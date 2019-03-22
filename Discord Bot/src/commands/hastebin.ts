@@ -1,5 +1,4 @@
 import { IBot, IBotCommand, IBotCommandHelp, IBotMessage, IBotConfig } from '../api'
-import { getRandomInt } from '../utils'
 import * as discord from 'discord.js'
 import BaseCommand from '../baseCommand';
 import * as snekfetch from 'snekfetch';
