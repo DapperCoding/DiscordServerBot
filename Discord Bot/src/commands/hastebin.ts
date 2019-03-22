@@ -26,12 +26,15 @@ export default class HastebinCommand extends BaseCommand {
 
     public async process(msg: string, answer: IBotMessage, message: discord.Message, client: discord.Client, config: IBotConfig, commands: IBotCommand[]): Promise<void> {
 
-        // Split content, take the first part of and take it back together
-        const code = message.content.split(" ").shift().join(" ");
+        // Split content
+        const code = message.content.split(" ");
+
+        // Remove the first entry of the array
+        code.shift()
 
         // Post code to hastebin
         snekfetch.post('https://hastebin.com/documents')
-            .send(code)
+            .send(code.join(" "))
             .then(res => {
 
                 // Now send the embed
