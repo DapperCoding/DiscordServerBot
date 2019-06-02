@@ -57,6 +57,8 @@ export default class CommandsCommand implements IBotCommand {
   ): Promise<void> {
     let embed = new discord.RichEmbed()
       .setTitle("Here is a list of all our commands")
+      .setDescription("Use the arrow buttons to page through the commands")
+      .setFooter("You'll have to manually remove the reaction to be able to click use the reaction again")
       .setColor("#ff0000");
 
     msgObject.author.send(embed).then(async message => {

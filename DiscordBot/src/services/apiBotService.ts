@@ -7,6 +7,7 @@ import * as aspnet from '@aspnet/signalr';
 import { faqMessage } from '../models/faq/faqMessage';
 import { ticket } from '../models/ticket/ticket';
 import { suggest } from '../models/suggest';
+import { channelhandler } from '../handlers/channelHandler';
 
 (<any>global).XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
@@ -46,6 +47,21 @@ export class apiBotService {
 
         // On 'TicketCreated' -> fires when ticket is created through API
         connection.on("TicketCreated", async (ticket: ticket) => {
+            let member = this._server.members.get(ticket.applicant.discordId);
+            if (!member) return;
+            // Create new channelHandler
+            new channelhandler(this._server)
+
+                // Add author to ticket
+                .createChannelTicketCommand(ticket.id, member)
+                .then(async channel => {
+                    let chan = (channel as discord.TextChannel);
+
+                    if (chan && member) {
+                        chan.setTopic(`This ticket is created by ${member.user.username} \n\n\n Subject:\n${ticket.subject} \n\n Description:\n${ticket.description}`)
+                    }
+                });
+
             console.log('hi')
             // Get all members with happy to help (h2h) role
             let happyToHelpers = this.GetAllWithRole("Happy To Help");
@@ -94,8 +110,13 @@ export class apiBotService {
         });
 
         // On 'TicketReaction' -> fires when ticket reaction has been added to an existing ticket
-        connection.on("TicketReaction", async (reaction) => {
+        connection.on("TicketReactionTest", async (reaction) => {
+            console.log("newTicketReactionTest");
+        });
 
+        // On 'TicketReaction' -> fires when ticket reaction has been added to an existing ticket
+        connection.on("TicketReaction", async (reaction) => {
+            console.log("newTicketReaction");
         });
 
         // On 'Suggestion' -> fires when someone suggested something using the website

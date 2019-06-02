@@ -180,17 +180,7 @@ export default class TicketCommand implements IBotCommand {
 
         console.log(ticket);
 
-        // Get discordMessage for getting author info
-        var message = this.getMessage();
-
-        // Check if discordMessage exists
-        if (message != null) {
-          // Create new channelHandler
-          new channelhandler(this._guild)
-
-            // Add author to ticket
-            .createChannelTicketCommand(ticket.id, message.member);
-        }
+        
       });
 
     return data;

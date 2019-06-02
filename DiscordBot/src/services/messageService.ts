@@ -15,12 +15,31 @@ export class messageService {
         this._config = config;
     }
 
+    public addBotMessage(message: discord.Message) {
+
+        let discordMessage = new msg.message();
+
+        discordMessage.message = message.content;
+        discordMessage.messageId = message.id;
+        discordMessage.timestamp = new Date(message.createdTimestamp);
+        discordMessage.guildId = message.guild.id;
+        discordMessage.channelId = message.channel.id;
+        discordMessage.isEmbed = false;
+        discordMessage.isDm = false;
+
+         // Request API and add our reaction to the database.
+         new apiRequestHandler()
+            .requestAPI('POST', discordMessage, 'https://api.dapperdino.co.uk/api/discordMessage', this._config)
+            .then(console.log)
+            .catch(console.error);
+    }
+
     public handleMessageInTicketCategory(message: discord.Message) {
-        
-        if (message.content.indexOf("TypeError [ERR_INVALID_ARG_TYPE]: The \"file\" argument must be of type string.") >= 0) {
-            let embed = this.createYtdlEmbed(message.member, message);
-            message.channel.send(embed);
-        }
+        // Now using luis
+        // if (message.content.indexOf("TypeError [ERR_INVALID_ARG_TYPE]: The \"file\" argument must be of type string.") >= 0) {
+        //     let embed = this.createYtdlEmbed(message.member, message);
+        //     message.channel.send(embed);
+        // }
 
         // Get ticket channel id from channel name
         let ticketChannelId = ((message.channel as discord.TextChannel).name.toString().replace("ticket", "")).toString();
@@ -43,7 +62,10 @@ export class messageService {
         reaction.discordMessage.isDm = false;
 
         // Request API and add our reaction to the database.
-        new apiRequestHandler().requestAPI('POST', reaction, 'https://api.dapperdino.co.uk/api/ticket/reaction', this._config);
+        new apiRequestHandler()
+            .requestAPI('POST', reaction, 'https://api.dapperdino.co.uk/api/ticket/reaction', this._config)
+            .then(console.log)
+            .catch(console.error);
     }
 
 

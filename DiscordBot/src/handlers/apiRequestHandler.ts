@@ -6,12 +6,12 @@ import { resolve } from 'dns';
 import { discordUser } from '../models/discordUser';
 
 export class apiRequestHandler {
-    
-    constructor(serverBot?:discord.Client, config?:IBotConfig) {
+
+    constructor(serverBot?: discord.Client, config?: IBotConfig) {
         if (serverBot) this._serverBot = serverBot;
         if (config) this._config = config;
     }
-    
+
 
     private _headers = {
         'User-Agent': 'DapperBot/0.0.1',
@@ -32,34 +32,42 @@ export class apiRequestHandler {
                 json: data
             }
 
-            return await request(options, (error: any, response: any, body: any) => {
-                console.log(response.statusCode);
-                if (!error && response.statusCode == 200 || response.statusCode == 201) {
-                    return resolve(body);
-                }
-                else if (response.statusCode == 401) {
-                    console.log(response.statusCode, error)
-                    return resolve(this.generateNewToken(options, config));
-                }
-                else if (response.statusCode == 400) {
-                    console.error(response.body)
-                    return reject(response.body);
-                }
-                else if (response.statusCode == 403) {
-                    console.log("Unauthorized");
-                    return reject("403")
-                }
-                else if (response.statusCode == 500 && this._serverBot && this._config) {
-                    let guild = this._serverBot.guilds.get(this._config.serverId);
+            await request(options, (error: any, response: any, body: any) => {
+                if (response) {
+                    if (!error && response.statusCode == 200 || response.statusCode == 201) {
+                        resolve(body);
+                        return;
+                    }
+                    else if (response.statusCode == 401) {
+                        console.log(response.statusCode, error)
+                        resolve(this.generateNewToken(options, config));
+                        return;
+                    }
+                    else if (response.statusCode == 400) {
+                        console.error(response.body)
+                        reject(response.body);
+                        return;
+                    }
+                    else if (response.statusCode == 403) {
+                        console.log("Unauthorized");
+                        reject("403")
+                        return;
+                    }
+                    else if (response.statusCode == 500 && this._serverBot && this._config) {
+                        let guild = this._serverBot.guilds.get(this._config.serverId);
 
-                    if (!guild) return ("Configured server not found");
+                        if (!guild) return ("Configured server not found");
 
-                    let channel = guild.channels.find(c => c.name == "web-error-log") as discord.TextChannel;
-                    
-                    if(!channel) return ("web-error-log channel not found") 
+                        let channel = guild.channels.find(c => c.name == "web-error-log") as discord.TextChannel;
 
-                    console.log("test");
-                
+                        if (!channel) return ("web-error-log channel not found")
+
+                        channel.send(response);
+
+                        console.log("test");
+                        return;
+
+                    }
                 }
             })
         });
@@ -77,19 +85,22 @@ export class apiRequestHandler {
             }
 
             return await request(options, (error: any, response: any, body: any) => {
-                console.log(response.statusCode);
+                if (response)
+                    console.log(response.statusCode);
                 if (!error && response.statusCode == 200 || response.statusCode == 201) {
 
                     if (typeof body == "string") {
-                        return resolve(JSON.parse(body) as T)
+                        resolve(JSON.parse(body) as T)
                     }
 
-                    return resolve(body as T);
+                    resolve(body as T);
+                    return;
                 }
                 else if (response.statusCode == 401) {
                     console.log(response.statusCode, error)
 
-                    return resolve(this.generateNewTokenWithType<T>(options, config));
+                    resolve(this.generateNewTokenWithType<T>(options, config));
+                    return;
                 }
                 else if (response.statusCode == 400) {
                     console.error(response.body)
@@ -97,10 +108,12 @@ export class apiRequestHandler {
                 }
                 else if (response.statusCode == 403) {
                     console.log("Unauthorized");
-                    return reject("403")
+                    reject("403")
+                    return;
                 }
                 else if (response.statusCode == 500) {
-                    return reject("500");
+                    reject("500");
+                    return;
                 }
             })
         });

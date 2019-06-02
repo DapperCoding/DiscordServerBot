@@ -23,13 +23,16 @@ export class channelhandler {
         return new Promise<discord.Channel>(async (resolve, reject) => {
 
             //Find the role 'Admin'
-            var adminRole = this._guild.roles.find((role) => role.name === "Admin");
+            var adminRole = this._guild.roles.find(role => role.name === "Admin");
 
             //Find the role 'Dapper Bot'
-            var dapperRole = this._guild.roles.find((role) => role.name === "Dapper Bot");
+            var dapperRole = this._guild.roles.find(role => role.name === "Dapper Bot");
+
+            //Find the role 'DapperWeb'
+            var dapperWebRole = this._guild.roles.find(role => role.name === "DapperWeb");
 
             // Find category 'Tickets'
-            var category = this._guild.channels.find((role) => role.name === 'Tickets') as discord.CategoryChannel;
+            var category = this._guild.channels.find(role => role.name === 'Tickets') as discord.CategoryChannel;
 
             // Add category if not existing
             if (!category) await this._guild.createChannel('Tickets', 'category').then(p => category = p as discord.CategoryChannel);
@@ -65,6 +68,14 @@ export class channelhandler {
 
                     // Add permissions for dapper bot
                     channel.overwritePermissions(dapperRole, {
+                        "READ_MESSAGE_HISTORY": true,
+                        "SEND_MESSAGES": true,
+                        "VIEW_CHANNEL": true,
+                        "EMBED_LINKS": true,
+                    });
+
+                    // Add permissions for dapper bot
+                    channel.overwritePermissions(dapperWebRole, {
                         "READ_MESSAGE_HISTORY": true,
                         "SEND_MESSAGES": true,
                         "VIEW_CHANNEL": true,

@@ -102,7 +102,10 @@ export class websiteBotService {
                 reaction.discordMessage.isDm = false;
 
                 // Request API and add our reaction to the database.
-                new apiRequestHandler().requestAPI('POST', reaction, 'https://api.dapperdino.co.uk/api/ticket/reaction', this._config);
+                new apiRequestHandler()
+                    .requestAPIWithType<any>('POST', reaction, 'https://api.dapperdino.co.uk/api/ticket/reaction', this._config)
+                    .then(console.log)
+                    .catch(console.error);
             });
         });
 
