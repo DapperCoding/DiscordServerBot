@@ -10,9 +10,7 @@ export class TicketProficiencyDialogue {
    */
   public SelectLanguage(message: Message, config: IBotConfig) {
     return new Promise<proficiency>((resolve, reject) => {
-      let startupEmbed = new RichEmbed()
-        .setColor("#ff0000")
-        .setTitle("All open tickets");
+      let startupEmbed = new RichEmbed().setTitle("Choose the language");
 
       new apiRequestHandler(message.client, config)
 
@@ -45,7 +43,10 @@ export class TicketProficiencyDialogue {
 
           let sendEmojis = async () => {
             let currentIndex = 0;
-            for (let i = 0; i < (max <= 10 ? max : 10); i++) {
+            if (max > 10) {
+              max = 10;
+            }
+            for (let i = 0; i < max; i++) {
               // Get emoji for proficiency number ()
               let emoji = getEmojiForNumber(currentIndex);
               await sentEmbed.react(emoji);
@@ -56,7 +57,7 @@ export class TicketProficiencyDialogue {
           let embed = new RichEmbed().setTitle("Choose the language");
           let currentIndex = 0;
           sendEmojis();
-          for (let i = 0; i < endIndex && i < max; i++) {
+          for (let i = 0; i < max; i++) {
             // Get current proficiency
             let currentProficiency = proficiencies[i];
             // Get emoji for proficiency number ()
@@ -105,9 +106,7 @@ export class TicketProficiencyDialogue {
 
   public SelectFramework(message: Message, config: IBotConfig) {
     return new Promise<proficiency>((resolve, reject) => {
-      let startupEmbed = new RichEmbed()
-        .setColor("#ff0000")
-        .setTitle("All open tickets");
+      let startupEmbed = new RichEmbed().setTitle("Select the framework");
 
       new apiRequestHandler(message.client, config)
 
@@ -151,7 +150,7 @@ export class TicketProficiencyDialogue {
           let embed = new RichEmbed().setTitle("Choose the framework");
           let currentIndex = 0;
           sendEmojis();
-          for (let i = 0; i < endIndex && i < max; i++) {
+          for (let i = 0; i < max; i++) {
             // Get current proficiency
             let currentProficiency = proficiencies[i];
             // Get emoji for proficiency number ()
