@@ -21,6 +21,8 @@ import { ticket } from "./models/ticket/ticket";
 import { applicant } from "./models/ticket/applicant";
 import { faq } from "./models/faq/faq";
 import { faqDialogue } from "./dialogues/faqDialogue";
+import { proficiency } from "./models/proficiency/proficiency";
+import { TicketProficiencyDialogue } from "./dialogues/TicketProficiencyDialogue";
 
 export class Bot implements IBot {
   public get commands(): IBotCommand[] {
@@ -109,7 +111,7 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function (erMsg, code) {
+    this._client.on("disconnect", function(erMsg, code) {
       console.log(
         "----- Bot disconnected from Discord with code",
         code,
@@ -125,7 +127,7 @@ export class Bot implements IBot {
     });
 
     // Automatically reconnect if the bot errors
-    this._client.on("error", function (error) {
+    this._client.on("error", function(error) {
       console.log(`----- Bot errored ${error} -----`);
 
       let client = getClient();
@@ -239,8 +241,8 @@ export class Bot implements IBot {
           )
           .addField(
             "Thanks For Joining The Other " +
-            member.guild.memberCount.toString() +
-            " Of Us!",
+              member.guild.memberCount.toString() +
+              " Of Us!",
             "Sincerely, your friend, DapperBot."
           );
 
@@ -262,7 +264,7 @@ export class Bot implements IBot {
       // Send rules intro text
       member.send(
         `Hello ${
-        member.displayName
+          member.displayName
         }. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
       );
 
@@ -337,7 +339,7 @@ export class Bot implements IBot {
         // Send discordMessage to welcome channel
         this._welcomeChannel.send(
           `${
-          member.displayName
+            member.displayName
           }, it's a shame you had to leave us. We'll miss you :(`
         );
       else {
@@ -351,7 +353,11 @@ export class Bot implements IBot {
     this._client.on("message", async message => {
       // Make sure that the bot isn't responding to itself
       if (message.author.id === this._botId) {
-        if (message.channel.type === "text" && (message.channel as discord.TextChannel).parent.name.toLowerCase() === "tickets") {
+        if (
+          message.channel.type === "text" &&
+          (message.channel as discord.TextChannel).parent.name.toLowerCase() ===
+            "tickets"
+        ) {
           this._messageService.handleMessageInTicketCategory(message);
         }
         return;
@@ -365,12 +371,12 @@ export class Bot implements IBot {
       // Log to console
       this._logger.debug(`[${message.author.tag}] ${text}`);
 
-      // Check if discordMessage is NOT sent in dm
+      // Check proficiencycordMessage is NOT sent in dm
       if (message.channel.type !== "dm") {
         // Add xp
         this._xpHandler.IncreaseXpOnMessage(message);
 
-        // Get ticket category
+        // Get ticket categoryproficiency
         let ticketCategory = message.guild.channels.find(
           category => category.name === "Tickets"
         ) as discord.CategoryChannel;
@@ -387,24 +393,32 @@ export class Bot implements IBot {
       // Handle commands
       this.handleCommands(text, message);
     });
-
     this._client.login(this._config.token);
   }
 
-  apiCall = (data: ticketDialogueData, ticketuser: any, config: any) => {
-    // Create new ticket object
+  apiCall = (
+    data: ticketDialogueData,
+    language: proficiency,
+    framework: proficiency,
+    ticketuser: any,
+    config: any
+  ) => {
+    // Create new proficiency object
     let ticketObject: ticket = new ticket();
 
     // Create new applicant object
     ticketObject.applicant = new applicant();
 
-    // Fill properties of ticket
+    // Fill properties of proficiency
     ticketObject.subject = data.title;
     ticketObject.description = data.description;
 
     // Fill properties of applicant
     ticketObject.applicant.username = ticketuser.displayName;
     ticketObject.applicant.discordId = ticketuser.id;
+    ticketObject.languageId;
+    ticketObject.frameworkId = framework.id;
+    ticketObject.languageId = language.id;
 
     // Post request to /api/Ticket/
     new apiRequestHandler()
@@ -423,15 +437,12 @@ export class Bot implements IBot {
         var ticket = JSON.parse(JSON.stringify(value)) as ticketReceive;
 
         console.log(ticket);
-
-        
       });
 
     return data;
   };
 
   async handleLuisCommands(text: string, message: discord.Message) {
-
     let chan = message.channel as discord.TextChannel;
 
     if (chan.parent.name.toLowerCase() !== "discussions") return;
@@ -449,7 +460,7 @@ export class Bot implements IBot {
 
       if (intent === "YtdlFix") {
         let matches = message.content.match(/\bhttps?:\/\/\S+/gi);
-        let url = 'https://dapperdino.co.uk/ytdl-fix.zip';
+        let url = "https://dapperdino.co.uk/ytdl-fix.zip";
 
         if (matches != null) {
           url = matches[0];
@@ -459,138 +470,171 @@ export class Bot implements IBot {
           .setColor("#ff0000")
           .setTitle("The YTDL Fix")
           .setURL(url)
-          .addField("Please download the zip file " + message.member.displayName + ".", "The Happy To Help team asks you to download the zip file and extract the files to your node_modules folder (overwrite files).")
-          .addField("Video explanation:", "https://www.youtube.com/watch?v=MsMYrxyYNZc")
-          .setFooter("If you keep experiencing errors, feel free to ask your question in a ticket.")
+          .addField(
+            "Please download the zip file " + message.member.displayName + ".",
+            "The Happy To Help team asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
+          )
+          .addField(
+            "Video explanation:",
+            "https://www.youtube.com/watch?v=MsMYrxyYNZc"
+          )
+          .setFooter(
+            "If you keep experiencing errors, feel free to ask your question in a ticket."
+          );
 
         message.channel.send(rtfmEmbed);
-
       }
-
       if (intent === "FAQS.ChangeDefaultCommandoCommands") {
         let embed = new RichEmbed();
 
-        embed.setTitle("Do you want to change a default commando command?")
+        embed.setTitle("Do you want to change a default commando command?");
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.ChangePrefix") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("Do you want to change your bots prefix?")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle("Do you want to change your bots prefix?");
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.ConfigNotFound") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("Error with your config file?")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle("Error with your config file?");
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.CSHARP") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("Do you want to start coding in C#?")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle("Do you want to start coding in C#?");
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.DeprecatedFind") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("We think you might be using a deprecated function (FIND)")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle(
+          "We think you might be using a deprecated function (FIND)"
+        );
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.DiscordNotFound") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("We think you might have forgotten to install the discord.js npm libraries")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle(
+          "We think you might have forgotten to install the discord.js npm libraries"
+        );
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.NotFoundModule") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("We think you might be opening your terminal from a wrong directory")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle(
+          "We think you might be opening your terminal from a wrong directory"
+        );
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.QuickDb") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("We think you might be having trouble installing QuickDb")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle(
+          "We think you might be having trouble installing QuickDb"
+        );
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent === "FAQS.ServersBot") {
         let embed = new RichEmbed();
-        
-        embed.setTitle("Looking for our github repository?")
 
-        embed.setDescription("We've added an faq item about this! #f-a-q")
+        embed.setTitle("Looking for our github repository?");
+
+        embed.setDescription("We've added an faq item about this! #f-a-q");
 
         message.channel.send(embed);
       }
 
       if (intent.toLowerCase() === "faq.add") {
-        if (message.member.roles.find(role => role.name.toLowerCase() === "happy to help" || role.name.toLowerCase() === "admin")) {
+        if (
+          message.member.roles.find(
+            role =>
+              role.name.toLowerCase() === "happy to help" ||
+              role.name.toLowerCase() === "admin"
+          )
+        ) {
           let faqModel = new faq();
-          let dialogue = new faqDialogue(this._config, message.channel as discord.TextChannel, message.member, this._client);
+          let dialogue = new faqDialogue(
+            this._config,
+            message.channel as discord.TextChannel,
+            message.member,
+            this._client
+          );
 
           let questionStep: dialogueStep<faq> = new dialogueStep<faq>(
             faqModel,
             dialogue.addQuestion,
             "Enter Question:",
             "Question Successful",
-            "Question Unsuccessful");
+            "Question Unsuccessful"
+          );
 
           let answerStep: dialogueStep<faq> = new dialogueStep<faq>(
             faqModel,
             dialogue.addAnswer,
             "Enter Answer:",
             "Answer Successful",
-            "Answer Unsuccessful");
+            "Answer Unsuccessful"
+          );
 
           let faqUrlVerifyStep: dialogueStep<faq> = new dialogueStep(
             faqModel,
             dialogue.startUsefulResource,
             "Would you like to add a resourceful URL related to the FAQ? (Enter 'Yes' if so, otherwise enter 'No')",
             "URL Choice Successful",
-            "URL Choice Unsuccessful");
+            "URL Choice Unsuccessful"
+          );
 
-
-          let handler = new dialogueHandler([questionStep, answerStep, faqUrlVerifyStep], faqModel);
+          let handler = new dialogueHandler(
+            [questionStep, answerStep, faqUrlVerifyStep],
+            faqModel
+          );
 
           await handler
-            .getInput(message.channel as discord.TextChannel, message.member, this._config)
-            .then((faq) => {
-
-              dialogue.finalizeSteps(faq)
+            .getInput(
+              message.channel as discord.TextChannel,
+              message.member,
+              this._config
+            )
+            .then(faq => {
+              dialogue.finalizeSteps(faq);
             });
 
           message.delete(0);
@@ -598,13 +642,11 @@ export class Bot implements IBot {
       }
 
       if (intent.toLowerCase() === "faq.edit") {
-
-        console.log("Faq edit?")
+        console.log("Faq edit?");
       }
 
       if (intent.toLowerCase() === "faq.delete") {
-
-        console.log("Remove faq?")
+        console.log("Remove faq?");
       }
 
       if (intent === "Ticket.Create") {
@@ -627,7 +669,10 @@ export class Bot implements IBot {
           // Array of collected info
           let collectedInfo = new ticketDialogueData();
 
-          let handler = new RichEmbedReactionHandler<CreateTicket>(myEmbed, msg);
+          let handler = new RichEmbedReactionHandler<CreateTicket>(
+            myEmbed,
+            msg
+          );
           let dialogue = new ticketDialogue();
 
           handler.addCategory("tickets", new Map());
@@ -639,7 +684,9 @@ export class Bot implements IBot {
               // create ticket
 
               // Create category step
-              let titleStep: dialogueStep<ticketDialogueData> = new dialogueStep(
+              let titleStep: dialogueStep<
+                ticketDialogueData
+              > = new dialogueStep(
                 collectedInfo,
                 dialogue.titleStep,
                 "Enter a title for your ticket that quickly summarises what you are requiring assistance with: (20 - 100)",
@@ -674,9 +721,27 @@ export class Bot implements IBot {
                   message.member,
                   this._config
                 )
-                .then(data => {
+                .then(async data => {
+                  // TODO: Create reaction handlers
+                  let reactionHandler = new TicketProficiencyDialogue();
+
+                  let language = await reactionHandler.SelectLanguage(
+                    message,
+                    this._config
+                  );
+                  let framework = await reactionHandler.SelectFramework(
+                    message,
+                    this._config
+                  );
+
                   //API CALL
-                  this.apiCall(data, message.member, this._config);
+                  this.apiCall(
+                    data,
+                    language,
+                    framework,
+                    message.member,
+                    this._config
+                  );
 
                   // Create ticket embed
                   let ticketEmbed = new discord.RichEmbed()
@@ -689,11 +754,13 @@ export class Bot implements IBot {
                     );
 
                   // Send ticketEmbed
-                  let chan = message.guild.channels.find(x => x.name === "help") as discord.TextChannel;
+                  let chan = message.guild.channels.find(
+                    x => x.name === "help"
+                  ) as discord.TextChannel;
                   chan.send(ticketEmbed);
                   (msg as discord.Message).delete(0);
                 })
-                .catch((e) => {
+                .catch(e => {
                   console.error(e);
                   (msg as discord.Message).delete(0);
                 });

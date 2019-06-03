@@ -69,7 +69,6 @@ export default class BotInfoCommand implements IBotCommand {
     config: IBotConfig,
     commands: IBotCommand[]
   ): Promise<void> {
-    
     let startupEmbed = new discord.RichEmbed()
       .setColor("#ff0000")
       .setTitle("All open tickets");
@@ -86,7 +85,7 @@ export default class BotInfoCommand implements IBotCommand {
         config
       )
 
-      // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
+      // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
       .then(async tickets => {
         let startIndex = 0;
         let perPage = 5;
@@ -132,7 +131,7 @@ export default class BotInfoCommand implements IBotCommand {
             i < endIndex && i < max && currentIndex < perPage;
             i++
           ) {
-            // Get emoji for ticket number ()
+            // Get emoji for proficiency number ()
             let emoji = getEmojiForNumber(currentIndex);
             await sentEmbed.react(emoji);
             currentIndex++;
@@ -145,15 +144,15 @@ export default class BotInfoCommand implements IBotCommand {
           let currentIndex = 0;
           sendEmojis();
           for (let i = startIndex; i < endIndex && i < max; i++) {
-            // Get current ticket
+            // Get current proficiency
             let currentTicket = tickets[i];
-            // Get emoji for ticket number ()
+            // Get emoji for proficiency number ()
             let emoji = getEmojiForNumber(currentIndex);
 
             // Remove emoji click if exists
             handler.removeIfExistsEmoji("tickets", emoji);
 
-            // Add emoji click for current ticket
+            // Add emoji click for current proficiency
             handler.addEmoji("tickets", emoji, {
               clickHandler: async data => {
                 // Get member from guild
@@ -184,12 +183,12 @@ export default class BotInfoCommand implements IBotCommand {
                     config
                   )
 
-                  // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
+                  // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
                   .then(receivedTicketBody => {
                     if (!this.bot) {
                       return;
                     }
-                    // Create new ticket model
+                    // Create new proficiency model
                     let receivedTicket: ticketReceive = JSON.parse(
                       JSON.stringify(receivedTicketBody)
                     ) as ticketReceive;
@@ -207,7 +206,7 @@ export default class BotInfoCommand implements IBotCommand {
                     // Create new channel handler
                     new channelhandler(this.bot.getServer())
 
-                      // Add h2h-er to ticket channel
+                      // Add h2h-er to proficiency channel
                       .addPermissionsToChannelTicketCommand(
                         receivedTicket.id,
                         message,

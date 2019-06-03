@@ -19,6 +19,8 @@ import {
   ticketDialogueData,
   ticketDialogue
 } from "../dialogues/ticketDialogue";
+import { TicketProficiencyDialogue } from "../dialogues/TicketProficiencyDialogue";
+import { proficiency } from "../models/proficiency/proficiency";
 
 export default class TicketCommand implements IBotCommand {
   private readonly CMD_REGEXP = /^\?(help?|ticket?|createticket)/im;
@@ -128,11 +130,17 @@ export default class TicketCommand implements IBotCommand {
         message.member,
         config as IBotConfig
       )
-      .then(data => {
-        //API CALL
-        this.apiCall(data, message.member, config);
+      .then(async data => {
+        // TODO: Create reaction handlers
+        let reactionHandler = new TicketProficiencyDialogue();
 
-        // Create ticket embed
+        let language = await reactionHandler.SelectLanguage(message, config);
+        let framework = await reactionHandler.SelectFramework(message, config);
+
+        //API CALL
+        this.apiCall(data, language, framework, message.member, config);
+
+        // Create proficiency embed
         let ticketEmbed = new discord.RichEmbed()
           .setTitle("Ticket Created Successfully!")
           .setColor("#ffdd05")
@@ -147,20 +155,29 @@ export default class TicketCommand implements IBotCommand {
       });
   }
 
-  apiCall = (data: ticketDialogueData, ticketuser: any, config: any) => {
-    // Create new ticket object
+  apiCall = (
+    data: ticketDialogueData,
+    language: proficiency,
+    framework: proficiency,
+    ticketuser: any,
+    config: any
+  ) => {
+    // Create new proficiency object
     let ticketObject: ticket = new ticket();
 
     // Create new applicant object
     ticketObject.applicant = new applicant();
 
-    // Fill properties of ticket
+    // Fill properties of proficiency
     ticketObject.subject = data.title;
     ticketObject.description = data.description;
 
     // Fill properties of applicant
     ticketObject.applicant.username = ticketuser.displayName;
     ticketObject.applicant.discordId = ticketuser.id;
+    ticketObject.languageId;
+    ticketObject.frameworkId = framework.id;
+    ticketObject.languageId = language.id;
 
     // Post request to /api/Ticket/
     new apiRequestHandler()
@@ -179,8 +196,6 @@ export default class TicketCommand implements IBotCommand {
         var ticket = JSON.parse(JSON.stringify(value)) as ticketReceive;
 
         console.log(ticket);
-
-        
       });
 
     return data;
