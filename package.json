@@ -1,0 +1,48 @@
+{
+  "name": "discordbot-ts",
+  "version": "1.0.5",
+  "description": "Simple discord bot",
+  "main": "src/index.js",
+  "scripts": {
+    "watch": "node_modules/.bin/tsc -w",
+    "build": "node_modules/.bin/tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "Nathan Farrer <email@email.com> (https://github.com/DapperDino) & Mick Rustenhoven <rustenhovenmick@outlook.com> (https://github.com/Mickie456)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DapperDino/DiscordServerBot.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cheerio": "^0.22.11",
+    "@types/node": "^8.10.49",
+    "@types/node-fetch": "^1.6.9",
+    "tslint": "^5.17.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "@aspnet/signalr": "^1.1.4",
+    "@types/superagent": "^3.8.7",
+    "bufferutil": "^4.0.1",
+    "cheerio": "^1.0.0-rc.3",
+    "discord.js": "^11.5.1",
+    "erlpack": "github:discordapp/erlpack",
+    "gulp": "^3.9.1",
+    "gulp-ts": "^0.3.0",
+    "libsodium-wrappers": "^0.7.4",
+    "luis-sdk-async": "^1.0.0",
+    "moment": "^2.24.0",
+    "node": "^10.15.3",
+    "node-fetch": "^2.6.0",
+    "node-opus": "^0.3.1",
+    "package.json": "^2.0.1",
+    "request": "^2.88.0",
+    "superagent": "^3.8.3",
+    "uuid": "^3.3.2",
+    "uws": "^100.0.1",
+    "websocket": "^1.0.28",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
