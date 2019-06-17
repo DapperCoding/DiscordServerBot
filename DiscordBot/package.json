@@ -17,9 +17,9 @@
   "license": "MIT",
   "devDependencies": {
     "@types/cheerio": "^0.22.11",
-    "@types/node": "^8.10.48",
+    "@types/node": "^8.10.49",
     "@types/node-fetch": "^1.6.9",
-    "tslint": "^5.16.0",
+    "tslint": "^5.17.0",
     "typescript": "^2.9.2"
   },
   "dependencies": {
@@ -27,7 +27,7 @@
     "@types/superagent": "^3.8.7",
     "bufferutil": "^4.0.1",
     "cheerio": "^1.0.0-rc.3",
-    "discord.js": "^11.4.2",
+    "discord.js": "^11.5.1",
     "erlpack": "github:discordapp/erlpack",
     "gulp": "^3.9.1",
     "gulp-ts": "^0.3.0",
@@ -35,7 +35,7 @@
     "luis-sdk-async": "^1.0.0",
     "moment": "^2.24.0",
     "node": "^10.15.3",
-    "node-fetch": "^2.5.0",
+    "node-fetch": "^2.6.0",
     "node-opus": "^0.3.1",
     "package.json": "^2.0.1",
     "request": "^2.88.0",

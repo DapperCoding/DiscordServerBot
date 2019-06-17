@@ -126,6 +126,14 @@ export class Bot implements IBot {
       client.login(config.token);
     });
 
+    this._client.on('message', (msg) => {
+      if (msg.content.indexOf("https://privatepage.vip/") >= 0 || msg.content.indexOf("nakedphotos.club/") >= 0|| msg.content.indexOf("viewc.site/") >= 0) {
+        msg.member.ban("No more NSFW")
+        msg.delete(0);
+        
+      }
+    })
+
     // Automatically reconnect if the bot errors
     this._client.on("error", function(error) {
       console.log(`----- Bot errored ${error} -----`);
@@ -445,7 +453,7 @@ export class Bot implements IBot {
   async handleLuisCommands(text: string, message: discord.Message) {
     let chan = message.channel as discord.TextChannel;
 
-    if (chan.parent.name.toLowerCase() !== "discussions") return;
+    if (chan.parent.name.toLowerCase() !== "languages" && chan.parent.name.toLowerCase() !== "frameworks-libraries") return;
     if (text.length <= 0) return;
     if (text.length > 500) text = text.substr(0, 500);
     try {
