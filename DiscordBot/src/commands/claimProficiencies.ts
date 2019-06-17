@@ -9,7 +9,7 @@ import { getRandomInt } from "../utils";
 import * as discord from "discord.js";
 import BaseCommand from "../baseCommand";
 import { apiRequestHandler } from "../handlers/apiRequestHandler";
-import { discordUserProficiency } from "../models/proficiency/proficiency";
+import { discordUserProficiency, proficiencyLevel } from "../models/proficiency/proficiency";
 import { message } from "../models/message";
 
 export default class ClaimProficienciesCommand extends BaseCommand {
@@ -48,7 +48,15 @@ export default class ClaimProficienciesCommand extends BaseCommand {
       "dapperweb",
       "dapperbot",
       "bots",
-      "member"
+      "member",
+      "glorious leader",
+      "twitch subscriber",
+      "nitro booster",
+      "supporter",
+      "discord server list",
+      "youtube member",
+      "weapons commissar",
+      "patreon"
     ];
     const toRemove: discord.Role[] = [];
 
@@ -59,7 +67,7 @@ export default class ClaimProficienciesCommand extends BaseCommand {
     });
 
     if (toRemove.length > 0) {
-      msgObj.member.removeRoles(toRemove);
+      await msgObj.member.removeRoles(toRemove).catch(console.error);
     }
 
     new apiRequestHandler()
@@ -72,8 +80,9 @@ export default class ClaimProficienciesCommand extends BaseCommand {
       )
       .then(proficiencies => {
         const addRoles: discord.Role[] = [];
-        for (let i = 0; i < proficiencies.length; i++) {
-          let proficiency = proficiencies[i];
+        const actualProficiencies = proficiencies.filter(x=>x.proficiencyLevel != proficiencyLevel.absoluteBeginner && x.proficiencyLevel != proficiencyLevel.justStarted);
+        for (let i = 0; i < actualProficiencies.length; i++) {
+          let proficiency = actualProficiencies[i];
 
           let role = msgObj.guild.roles.find(
             x =>
