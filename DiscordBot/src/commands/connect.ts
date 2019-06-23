@@ -25,28 +25,32 @@ export default class RegisterCommand extends BaseCommand {
 
     public async process(msg: string, answer: IBotMessage, msgObj: discord.Message, client: discord.Client, config: IBotConfig, commands: IBotCommand[]): Promise<void> {
         
-        if (msg.toLowerCase().trim() === "?connect") {
-            let model = false;
-            let dialogue = new connectDialogue(config, msgObj.channel as discord.TextChannel, msgObj.member, client);
+        // if (msg.toLowerCase().trim() === "?connect") {
+        //     let model = false;
+        //     let dialogue = new connectDialogue(config, msgObj.channel as discord.TextChannel, msgObj.member, client);
 
-            let connectStep: dialogueStep<boolean> = new dialogueStep<boolean>(
-                model,
-                dialogue.getConnectCode,
-                "Enter your connect code:",
-                "",
-                "");
+        //     let connectStep: dialogueStep<boolean> = new dialogueStep<boolean>(
+        //         model,
+        //         dialogue.getConnectCode,
+        //         "Enter your connect code:",
+        //         "",
+        //         "");
     
-            let handler = new dialogueHandler([connectStep], model);
+        //     let handler = new dialogueHandler([connectStep], model);
     
-            await handler
-            .getInput(msgObj.channel as discord.TextChannel, msgObj.member, config as IBotConfig)
-            .then((connected) => {
+        //     await handler
+        //     .getInput(msgObj.channel as discord.TextChannel, msgObj.member, config as IBotConfig)
+        //     .then((connected) => {
                 
-            });
-        } else {
-            new connectHandler(client, config)
+        //     });
+        // } else {
+        //     new connectHandler(client, config)
+        //     .registerDiscord(msgObj)
+        //     .then()
+        // }
+
+        new connectHandler(client, config)
             .registerDiscord(msgObj)
             .then()
-        }
     }
 }

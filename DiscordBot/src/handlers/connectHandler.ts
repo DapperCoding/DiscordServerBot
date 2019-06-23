@@ -34,7 +34,7 @@ export class connectHandler {
             model.discordId = message.author.id;
 
             // Add connect code
-            model.registrationCode = message.content.replace("?connect ", "");
+            //model.registrationCode = message.content.replace("?connect ", "");
 
             if (message.member.roles.find(role => role.name.toLowerCase() === "happy to help")) {
                 model.isHappyToHelp = true;

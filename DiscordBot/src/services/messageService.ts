@@ -33,7 +33,6 @@ export class messageService {
         "https://api.dapperdino.co.uk/api/discordMessage",
         this._config
       )
-      .then(console.log)
       .catch(console.error);
   }
 

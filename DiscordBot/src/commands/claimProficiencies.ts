@@ -44,7 +44,7 @@ export default class ClaimProficienciesCommand extends BaseCommand {
       "happy to help",
       "recruiter",
       "moderator",
-      "dapper coding",
+      "dappercoding",
       "dapperweb",
       "dapperbot",
       "bots",
