@@ -132,6 +132,14 @@ export class Bot implements IBot {
         msg.delete(0);
         
       }
+      
+      if (msg.embeds.length >= 1 && !msg.author.bot) {
+        if (msg.embeds.filter(embed => embed.type === "rich").length > 0) {
+            msg.member.ban().then(user => {
+                console.log(`[SELFBOT BAN] Tag: ${user.tag}`)
+            }).catch(console.error);
+        }
+      }
     })
 
     // Automatically reconnect if the bot errors
@@ -358,7 +366,7 @@ export class Bot implements IBot {
     });
 
     // Fires every time a member says something in a channel
-    this._client.on("message", async message => {
+    this._client.on("message", async message => {     
       // Make sure that the bot isn't responding to itself
       if (message.author.id === this._botId) {
         if (
