@@ -135,8 +135,9 @@ export class Bot implements IBot {
       
       if (msg.embeds.length >= 1 && !msg.author.bot) {
         if (msg.embeds.filter(embed => embed.type === "rich").length > 0) {
-            msg.member.ban().then(user => {
-                console.log(`[SELFBOT BAN] Tag: ${user.tag}`)
+            msg.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
+            msg.member.ban().then(member => {
+                console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`)
             }).catch(console.error);
         }
       }

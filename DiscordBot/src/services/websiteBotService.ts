@@ -62,6 +62,15 @@ export class websiteBotService {
     });
 
     // On 'ReceiveMessage' -> test method
+    connection.on("NewOrder", (order) => {
+      let channel = this._server.channels.find(x=>x.name.toLowerCase() == "dapper-coding") as discord.TextChannel;
+
+      if (channel) {
+        channel.send(`New order with id ${order.id}`);
+      }
+    });
+
+    // On 'ReceiveMessage' -> test method
     connection.on("ReceiveMessage", (user, message) => {
       let testUser = this._serverBot.users.get(
         this.GetDiscordUserByUsername(user).discordId
