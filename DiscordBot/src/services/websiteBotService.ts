@@ -56,7 +56,7 @@ export class WebsiteBotService {
 
     // On 'ReceiveMessage' -> test method
     connection.on("NewOrder", (order) => {
-      let channel = this._server.channels.find(x=>x.name.toLowerCase() == "dapper-coding") as discord.TextChannel;
+      let channel = this._server.channels.find(x=>x.name.toLowerCase() == "dapper-coding") as Discord.TextChannel;
 
       if (channel) {
         channel.send(`New order with id ${order.id}`);
