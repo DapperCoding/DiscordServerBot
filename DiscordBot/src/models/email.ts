@@ -1,7 +1,7 @@
-export interface email {
+export interface Email {
     email: string;
 }
 
-export class email implements email {
+export class Email implements Email {
     
 }

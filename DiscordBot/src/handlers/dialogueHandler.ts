@@ -1,20 +1,20 @@
-import * as discord from 'discord.js'
-import * as api from '../api'
-import { validationError } from '../errors';
+import * as Discord from 'discord.js'
+import * as API from '../api'
+import { ValidationError } from '../error';
 import { Bot } from '../bot';
 
-export class dialogueHandler<T> {
-    private _steps: dialogueStep<T>[] | dialogueStep<T>;
+export class DialogueHandler<T> {
+    private _steps: DialogueStep<T>[] | DialogueStep<T>;
     private _data: T;
-    private _currentStep: dialogueStep<T>;
-    private _channel?: discord.TextChannel;
-    private _removeMessages: discord.Message[];
+    private _currentStep: DialogueStep<T>;
+    private _channel?: Discord.TextChannel;
+    private _removeMessages: Discord.Message[];
     private _cancelDialogue: boolean;
 
     /**
      *
      */
-    constructor(steps: dialogueStep<T>[] | dialogueStep<T>, data: T) {
+    constructor(steps: DialogueStep<T>[] | DialogueStep<T>, data: T) {
 
         // Set private steps to the inputted steps 
         this._steps = steps;
@@ -41,13 +41,13 @@ export class dialogueHandler<T> {
 
 
     // Used for adding 
-    public addRemoveMessage(message: discord.Message) {
+    public addRemoveMessage(message: Discord.Message) {
 
         // Add message to the removeMessages list
         this._removeMessages.push(message);
     }
 
-    public async getInput(channel: discord.TextChannel, user: discord.GuildMember, config: api.IBotConfig): Promise<T> {
+    public async getInput(channel: Discord.TextChannel, user: Discord.GuildMember, config: API.IBotConfig): Promise<T> {
 
         return new Promise<T>(async (resolve, reject) => {
 
@@ -57,7 +57,7 @@ export class dialogueHandler<T> {
             Bot.setIsInDialogue(this._channel.id, user.user.id, new Date())
 
             // Loop over each step
-            for (const step of this._steps as dialogueStep<T>[]) {
+            for (const step of this._steps as DialogueStep<T>[]) {
 
                 // Check if user has cancelled dialogue, then stop the loop
                 if (this._cancelDialogue) break;
@@ -68,7 +68,7 @@ export class dialogueHandler<T> {
                 // Filter for current user
                 const filter = m => (m.member == user);
 
-                let message = new discord.RichEmbed()
+                let message = new Discord.RichEmbed()
                     .setTitle("Hi " + user.user.username)
                     .setDescription(step.beforeMessage)
                     .addField("Notification for", user)
@@ -77,7 +77,7 @@ export class dialogueHandler<T> {
                 // Send before discordMessage
                 await channel.send(message)
                     .then(newMsg => {
-                        this._removeMessages.push(newMsg as discord.Message);
+                        this._removeMessages.push(newMsg as Discord.Message);
                     });
 
                 // Handle callback + validation
@@ -147,7 +147,7 @@ export class dialogueHandler<T> {
                     .catch(async e => {
 
                         // Check for validation errors
-                        if (e instanceof validationError) {
+                        if (e instanceof ValidationError) {
 
                             // Check if channel isn't null
                             if (this._channel != null)
@@ -159,7 +159,7 @@ export class dialogueHandler<T> {
                                     .then(newMsg => {
 
                                         // Add new message to remove list
-                                        this._removeMessages.push((newMsg as discord.Message));
+                                        this._removeMessages.push((newMsg as Discord.Message));
                                     });
 
                             // Retry step
@@ -182,7 +182,7 @@ export class dialogueHandler<T> {
     }
 }
 
-export class dialogueStep<E> implements dialogueStep<E> {
+export class DialogueStep<E> implements DialogueStep<E> {
     /**
      *
      */
@@ -195,7 +195,7 @@ export class dialogueStep<E> implements dialogueStep<E> {
     }
 }
 
-export interface dialogueStep<E> {
+export interface DialogueStep<E> {
     callback: (response: any, data: E) => Promise<E>;
     stepData: E;
     beforeMessage: string;

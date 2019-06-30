@@ -1,20 +1,18 @@
-import * as discord from "discord.js";
-import * as api from "../api";
-import { connectHandler } from "../handlers/connectHandler";
+import * as Discord from "discord.js";
+import * as API from "../api";
+import { ConnectHandler } from "../handlers/connectHandler";
 
-export class connectDialogue {
-
-
-    
-    private _config: api.IBotConfig;
-    private _channel: discord.TextChannel;
-    private _user: discord.GuildMember;
-    private _bot: discord.Client;
+export class ConnectDialogue {
+ 
+    private _config: API.IBotConfig;
+    private _channel: Discord.TextChannel;
+    private _user: Discord.GuildMember;
+    private _bot: Discord.Client;
 
     /**
      * Create dialogue for the connect command
      */
-    constructor(config: api.IBotConfig, channel:discord.TextChannel, user:discord.GuildMember, bot:discord.Client) {
+    constructor(config: API.IBotConfig, channel:Discord.TextChannel, user:Discord.GuildMember, bot:Discord.Client) {
         this._config = config;
         this._channel=channel;
         this._user = user;
@@ -24,12 +22,12 @@ export class connectDialogue {
     /**
      * getConnectCode
      */
-    public getConnectCode(response: discord.Message, data: boolean) {
+    public getConnectCode(response: Discord.Message, data: boolean) {
         return new Promise<boolean>((resolve, reject) => {
 
             try {
 
-                new connectHandler(this._bot, this._config)
+                new ConnectHandler(this._bot, this._config)
             .registerDiscord(response)
             .then()
 

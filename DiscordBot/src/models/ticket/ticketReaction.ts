@@ -1,12 +1,12 @@
-import { message } from "../message";
+import { Message } from "../message";
 
-export interface ticketReaction {
+export interface TicketReaction {
     ticketId: number;
     fromId: string;
-    username:string;
-    discordMessage: message;
+    username: string;
+    discordMessage: Message;
 }
 
-export class ticketReaction implements ticketReaction {
+export class TicketReaction implements TicketReaction {
 
 }

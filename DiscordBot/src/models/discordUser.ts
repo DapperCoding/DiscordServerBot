@@ -1,9 +1,11 @@
-import { compactDiscordUser } from "./compactDiscordUser";
-import { proficiency } from "./proficiency/proficiency";
+import { CompactDiscordUser } from "./compactDiscordUser";
+import { Proficiency } from "./proficiency/proficiency";
 
-export interface discordUser extends compactDiscordUser {
+export interface DiscordUser extends CompactDiscordUser {
   name: string;
-  proficiencies: proficiency[];
+  proficiencies: Proficiency[];
 }
 
-export class discordUser implements discordUser {}
+export class DiscordUser implements DiscordUser {
+
+}

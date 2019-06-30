@@ -1,11 +1,10 @@
-import * as discord from 'discord.js';
-import { ticketDialogueData } from '../dialogues/ticketDialogue';
+import * as Discord from 'discord.js';
 
-export class channelhandler {
+export class ChannelHandler {
 
-    private _guild: discord.Guild;
+    private _guild: Discord.Guild;
 
-    constructor(guild: discord.Guild) {
+    constructor(guild: Discord.Guild) {
         this._guild = guild;
     }
 
@@ -17,10 +16,10 @@ export class channelhandler {
      * - discordMessage: Message by creator
      * - ticketId: Ticket id gotten from POST to API
      */
-    public async createChannelTicketCommand(ticketId: number, member: discord.GuildMember) {
+    public async createChannelTicketCommand(ticketId: number, member: Discord.GuildMember) {
 
         // Return new promise, contains the discord channel if it's resolved
-        return new Promise<discord.Channel>(async (resolve, reject) => {
+        return new Promise<Discord.Channel>(async (resolve, reject) => {
 
             //Find the role 'Admin'
             var adminRole = this._guild.roles.find(role => role.name === "Admin");
@@ -32,10 +31,10 @@ export class channelhandler {
             var dapperWebRole = this._guild.roles.find(role => role.name === "DapperWeb");
 
             // Find category 'Tickets'
-            var category = this._guild.channels.find(role => role.name === 'Tickets') as discord.CategoryChannel;
+            var category = this._guild.channels.find(role => role.name === 'Tickets') as Discord.CategoryChannel;
 
             // Add category if not existing
-            if (!category) await this._guild.createChannel('Tickets', 'category').then(p => category = p as discord.CategoryChannel);
+            if (!category) await this._guild.createChannel('Tickets', 'category').then(p => category = p as Discord.CategoryChannel);
 
             // Create channel for ticket
             return await this._guild.createChannel(`ticket${ticketId}`, 'text', [{
@@ -89,7 +88,7 @@ export class channelhandler {
                         "VIEW_CHANNEL": false,
                     });
 
-                    let ticketChannelEmbed = new discord.RichEmbed()
+                    let ticketChannelEmbed = new Discord.RichEmbed()
                         .setTitle(`Hello ${member.user.username}, welcome to our Ticket managing service!`)
                         .setThumbnail("https://dapperdino.co.uk/images/dapperbot.png")
                         .setDescription("We have received your ticket and have notified all Happy-To-Help members.")
@@ -99,7 +98,7 @@ export class channelhandler {
                         .addField("When your ticket is accepted you will be notified here", "Just remember to be patient and well mannered as these members are giving up their own time to help you")
                         .setFooter("In the meantime you can start explaining your problems here as the Happy-To-Help member will be able to read all messages in the channel when they join");
 
-                    (channel as discord.TextChannel).send(ticketChannelEmbed);
+                    (channel as Discord.TextChannel).send(ticketChannelEmbed);
 
                     return resolve(channel);
                 })
@@ -121,7 +120,7 @@ export class channelhandler {
      * - ticketId = ticket id got from api/signalR
      * - discordMessage = h2h-er accept discordMessage
      */
-    public async addPermissionsToChannelTicketCommand(ticketId: number, message: discord.Message, embed: discord.RichEmbed) {
+    public async addPermissionsToChannelTicketCommand(ticketId: number, message: Discord.Message, embed: Discord.RichEmbed) {
 
         // Find channel based on ticketId
         var channel = this._guild.channels.find((channel) => channel.name === `ticket${ticketId}`);
@@ -137,10 +136,10 @@ export class channelhandler {
                 "EMBED_LINKS": true,
             });
 
-            (channel as discord.TextChannel).send(embed);
+            (channel as Discord.TextChannel).send(embed);
 
             //Create embed for helpers to know that the ticket is closed
-            let inProgressEmbed = new discord.RichEmbed()
+            let inProgressEmbed = new Discord.RichEmbed()
                 .setTitle(`Ticket ${ticketId} has been accepted by ${message.member.displayName}!`)
                 .setColor('#ffdd05')
                 .setDescription(`Thank you for your time and efforts :)`)
@@ -151,7 +150,7 @@ export class channelhandler {
             }
 
             // Get completed tickets channel
-            let inProgressChannel = this._guild.channels.find(channel => channel.name === "tickets-in-progress") as discord.TextChannel;
+            let inProgressChannel = this._guild.channels.find(channel => channel.name === "tickets-in-progress") as Discord.TextChannel;
 
             if (!inProgressChannel) return ("Channel not found");
 

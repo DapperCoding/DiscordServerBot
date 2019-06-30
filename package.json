@@ -1,0 +1,19 @@
+{
+  "name": "dapper-bot",
+  "version": "1.0.0",
+  "description": "Hello everyone, here is where you'll find my project where I am creating a Discord bot for my server to have the usual functionality of commands and events like any other Discord bot whilst also eventually adding the functionality to be able to connect with the backend of my upcoming website so that certain aspects of the Discord server will be linked online, such as leaderboards and FAQ's. The code is here so that anyone (mainly people from my server) can see how it all works and they can then impliment similar funcitonality in their own creations.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DapperCoding/DiscordServerBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DapperCoding/DiscordServerBot/issues"
+  },
+  "homepage": "https://github.com/DapperCoding/DiscordServerBot#readme"
+}

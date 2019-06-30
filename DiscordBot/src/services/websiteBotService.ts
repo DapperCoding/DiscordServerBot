@@ -1,37 +1,30 @@
-import * as discord from "discord.js";
-import * as api from "../api";
-import { compactDiscordUser } from "../models/compactDiscordUser";
-import { apiRequestHandler } from "../handlers/apiRequestHandler";
-import { email } from "../models/email";
-import * as aspnet from "@aspnet/signalr";
-import { faqMessage } from "../models/faq/faqMessage";
-import { faqHandler } from "../handlers/faqHandler";
-import { suggest } from "../models/suggest";
-import { hostingEnquiry } from "../models/signalr/hostingEnquiry";
+import * as Discord from "discord.js";
+import * as API from "../api";
+import * as ASPNET from "@aspnet/signalr";
+import { CompactDiscordUser } from "../models/compactDiscordUser";
+import { ApiRequestHandler } from "../handlers/apiRequestHandler";
+import { Email } from "../models/email";
+import { Suggest } from "../models/suggest";
+import { HostingEnquiry } from "../models/signalr/hostingEnquiry";
 import { Application } from "../models/signalr/application";
-import { ticketReaction } from "../models/ticket/ticketReaction";
-import { message } from "../models/message";
+import { TicketReaction } from "../models/ticket/ticketReaction";
+import { Message } from "../models/message";
 import TicketEmbed from "../models/ticket/ticketEmbed";
-import { channelhandler } from "../handlers/channelHandler";
-import { ticket } from "../models/ticket/ticket";
-import { discordUser } from "../models/discordUser";
-import {
-  proficiency,
-  discordUserProficiency,
-  proficiencyLevel
-} from "../models/proficiency/proficiency";
+import { ChannelHandler } from "../handlers/channelHandler";
+import { DiscordUserProficiency, ProficiencyLevel } from "../models/proficiency/proficiency";
+import { Ticket } from "../models/ticket/ticket";
 
 (<any>global).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-export class websiteBotService {
-  private _serverBot: discord.Client;
-  private _config: api.IBotConfig;
-  private _server: discord.Guild;
+export class WebsiteBotService {
+  private _serverBot: Discord.Client;
+  private _config: API.IBotConfig;
+  private _server: Discord.Guild;
 
   constructor(
-    serverBot: discord.Client,
-    config: api.IBotConfig,
-    server: discord.Guild
+    serverBot: Discord.Client,
+    config: API.IBotConfig,
+    server: Discord.Guild
   ) {
     this._serverBot = serverBot;
     this._config = config;
@@ -40,9 +33,9 @@ export class websiteBotService {
 
   startupService = () => {
     // Creates connection to our website's SignalR hub
-    const connection = new aspnet.HubConnectionBuilder()
+    const connection = new ASPNET.HubConnectionBuilder()
       .withUrl("https://dapperdino.co.uk/discordbothub")
-      .configureLogging(aspnet.LogLevel.Information)
+      .configureLogging(ASPNET.LogLevel.Information)
       .build();
 
     // Starts connection
@@ -53,7 +46,7 @@ export class websiteBotService {
 
     // Auto reconnect
     connection.onclose(() => {
-      setTimeout(function() {
+      setTimeout(function () {
         connection
           .start()
           .then(() => console.log("t"))
@@ -76,7 +69,7 @@ export class websiteBotService {
       // Get proficiency channel
       let channel = this._server.channels.find(
         c => c.name == `ticket${unsentTicketReaction.ticketId}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) return true;
 
@@ -84,7 +77,7 @@ export class websiteBotService {
 
       if (!fromUser) return true;
 
-      let reactionEmbed = new discord.RichEmbed()
+      let reactionEmbed = new Discord.RichEmbed()
         .setTitle(`Message from ${fromUser.user.username}`)
         .setDescription(unsentTicketReaction.message)
         .setThumbnail(
@@ -95,15 +88,15 @@ export class websiteBotService {
 
       // Send message if exists
       channel.send(reactionEmbed).then(msg => {
-        let reaction = new ticketReaction();
-        msg = msg as discord.Message;
+        let reaction = new TicketReaction();
+        msg = msg as Discord.Message;
 
         // Fill proficiency reaction model
         reaction.ticketId = unsentTicketReaction.ticketId;
         reaction.fromId = unsentTicketReaction.discordId; // use info from unsent
         reaction.username = unsentTicketReaction.username; // use info from unsent
 
-        reaction.discordMessage = new message();
+        reaction.discordMessage = new Message();
 
         reaction.discordMessage.message = unsentTicketReaction.message;
         reaction.discordMessage.messageId = msg.id;
@@ -114,7 +107,7 @@ export class websiteBotService {
         reaction.discordMessage.isDm = false;
 
         // Request API and add our reaction to the database.
-        new apiRequestHandler()
+        new ApiRequestHandler()
           .requestAPIWithType<any>(
             "POST",
             reaction,
@@ -127,9 +120,9 @@ export class websiteBotService {
     });
 
     // Add proficiency channel, send correct messages
-    connection.on("AddTicket", (ticket: ticket) => {
+    connection.on("AddTicket", (ticket: Ticket) => {
       // Create new channel handler
-      let handler = new channelhandler(this._server);
+      let handler = new ChannelHandler(this._server);
 
       // Get applicant as memebr
       let user = this._server.members.find(
@@ -148,7 +141,7 @@ export class websiteBotService {
     });
 
     // On 'TicketCreated' -> fires when proficiency is created through API
-    connection.on("TicketCreated", async (ticket: ticket) => {
+    connection.on("TicketCreated", async (ticket: Ticket) => {
       console.log("hi");
       // Get all members with happy to help (h2h) role
       let happyToHelpers = this.GetAllWithRole("Happy To Help");
@@ -156,12 +149,12 @@ export class websiteBotService {
       // Loop over all h2h-ers
       for (let i = 0; i < happyToHelpers.length; i++) {
         // Get information for discord user
-        new apiRequestHandler()
-          .requestAPIWithType<discordUserProficiency[]>(
+        new ApiRequestHandler()
+          .requestAPIWithType<DiscordUserProficiency[]>(
             "GET",
             null,
             "https://api.dapperdino.co.uk/api/proficiency/GetProficienciesForDiscordUser/" +
-              happyToHelpers[i].user.id,
+            happyToHelpers[i].user.id,
             this._config
           )
           .then(proficiencies => {
@@ -184,8 +177,8 @@ export class websiteBotService {
 
                   if (
                     proficiency.proficiencyLevel !=
-                      proficiencyLevel.absoluteBeginner &&
-                    proficiency.proficiencyLevel != proficiencyLevel.justStarted
+                    ProficiencyLevel.AbsoluteBeginner &&
+                    proficiency.proficiencyLevel != ProficiencyLevel.JustStarted
                   ) {
                     if (ticket.language.id == proficiency.proficiencyId) {
                       isInLanguage = true;
@@ -200,7 +193,7 @@ export class websiteBotService {
 
               if (isInFramework || isInLanguage) {
                 // Create proficiency embed
-                let ticketEmbed = new discord.RichEmbed()
+                let ticketEmbed = new Discord.RichEmbed()
                   .setTitle("Ticket: " + ticket.subject + ", has been created")
                   .setDescription(
                     ticket.applicant.username + " is in need of help!"
@@ -210,7 +203,7 @@ export class websiteBotService {
                   .addField(
                     "Thank you ",
                     happyToHelpers[i].displayName +
-                      " for being willing to assist others in our server."
+                    " for being willing to assist others in our server."
                   )
                   .addField("Language", ticket.language.name)
                   .addField("Framework", ticket.framework.name)
@@ -224,7 +217,7 @@ export class websiteBotService {
                   )
                   .setURL(
                     `https://dapperdino.co.uk/HappyToHelp/Ticket?id=${
-                      ticket.id
+                    ticket.id
                     }`
                   )
                   .setFooter("Thanks for all your help :)");
@@ -241,7 +234,7 @@ export class websiteBotService {
       if (!guild) return "Server not found";
 
       //Create embed for helpers to know that the proficiency is closed
-      let acceptTicketEmbed = new discord.RichEmbed()
+      let acceptTicketEmbed = new Discord.RichEmbed()
         .setTitle("Ticket: " + ticket.subject + ", has been created")
         .setColor("#2dff2d")
         .addField("Their description:", ticket.description)
@@ -259,7 +252,7 @@ export class websiteBotService {
       // Get tickets to accept channel
       let ticketsToAcceptChannel = guild.channels.find(
         channel => channel.name === "tickets-to-accept"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!ticketsToAcceptChannel) return "Channel not found";
 
@@ -268,7 +261,7 @@ export class websiteBotService {
     });
 
     // On 'SuggestionUpdate' -> fires when suggestion is updated on the website
-    connection.on("SuggestionUpdate", (suggestion: suggest) => {
+    connection.on("SuggestionUpdate", (suggestion: Suggest) => {
       // Get user that suggested this suggestion
       let suggestor = this._serverBot.users.get(
         suggestion.discordUser.discordId
@@ -277,7 +270,7 @@ export class websiteBotService {
       // Check if found
       if (suggestor) {
         // Create suggestion embed
-        let suggestionUpdateEmbed = new discord.RichEmbed({})
+        let suggestionUpdateEmbed = new Discord.RichEmbed({})
           .setTitle("Your suggestion has been updated!")
           .setColor("0xff0000")
           .addField(
@@ -338,14 +331,14 @@ export class websiteBotService {
     };
 
     // On 'Suggestion' -> fires when someone suggested something using the website
-    connection.on("Suggestion", (suggestion: suggest) => {
+    connection.on("Suggestion", (suggestion: Suggest) => {
       // Get user that suggested this suggestion
       const suggestor = this._serverBot.users.get(
         suggestion.discordUser.discordId
       );
 
       // Create suggestion embed
-      const suggestionEmbed = new discord.RichEmbed({})
+      const suggestionEmbed = new Discord.RichEmbed({})
         .setTitle("Your suggestion has been created!")
         .setColor("0xff0000")
         .addField(
@@ -369,7 +362,7 @@ export class websiteBotService {
 
         const h2hChat = this._server.channels.find(
           channel => channel.name.toLowerCase() === "dapper-team"
-        ) as discord.TextChannel;
+        ) as Discord.TextChannel;
 
         h2hChat.send(suggestionEmbed);
       }
@@ -385,13 +378,13 @@ export class websiteBotService {
       // If FAQ channel is found
       if (faqChannel) {
         // Get as text channel
-        let channel = faqChannel as discord.TextChannel;
+        let channel = faqChannel as Discord.TextChannel;
 
         // Try to find discordMessage with id of updated faq item
         let message = await channel.fetchMessage(faq.discordMessage.messageId);
 
         // Create faq embed
-        let faqEmbed = new discord.RichEmbed()
+        let faqEmbed = new Discord.RichEmbed()
           .setTitle("-Q: " + faq.question)
           .setDescription("-A: " + faq.answer)
           .setColor("#2dff2d");
@@ -417,7 +410,7 @@ export class websiteBotService {
 
     connection.on("ProductEnquiry", productEnquiry => {
       let dapperCodingTeam = this.GetAllWithRole("dappercoding");
-      let enquiryEmbed = new discord.RichEmbed()
+      let enquiryEmbed = new Discord.RichEmbed()
         .setTitle(
           `A user has requested contact regarding the ${productEnquiry.product}`
         )
@@ -438,7 +431,7 @@ export class websiteBotService {
       );
       if (testUser) {
         try {
-          let productEnquiryEmbed = new discord.RichEmbed()
+          let productEnquiryEmbed = new Discord.RichEmbed()
             .setTitle("Thanks for your requesting contact!")
             .setColor("0xff0000")
             .addField(
@@ -447,24 +440,24 @@ export class websiteBotService {
             )
             .setFooter("With ❤ by the DapperCoding team");
           testUser.send(productEnquiryEmbed).catch(console.error);
-        } catch (e) {}
+        } catch (e) { }
       }
       return true;
     });
 
-    connection.on("HostingEnquiry", (enquiry: hostingEnquiry) => {
+    connection.on("HostingEnquiry", (enquiry: HostingEnquiry) => {
       const channel = this._server.channels.find(
         channel => channel.name.toLowerCase() === "dapper-coding"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
       const discordUser = this._server.members.get(enquiry.discordId);
 
       if (channel == null) return true;
 
       let dapperCodingTeam = this.GetAllWithRole("dappercoding");
-      let hostingEmbed = new discord.RichEmbed()
+      let hostingEmbed = new Discord.RichEmbed()
         .setTitle(
           `A user has requested contact regarding the hosting ${
-            enquiry.packageType
+          enquiry.packageType
           }`
         )
         .setColor("0x00ff00")
@@ -488,7 +481,7 @@ export class websiteBotService {
 
       if (discordUser) {
         try {
-          let hostingEnquiryEmbed = new discord.RichEmbed()
+          let hostingEnquiryEmbed = new Discord.RichEmbed()
             .setTitle(
               "Thanks for taking interest in one of our hosting packages!"
             )
@@ -497,12 +490,12 @@ export class websiteBotService {
             .addField(
               "Information",
               `You'll receive more information about hosting package: ${
-                enquiry.package
+              enquiry.package
               }, soon.`
             )
             .setFooter("With ❤ by the DapperCoding team");
           discordUser.send(hostingEnquiryEmbed).catch(console.error);
-        } catch (e) {}
+        } catch (e) { }
       }
       return true;
     });
@@ -510,10 +503,10 @@ export class websiteBotService {
     connection.on("Application", (application: Application) => {
       const channel = this._server.channels.find(
         channel => channel.name.toLowerCase() === "dapper-coding"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
       const dapperCodingTeam = this.GetAllWithRole("dappercoding");
       const discordUser = this._server.members.get(application.discordId);
-      const applicationEmbed = new discord.RichEmbed()
+      const applicationEmbed = new Discord.RichEmbed()
         .setTitle(`A user has applied for the happy to help role`)
         .addField("First name", application.firstName)
         .addField("Last name", application.lastName)
@@ -541,7 +534,7 @@ export class websiteBotService {
 
       if (discordUser) {
         try {
-          let appliedEmbed = new discord.RichEmbed()
+          let appliedEmbed = new Discord.RichEmbed()
             .setTitle("Thanks for your application!")
             .setColor("0xff0000")
             .addField(
@@ -550,7 +543,7 @@ export class websiteBotService {
             )
             .setFooter("With ❤ by the DapperCoding team");
           discordUser.send(appliedEmbed).catch(console.error);
-        } catch (e) {}
+        } catch (e) { }
       }
       return true;
     });
@@ -574,7 +567,7 @@ export class websiteBotService {
 
       let channel = this._server.channels.find(
         channel => channel.name.toLowerCase() == "dapper-team"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
       if (channel == null) return false;
 
       channel
@@ -595,19 +588,19 @@ export class websiteBotService {
         channel.delete("Closed through ticket portal (web)");
       }
 
-      let completedTicketEmbed = new discord.RichEmbed()
+      let completedTicketEmbed = new Discord.RichEmbed()
         .setTitle(`Ticket ${information.ticket.id} has been completed!`)
         .setColor("#ff0000")
         .setDescription(
           `${
-            information.ticket.applicant.username
+          information.ticket.applicant.username
           }'s problem has now been resolved, good job`
         );
 
       // Get completed tickets channel
       let completedTicketsChannel = this.GetChannel(
         "completed-tickets"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!completedTicketsChannel) return "Channel not found";
 
@@ -619,7 +612,7 @@ export class websiteBotService {
     connection.on("CloseTicketEmbed", async (info: TicketEmbed) => {
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -632,7 +625,7 @@ export class websiteBotService {
       }
 
       // Create embed that tells the creator to close the proficiency
-      let endTicketEmbed = new discord.RichEmbed()
+      let endTicketEmbed = new Discord.RichEmbed()
         .setTitle(
           `${info.user.username} thinks that this ticket can be closed now`
         )
@@ -649,7 +642,7 @@ export class websiteBotService {
     connection.on("Error", async (info: TicketEmbed) => {
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -668,7 +661,7 @@ export class websiteBotService {
       }
 
       // Create embed that tells the creator to send their errors
-      let errorEmbed = new discord.RichEmbed()
+      let errorEmbed = new Discord.RichEmbed()
         .setColor("#ff0000")
         .setTitle(`Please send us your errors`)
         .setDescription(`${user.user.username} asks you to send your errors`)
@@ -693,7 +686,7 @@ export class websiteBotService {
     connection.on("Code", async (info: TicketEmbed) => {
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -712,7 +705,7 @@ export class websiteBotService {
       }
 
       // Create embed that tells the creator to send their errors
-      let errorEmbed = new discord.RichEmbed()
+      let errorEmbed = new Discord.RichEmbed()
         .setColor("#00ff00")
         .setTitle(`Please send us your code`)
         .setDescription(`${user.user.username} asks you to send your code`)
@@ -737,7 +730,7 @@ export class websiteBotService {
     connection.on("YtdlFix", async (info: TicketEmbed) => {
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -751,16 +744,16 @@ export class websiteBotService {
       let url = "https://dapperdino.co.uk/ytdl-fix.zip";
 
       // Create embed that tells the creator to close the proficiency
-      let ytdlfixEmbed = new discord.RichEmbed()
+      let ytdlfixEmbed = new Discord.RichEmbed()
         .setColor("#ff0000")
         .setTitle("The YTDL Fix")
         .setURL(url)
         .addField(
           "Please download the zip file " +
-            info.ticket.applicant.username +
-            ".",
+          info.ticket.applicant.username +
+          ".",
           info.user.username +
-            " asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
+          " asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
         )
         .addField(
           "Video explanation:",
@@ -778,7 +771,7 @@ export class websiteBotService {
     connection.on("Debugger", async (info: TicketEmbed) => {
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -791,7 +784,7 @@ export class websiteBotService {
       }
 
       // Create embed that tells the creator to close the proficiency
-      let endTicketEmbed = new discord.RichEmbed()
+      let endTicketEmbed = new Discord.RichEmbed()
         .setColor("#ff0000")
         .setTitle(`Hey ${info.ticket.applicant.username} - just a tip`)
         .setDescription(
@@ -812,7 +805,7 @@ export class websiteBotService {
       // console.log(info);
       let channel = this.GetChannel(
         `ticket${info.ticket.id}`
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!channel) {
         return true;
@@ -832,7 +825,7 @@ export class websiteBotService {
         EMBED_LINKS: true
       });
 
-      let acceptedTicketembed = new discord.RichEmbed()
+      let acceptedTicketembed = new Discord.RichEmbed()
         .setTitle(`${info.user.username} is here to help you!`)
         .setThumbnail(user.user.avatarURL)
         .setColor("#2dff2d")
@@ -840,10 +833,10 @@ export class websiteBotService {
           "Please treat them nicely and they will treat you nicely back :)"
         );
 
-      (channel as discord.TextChannel).send(acceptedTicketembed);
+      (channel as Discord.TextChannel).send(acceptedTicketembed);
 
       //Create embed for helpers to know that the proficiency is closed
-      let inProgressEmbed = new discord.RichEmbed()
+      let inProgressEmbed = new Discord.RichEmbed()
         .setTitle(
           `Ticket ${info.ticket.id} has been accepted by ${user.displayName}!`
         )
@@ -858,7 +851,7 @@ export class websiteBotService {
       // Get completed tickets channel
       let inProgressChannel = this._server.channels.find(
         channel => channel.name === "tickets-in-progress"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!inProgressChannel) return "Channel not found";
 
@@ -872,7 +865,7 @@ export class websiteBotService {
     let allUsers = this._server.members.array();
 
     //Create an array to story all the members with the requested role
-    let usersWithRole = new Array<discord.GuildMember>();
+    let usersWithRole = new Array<Discord.GuildMember>();
 
     //Loop through all the members in the server
     for (let i = 0; i < allUsers.length; i++) {
@@ -907,7 +900,7 @@ export class websiteBotService {
     let user = this._serverBot.users.find(user => user.username === username);
 
     // Create compact discord user
-    let userObject = new compactDiscordUser();
+    let userObject = new CompactDiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {
@@ -926,7 +919,7 @@ export class websiteBotService {
     let user = this._serverBot.users.find(user => user.id === id);
 
     // Create compact discord user
-    let userObject = new compactDiscordUser();
+    let userObject = new CompactDiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {
@@ -942,13 +935,13 @@ export class websiteBotService {
   // Get discord user by email from API
   public GetDiscordUserByEmail(emailAddress: string) {
     // Create new Email object
-    let emailObject = new email();
+    let emailObject = new Email();
 
     // Add email address to it
     emailObject.email = emailAddress;
 
     // Get response from api
-    let responseData = new apiRequestHandler().requestAPI(
+    let responseData = new ApiRequestHandler().requestAPI(
       "POST",
       emailObject,
       "https://dapperdinoapi.azurewebsites.net/api/search/user",

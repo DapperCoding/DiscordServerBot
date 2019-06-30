@@ -1,13 +1,11 @@
 const request = require('request');
-import { IBotConfig } from '../api'
 import * as fs from 'fs'
-import * as discord from 'discord.js';
-import { resolve } from 'dns';
-import { discordUser } from '../models/discordUser';
+import * as Discord from 'discord.js';
+import { IBotConfig } from '../api'
 
-export class apiRequestHandler {
+export class ApiRequestHandler {
 
-    constructor(serverBot?: discord.Client, config?: IBotConfig) {
+    constructor(serverBot?: Discord.Client, config?: IBotConfig) {
         if (serverBot) this._serverBot = serverBot;
         if (config) this._config = config;
     }
@@ -18,7 +16,7 @@ export class apiRequestHandler {
         'Content-Type': 'application/json',
         'Authorization': ``
     }
-    private _serverBot?: discord.Client;
+    private _serverBot?: Discord.Client;
     private _config?: IBotConfig;
 
     public async requestAPI(httpType: 'POST' | 'DELETE' | 'PUT' | 'PATCH' | 'GET' | 'HEAD' | 'OPTIONS' | 'CONNECT' | 'TRACE', data: any, requestUrl: string, config: IBotConfig) {
@@ -58,7 +56,7 @@ export class apiRequestHandler {
 
                         if (!guild) return ("Configured server not found");
 
-                        let channel = guild.channels.find(c => c.name == "web-error-log") as discord.TextChannel;
+                        let channel = guild.channels.find(c => c.name == "web-error-log") as Discord.TextChannel;
 
                         if (!channel) return ("web-error-log channel not found")
 

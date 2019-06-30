@@ -1,13 +1,13 @@
-import { resourceLink } from "./resourceLink";
+import { ResourceLink } from "./resourceLink";
 
-export interface faq {
+export interface Faq {
     id: number;
-    Description: string;
-    Question: string;
-    Answer: string;
-    ResourceLink: resourceLink
+    description: string;
+    question: string;
+    answer: string;
+    resourceLink: ResourceLink;
 }
 
-export class faq implements faq {
+export class Faq implements Faq {
 
 }

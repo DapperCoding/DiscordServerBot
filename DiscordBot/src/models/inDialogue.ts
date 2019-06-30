@@ -1,10 +1,10 @@
 
-export interface inDialogue {
-    channelId:string;
-    userId:string;
-    timestamp:Date;
+export interface InDialogue {
+    channelId: string;
+    userId: string;
+    timestamp: Date;
 }
 
-export class inDialogue implements inDialogue {
+export class InDialogue implements InDialogue {
 
 }

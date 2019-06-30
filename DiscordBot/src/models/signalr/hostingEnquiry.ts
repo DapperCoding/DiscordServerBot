@@ -1,14 +1,13 @@
-
-export class hostingEnquiry {
+export class HostingEnquiry {
     public discordId:string = "";
     public firstName:string="";
     public lastName:string="";
     public package:string="";
-    public packageType: hostingType = hostingType.small;
+    public packageType: HostingType = HostingType.Small;
 }
 
-export enum hostingType {
-    small = 0,
-    pro = 1,
-    enterprise = 2
+export enum HostingType {
+    Small = 0,
+    Pro = 1,
+    Enterprise = 2
 }

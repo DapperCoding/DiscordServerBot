@@ -1,7 +1,7 @@
-export interface compactPostXp {
+export interface CompactPostXp {
     xp: number;
 }
 
-export class compactPostXp implements compactPostXp {
+export class CompactPostXp implements CompactPostXp {
 
 }

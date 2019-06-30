@@ -1,9 +1,9 @@
-import { postXp } from './postXp';
+import { PostXp } from './postXp';
 
-export interface receiveXp extends postXp{
+export interface ReceiveXp extends PostXp{
     level: number;
 }
 
-export class receiveXp implements receiveXp {
+export class ReceiveXp implements ReceiveXp {
 
 }

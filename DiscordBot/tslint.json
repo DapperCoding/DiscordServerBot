@@ -9,7 +9,7 @@
         "indent": [
             true,
             "spaces",
-            4
+            2
         ],
         "object-literal-sort-keys": false,
         "quotemark": [

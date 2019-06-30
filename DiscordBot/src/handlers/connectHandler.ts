@@ -1,16 +1,16 @@
-import * as discord from 'discord.js';
-import * as api from '../api';
-import { apiRequestHandler } from './apiRequestHandler';
-import { registerModel } from '../models/registerModel';
-import { discordUser } from '../models/discordUser';
+import * as Discord from 'discord.js';
+import * as API from '../api';
+import { ApiRequestHandler } from './apiRequestHandler';
+import { RegisterModel } from '../models/registerModel';
+import { DiscordUser } from '../models/discordUser';
 
-export class connectHandler {
+export class ConnectHandler {
 
     // Config used for api
-    private _config: api.IBotConfig;
-    private _client: discord.Client;
+    private _config: API.IBotConfig;
+    private _client: Discord.Client;
 
-    constructor(client: discord.Client, config: api.IBotConfig) {
+    constructor(client: Discord.Client, config: API.IBotConfig) {
 
         // Register config
         this._config = config;
@@ -18,7 +18,7 @@ export class connectHandler {
     }
 
 
-    public async registerDiscord(message: discord.Message) {
+    public async registerDiscord(message: Discord.Message) {
 
         // Return new promise
         return new Promise(async (resolve, reject) => {
@@ -27,7 +27,7 @@ export class connectHandler {
             let registerDiscordUrl = 'https://api.dapperdino.co.uk/api/Account/RegisterDiscord/';
 
             // Create new registerModel
-            let model = new registerModel();
+            let model = new RegisterModel();
 
             // Add user information
             model.username = message.author.username;
@@ -42,8 +42,8 @@ export class connectHandler {
 
             // Request API
             try {
-                const discordAccount = await new apiRequestHandler(this._client, this._config)
-                    .requestAPIWithType<discordUser>("POST", model, registerDiscordUrl, this._config);
+                const discordAccount = await new ApiRequestHandler(this._client, this._config)
+                    .requestAPIWithType<DiscordUser>("POST", model, registerDiscordUrl, this._config);
                 // Send okay message
                 this.sendOkMessage(message, discordAccount);
                 // Resolve
@@ -59,11 +59,11 @@ export class connectHandler {
         });
     }
 
-    public async sendOkMessage(message: discord.Message, model) {
+    public async sendOkMessage(message: Discord.Message, model) {
         message.reply("You have successfully connected your discord account");
     }
 
-    public async sendRejectMessage(message: discord.Message, reason) {
+    public async sendRejectMessage(message: Discord.Message, reason) {
         message.reply(reason);
     }
 }

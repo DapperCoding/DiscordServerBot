@@ -1,21 +1,20 @@
-import * as discord from "discord.js";
-import * as api from "../api";
-import { apiRequestHandler } from "../handlers/apiRequestHandler";
-import { ticketReaction } from "../models/ticket/ticketReaction";
-import { ticketReceive } from "../models/ticket/ticketReceive";
-import * as msg from "../models/message";
+import * as Discord from "discord.js";
+import * as API from "../api";
+import { Message } from "../models/message";
+import { ApiRequestHandler } from "../handlers/apiRequestHandler";
+import { TicketReaction } from "../models/ticket/ticketReaction";
 
-export class messageService {
-  private _serverBot: discord.Client;
-  private _config: api.IBotConfig;
+export class MessageService {
+  private _serverBot: Discord.Client;
+  private _config: API.IBotConfig;
 
-  constructor(serverBot: discord.Client, config: api.IBotConfig) {
+  constructor(serverBot: Discord.Client, config: API.IBotConfig) {
     this._serverBot = serverBot;
     this._config = config;
   }
 
-  public addBotMessage(message: discord.Message) {
-    let discordMessage = new msg.message();
+  public addBotMessage(message: Discord.Message) {
+    let discordMessage = new Message();
 
     discordMessage.message = message.content;
     discordMessage.messageId = message.id;
@@ -26,7 +25,7 @@ export class messageService {
     discordMessage.isDm = false;
 
     // Request API and add our reaction to the database.
-    new apiRequestHandler()
+    new ApiRequestHandler()
       .requestAPI(
         "POST",
         discordMessage,
@@ -37,7 +36,7 @@ export class messageService {
       .catch(console.error);
   }
 
-  public handleMessageInTicketCategory(message: discord.Message) {
+  public handleMessageInTicketCategory(message: Discord.Message) {
     // Now using luis
     // if (message.content.indexOf("TypeError [ERR_INVALID_ARG_TYPE]: The \"file\" argument must be of type string.") >= 0) {
     //     let embed = this.createYtdlEmbed(message.member, message);
@@ -45,19 +44,19 @@ export class messageService {
     // }
 
     // Get ticket channel id from channel name
-    let ticketChannelId = (message.channel as discord.TextChannel).name
+    let ticketChannelId = (message.channel as Discord.TextChannel).name
       .toString()
       .replace("ticket", "")
       .toString();
 
-    let reaction = new ticketReaction();
+    let reaction = new TicketReaction();
 
     // Fill ticket reaction model
     reaction.ticketId = parseInt(ticketChannelId);
     reaction.fromId = message.author.id;
     reaction.username = message.author.username;
 
-    reaction.discordMessage = new msg.message();
+    reaction.discordMessage = new Message();
 
     reaction.discordMessage.message = message.content;
     reaction.discordMessage.messageId = message.id;
@@ -68,7 +67,7 @@ export class messageService {
     reaction.discordMessage.isDm = false;
 
     // Request API and add our reaction to the database.
-    new apiRequestHandler()
+    new ApiRequestHandler()
       .requestAPI(
         "POST",
         reaction,
@@ -90,7 +89,7 @@ export class messageService {
     oldChannelId: string,
     oldMessageId: string,
     newChannelId: string,
-    message: discord.Message | discord.RichEmbed
+    message: Discord.Message | Discord.RichEmbed
   ) {
     //Return new promise, resolves if the new discordMessage is sent
     return new Promise<string>(async (resolve, reject) => {
@@ -100,7 +99,7 @@ export class messageService {
       if (!guild) return reject("Server not found");
 
       // Get old channel
-      let channel = guild.channels.get(oldChannelId) as discord.TextChannel;
+      let channel = guild.channels.get(oldChannelId) as Discord.TextChannel;
 
       if (!channel) return reject("Old channel not found");
 
@@ -110,7 +109,7 @@ export class messageService {
       if (!oldMessage) return reject("Old message not found");
 
       // Get new channel
-      let newChannel = guild.channels.get(newChannelId) as discord.TextChannel;
+      let newChannel = guild.channels.get(newChannelId) as Discord.TextChannel;
 
       if (!newChannel) return reject("New channel not found");
 
@@ -121,34 +120,10 @@ export class messageService {
       return newChannel
         .send(message)
         .then(msg => {
-          return resolve((msg as discord.Message).id);
+          return resolve((msg as Discord.Message).id);
         })
         .catch(reject);
     });
   }
 
-  private createYtdlEmbed(
-    ytdlUser: discord.GuildMember,
-    message: discord.Message
-  ): discord.RichEmbed {
-    let matches = message.content.match(/\bhttps?:\/\/\S+/gi);
-    let url = "https://dapperdino.co.uk/ytdl-fix.zip";
-
-    if (matches != null) {
-      url = matches[0];
-    }
-
-    return new discord.RichEmbed()
-      .setColor("#ff0000")
-      .setTitle("The YTDL Fix")
-      .setURL(url)
-      .addField(
-        "Please download the zip file " + ytdlUser.displayName + ".",
-        message.author +
-          " asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
-      )
-      .setFooter(
-        "If you keep experiencing errors, feel free to ask your question in a ticket."
-      );
-  }
 }

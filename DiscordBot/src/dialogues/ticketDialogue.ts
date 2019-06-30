@@ -1,16 +1,16 @@
-import * as discord from "discord.js";
-import { validationError } from "../errors";
+import * as Discord from "discord.js";
+import { ValidationError } from "../error";
 
-export class ticketDialogue {
+export class TicketDialogue {
   /**
    * titleStep
    */
-  public titleStep(response: discord.Message, data: ticketDialogueData) {
-    return new Promise<ticketDialogueData>((resolve, reject) => {
+  public titleStep(response: Discord.Message, data: TicketDialogueData) {
+    return new Promise<TicketDialogueData>((resolve, reject) => {
       try {
         if (response.content.length < 20) {
           reject(
-            new validationError(
+            new ValidationError(
               `Minimum length for title is 20 characters, current length: ${
                 response.content.length
               }.`
@@ -20,7 +20,7 @@ export class ticketDialogue {
 
         if (response.content.length > 100) {
           return reject(
-            new validationError(
+            new ValidationError(
               `Title may not exceed 100 characters, current length: ${
                 response.content.length
               }.`
@@ -39,12 +39,12 @@ export class ticketDialogue {
   /**
    * descriptionStep
    */
-  public descriptionStep(response: discord.Message, data: ticketDialogueData) {
-    return new Promise<ticketDialogueData>((resolve, reject) => {
+  public descriptionStep(response: Discord.Message, data: TicketDialogueData) {
+    return new Promise<TicketDialogueData>((resolve, reject) => {
       try {
         if (response.content.length < 60) {
           reject(
-            new validationError(
+            new ValidationError(
               `Minimum length for description is 60 characters, current length: ${
                 response.content.length
               }.`
@@ -55,7 +55,7 @@ export class ticketDialogue {
 
         if (response.content.length > 700) {
           reject(
-            new validationError(
+            new ValidationError(
               `Description may not exceed 700 characters, current length: ${
                 response.content.length
               }.`
@@ -75,8 +75,8 @@ export class ticketDialogue {
   /**
    * categoryStep
    */
-  public categoryStep(response: string, data: ticketDialogueData) {
-    return new Promise<ticketDialogueData>((resolve, reject) => {
+  public categoryStep(response: string, data: TicketDialogueData) {
+    return new Promise<TicketDialogueData>((resolve, reject) => {
       try {
         data.category = response;
         return resolve(data);
@@ -87,10 +87,10 @@ export class ticketDialogue {
   }
 }
 
-export interface ticketDialogueData {
+export interface TicketDialogueData {
   title: string;
   description: string;
   category: string;
 }
 
-export class ticketDialogueData implements ticketDialogueData {}
+export class TicketDialogueData implements TicketDialogueData {}

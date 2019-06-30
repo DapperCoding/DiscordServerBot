@@ -1,7 +1,7 @@
-import { ticket } from "./ticket";
-import { discordUser } from "../discordUser";
+import { Ticket } from "./ticket";
+import { DiscordUser } from "../discordUser";
 
 export default interface TicketEmbed {
-    ticket:ticket;
-    user:discordUser;
+    ticket: Ticket;
+    user: DiscordUser;
 }

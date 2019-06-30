@@ -1,11 +1,11 @@
-import { discordUser } from "./discordUser";
+import { DiscordUser } from "./discordUser";
 
-export interface suggest {
+export interface Suggest {
     description: string;
     type: SuggestionTypes;
-    discordUser: discordUser
+    discordUser: DiscordUser
     id: string;
-    status:SuggestionStatus;
+    status: SuggestionStatus;
 }
 
 export enum SuggestionTypes {
@@ -26,6 +26,6 @@ export enum SuggestionStatus {
 }
 
 
-export class suggest implements suggest {
+export class Suggest implements Suggest {
 
 }

@@ -1,57 +1,55 @@
-import * as discord from 'discord.js';
-import * as api from '../api';
-import { apiRequestHandler } from './apiRequestHandler';
-import { faqMessage } from '../models/faq/faqMessage';
-import { resolve } from 'url';
-import { faq } from '../models/faq/faq';
-import { receiveFaq } from '../models/faq/receiveFaq'
-import * as msg from "../models/message";
+import * as Discord from 'discord.js';
+import * as API from '../api';
+import { ApiRequestHandler } from './apiRequestHandler';
+import { FaqMessage } from '../models/faq/faqMessage';
+import { Faq } from '../models/faq/faq';
+import { ReceiveFaq } from '../models/faq/receiveFaq'
+import { Message } from "../models/message";
 
+export class FaqHandler {
+    private _config: API.IBotConfig;
 
-export class faqHandler {
-    private _config: api.IBotConfig;
-
-    constructor(config: api.IBotConfig) {
+    constructor(config: API.IBotConfig) {
         this._config = config;
     }
 
     // Create new faq item by using the API
-    public async addFaq(faqObject: faq) {
+    public async addFaq(faqObject: Faq) {
 
         // Create new promise
-        return new Promise<receiveFaq>(async (resolve, reject) => {
+        return new Promise<ReceiveFaq>(async (resolve, reject) => {
 
             // Return finished request 
-            return new apiRequestHandler()
-                .requestAPIWithType<receiveFaq>("POST", faqObject, 'https://api.dapperdino.co.uk/api/faq', this._config)
+            return new ApiRequestHandler()
+                .requestAPIWithType<ReceiveFaq>("POST", faqObject, 'https://api.dapperdino.co.uk/api/faq', this._config)
                 .then((faqReturnObject) => {
                     return resolve(faqReturnObject);
                 })
-                .catch(err => { 
-                    return reject(err); 
+                .catch(err => {
+                    return reject(err);
                 });
         })
     }
 
     // Sets faq discordMessage in the database through our API
-    public setFaqMessageId(message: discord.Message, faqId: number, config: api.IBotConfig) {
+    public setFaqMessageId(message: Discord.Message, faqId: number, config: API.IBotConfig) {
 
         // Create new faqMessage object
-        let faqMessageObject = new faqMessage();
+        let faqMessageObject = new FaqMessage();
 
         // Fill with faq & discordMessage id
         faqMessageObject.id = faqId;
 
-        faqMessageObject.message = new msg.message();
+        faqMessageObject.message = new Message();
 
         faqMessageObject.message.channelId = message.channel.id;
         faqMessageObject.message.guildId = message.guild.id;
         faqMessageObject.message.isEmbed = message.embeds.length > 0;
         faqMessageObject.message.messageId = message.id;
-        faqMessageObject.message.isDm = message.channel instanceof discord.DMChannel;
+        faqMessageObject.message.isDm = message.channel instanceof Discord.DMChannel;
 
         faqMessageObject.message.timestamp = new Date(message.createdTimestamp);
         // Request API
-        new apiRequestHandler().requestAPI("POST", faqMessageObject, 'https://api.dapperdino.co.uk/api/faq/AddMessageId', config)
+        new ApiRequestHandler().requestAPI("POST", faqMessageObject, 'https://api.dapperdino.co.uk/api/faq/AddMessageId', config)
     }
 }

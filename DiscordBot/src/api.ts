@@ -1,9 +1,9 @@
-import * as discord from "discord.js";
-import { websiteBotService } from "./services/websiteBotService";
+import * as Discord from "discord.js";
+import { CommandData } from "./models/commandData";
 
 export interface ILoggerMethod {
-  (msg: string, ...args: any[]): void;
-  (obj: object, msg?: string, ...args: any[]): void;
+  (message: string, ...args: any[]): void;
+  (obj: object, message?: string, ...args: any[]): void;
 }
 
 export interface ILogger {
@@ -14,20 +14,16 @@ export interface ILogger {
 }
 
 export interface IBotConfig {
-  luisApiKey: any;
-  luisAppId: any;
   token: string;
+  prefix: string;
   serverId: string;
-  welcomeChannel: string;
-  faqChannel: string;
-  reportChannel: string;
-  kicksAndBansChannel: string;
   apiBearerToken: string;
   apiEmail: string;
   apiPassword: string;
-  commands: string[];
-  game?: string;
-  username?: string;
+  luisAppId: any;
+  luisApiKey: any;
+  welcomeChannel: string;
+  faqChannel: string;
 }
 
 export interface IBotCommandHelp {
@@ -38,7 +34,6 @@ export interface IBotCommandHelp {
 
 export interface IBot {
   readonly commands: IBotCommand[];
-  readonly logger: ILogger;
   readonly allUsers: IUser[];
   readonly onlineUsers: IUser[];
   start(
@@ -50,21 +45,13 @@ export interface IBot {
 }
 
 export interface IBotCommand {
-  getHelp(): IBotCommandHelp;
-  canUseInChannel(channel: discord.TextChannel): boolean;
-  canUseCommand(roles: discord.Role[], message?: discord.Message);
+  readonly commandWords: string[];
   init(bot: IBot, dataPath: string): void;
-  isValid(msg: string): boolean;
-  process(
-    msg: string,
-    answer: IBotMessage,
-    msgObj: discord.Message,
-    client: discord.Client,
-    config: IBotConfig,
-    commands: IBotCommand[],
-    webBotService: websiteBotService,
-    guild: discord.Guild
-  ): Promise<void>;
+  isValid(message: string, config: IBotConfig): boolean;
+  getHelp(): IBotCommandHelp;
+  process(commandData: CommandData): Promise<void>;
+  canUseInChannel(channel: Discord.TextChannel): boolean;
+  canUseCommand(roles: Discord.Role[], message?: Discord.Message): boolean;
 }
 
 export interface IUser {

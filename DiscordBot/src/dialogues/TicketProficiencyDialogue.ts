@@ -1,7 +1,7 @@
-import { apiRequestHandler } from "../handlers/apiRequestHandler";
+import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { Message, RichEmbed } from "discord.js";
 import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
-import { proficiency } from "../models/proficiency/proficiency";
+import { Proficiency } from "../models/proficiency/proficiency";
 import { IBotConfig } from "../api";
 
 export class TicketProficiencyDialogue {
@@ -9,13 +9,13 @@ export class TicketProficiencyDialogue {
    * test
    */
   public SelectLanguage(message: Message, config: IBotConfig) {
-    return new Promise<proficiency>((resolve, reject) => {
+    return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Choose the language");
 
-      new apiRequestHandler(message.client, config)
+      new ApiRequestHandler(message.client, config)
 
         // Set params for requestAPI
-        .requestAPIWithType<proficiency[]>(
+        .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
           `https://api.dapperdino.co.uk/api/proficiency/getlanguages`,
@@ -105,13 +105,13 @@ export class TicketProficiencyDialogue {
   }
 
   public SelectFramework(message: Message, config: IBotConfig) {
-    return new Promise<proficiency>((resolve, reject) => {
+    return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Select the framework");
 
-      new apiRequestHandler(message.client, config)
+      new ApiRequestHandler(message.client, config)
 
         // Set params for requestAPI
-        .requestAPIWithType<proficiency[]>(
+        .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
           `https://api.dapperdino.co.uk/api/proficiency/getFrameworks`,
@@ -202,5 +202,5 @@ interface TicketLangueWithHandler {
   clickHandler: (
     data: TicketLangueWithHandler
   ) => Promise<{ embed: RichEmbed; category: string }>;
-  proficiency: proficiency;
+  proficiency: Proficiency;
 }

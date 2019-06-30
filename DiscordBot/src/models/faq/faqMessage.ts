@@ -1,10 +1,10 @@
-import { message } from "../message";
+import { Message } from "../message";
 
-export interface faqMessage {
+export interface FaqMessage {
     id: number;
-    message: message;
+    message: Message;
 }
 
-export class faqMessage implements faqMessage {
+export class FaqMessage implements FaqMessage {
 
 }

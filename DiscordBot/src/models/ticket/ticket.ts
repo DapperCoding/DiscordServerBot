@@ -1,15 +1,15 @@
-import { applicant } from "./applicant";
-import { proficiency } from "../proficiency/proficiency";
+import { Applicant } from "./applicant";
+import { Proficiency } from "../proficiency/proficiency";
 
-export interface ticket {
+export interface Ticket {
   id: number;
   description: string;
   subject: string;
-  applicant: applicant;
-  language: proficiency;
+  applicant: Applicant;
+  language: Proficiency;
   languageId: number;
-  frameworkId:number;
-  framework: proficiency;
+  frameworkId: number;
+  framework: Proficiency;
 }
 
-export class ticket implements ticket {}
+export class Ticket implements Ticket { }

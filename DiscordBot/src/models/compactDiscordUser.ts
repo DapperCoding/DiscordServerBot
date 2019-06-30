@@ -1,8 +1,8 @@
-export interface compactDiscordUser {
+export interface CompactDiscordUser {
     discordId: string;
     username: string;
 }
 
-export class compactDiscordUser implements compactDiscordUser {
-    
+export class CompactDiscordUser implements CompactDiscordUser {
+
 }

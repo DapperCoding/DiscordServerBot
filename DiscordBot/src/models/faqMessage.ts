@@ -1,8 +1,8 @@
-export interface faqMessage {
-    Id: number;
+export interface FaqMessage {
+    id: number;
     messageId: string;
 }
 
-export class faqMessage implements faqMessage {
+export class FaqMessage implements FaqMessage {
 
 }

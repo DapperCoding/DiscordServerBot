@@ -1,8 +1,8 @@
-export interface applicant {
+export interface Applicant {
     discordId: string;
     username: string
 }
 
-export class applicant implements applicant {
-    
+export class Applicant implements Applicant {
+
 }

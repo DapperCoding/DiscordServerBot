@@ -1,55 +1,54 @@
-import * as discord from 'discord.js';
-import * as api from '../api';
-import { apiRequestHandler } from './apiRequestHandler';
-import { postXp } from '../models/xp/postXp';
-import { compactDiscordUser } from '../models/compactDiscordUser';
-import { receiveXp } from '../models/xp/receiveXp';
-import { compactPostXp } from '../models/xp/compactPostXp';
+import * as Discord from 'discord.js';
+import * as API from '../api';
+import { ApiRequestHandler } from './apiRequestHandler';
+import { PostXp } from '../models/xp/postXp';
+import { ReceiveXp } from '../models/xp/receiveXp';
+import { CompactPostXp } from '../models/xp/compactPostXp';
 
-export class xpHandler {
-    private _config: api.IBotConfig;
+export class XpHandler {
+    private _config: API.IBotConfig;
 
-    constructor(config: api.IBotConfig) {
+    constructor(config: API.IBotConfig) {
         this._config = config;
     }
 
     private baseUrl = 'https://api.dapperdino.co.uk/api/xp/';
 
-    public async IncreaseXpOnMessage(message: discord.Message) {
+    public async IncreaseXpOnMessage(message: Discord.Message) {
         let userXpURL = this.baseUrl + message.author.id;
 
-        let xpObject: postXp = new postXp();
+        let xpObject: PostXp = new PostXp();
         let xpValue = Math.floor(Math.random() * 10) + 5;
         xpObject.xp = xpValue;
         xpObject.discordId = message.author.id;
         xpObject.username = message.author.username;
 
-        new apiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
+        new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
     }
 
-    public async IncreaseXp(message: discord.Message, xp: number) {
+    public async IncreaseXp(message: Discord.Message, xp: number) {
         let userXpURL = this.baseUrl +  message.author.id;
 
-        let xpObject: postXp = new postXp();
+        let xpObject: PostXp = new PostXp();
         xpObject.xp = xp;
         xpObject.discordId = message.author.id;
         xpObject.username = message.author.username;
 
-        new apiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
+        new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
     }
 
     public async IncreaseXpDefault(discordId:string, xp:number){
         let userXpURL = this.baseUrl +  discordId;
 
-        let xpObject: compactPostXp = new compactPostXp();
+        let xpObject: CompactPostXp = new CompactPostXp();
         xpObject.xp = xp;
 
-        new apiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
+        new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL, this._config)
     }
 
     public async GetLevelData() {
 
-        new apiRequestHandler().requestAPI("GET", null, this.baseUrl, this._config)
+        new ApiRequestHandler().requestAPI("GET", null, this.baseUrl, this._config)
             .then((xpArray) => {
                 console.log(xpArray);
             });
@@ -58,14 +57,14 @@ export class xpHandler {
     public async getLevelDataById(discordId: number) {
 
         // Return new Promise<receiveXp>
-        return new Promise<receiveXp>(async (resolve, reject) => {
+        return new Promise<ReceiveXp>(async (resolve, reject) => {
 
             // Create xp url
             let xpUrl = `${this.baseUrl}${discordId}`
 
             // Request API
-            new apiRequestHandler()
-                .requestAPIWithType<receiveXp>("GET", null, xpUrl, this._config)
+            new ApiRequestHandler()
+                .requestAPIWithType<ReceiveXp>("GET", null, xpUrl, this._config)
                 .then((xpReturnObject) => {
                     
                     // Resolve if all went okay

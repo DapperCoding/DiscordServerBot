@@ -1,9 +1,9 @@
-import { ticket } from "./ticket";
+import { Ticket } from "./ticket";
 
-export interface createTicket extends ticket {
+export interface CreateTicket extends Ticket {
     id: number;
 }
 
-export class createTicket implements createTicket {
+export class CreateTicket implements CreateTicket {
 
 }

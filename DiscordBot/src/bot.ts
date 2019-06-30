@@ -1,28 +1,28 @@
 import * as discord from "discord.js";
-import { RichEmbed } from "discord.js";
 import * as path from "path";
-import { IBot, IBotCommand, IBotConfig, ILogger } from "./api";
-import { BotMessage } from "./message";
-import { websiteBotService } from "./services/websiteBotService";
-import { xpHandler } from "./handlers/xpHandler";
-import * as fs from "fs";
-import { MissingChannelIdError } from "./errors";
-import { messageService } from "./services/messageService";
-import { apiBotService } from "./services/apiBotService";
-import { channelhandler } from "./handlers/channelHandler";
-import { inDialogue } from "./models/inDialogue";
 import * as Luis from "luis-sdk-async";
+import * as fs from "fs";
+import { RichEmbed } from "discord.js";
+import { IBot, IBotCommand, IBotConfig, ILogger } from "./api";
+import { WebsiteBotService } from "./services/websiteBotService";
+import { XpHandler } from "./handlers/xpHandler";
+import { MissingChannelIdError } from "./error";
+import { MessageService } from "./services/messageService";
+import { ApiBotService } from "./services/apiBotService";
+import { InDialogue } from "./models/inDialogue";
 import { RichEmbedReactionHandler } from "./genericRichEmbedReactionHandler";
-import { dialogueStep, dialogueHandler } from "./handlers/dialogueHandler";
-import { ticketDialogueData, ticketDialogue } from "./dialogues/ticketDialogue";
-import { ticketReceive } from "./models/ticket/ticketReceive";
-import { apiRequestHandler } from "./handlers/apiRequestHandler";
-import { ticket } from "./models/ticket/ticket";
-import { applicant } from "./models/ticket/applicant";
-import { faq } from "./models/faq/faq";
-import { faqDialogue } from "./dialogues/faqDialogue";
-import { proficiency } from "./models/proficiency/proficiency";
-import { TicketProficiencyDialogue } from "./dialogues/TicketProficiencyDialogue";
+import { DialogueStep, DialogueHandler } from "./handlers/dialogueHandler";
+import { TicketDialogueData, TicketDialogue } from "./dialogues/ticketDialogue";
+import { TicketReceive } from "./models/ticket/ticketReceive";
+import { ApiRequestHandler } from "./handlers/apiRequestHandler";
+import { Ticket } from "./models/ticket/ticket";
+import { Applicant } from "./models/ticket/applicant";
+import { Faq } from "./models/faq/faq";
+import { FaqDialogue } from "./dialogues/faqDialogue";
+import { Proficiency } from "./models/proficiency/proficiency";
+import { TicketProficiencyDialogue } from "./dialogues/ticketProficiencyDialogue";
+import { BotMessage } from "./botMessage";
+import { CommandData } from "./models/commandData";
 
 export class Bot implements IBot {
   public get commands(): IBotCommand[] {
@@ -58,16 +58,11 @@ export class Bot implements IBot {
   private _botId!: string;
   private _server!: discord.Guild;
   private _welcomeChannel!: discord.TextChannel;
-  private _reportChannel!: discord.TextChannel;
-  private _kicksAndBansChannel!: discord.TextChannel;
   private _faqChannel!: discord.TextChannel;
-  private _ticketsToAcceptChannel!: discord.TextChannel;
-  private _ticketsInProgressChannel!: discord.TextChannel;
-  private _completedTicketsChannel!: discord.TextChannel;
-  private _websiteBotService!: websiteBotService;
-  private _apiBotService!: apiBotService;
-  private _messageService!: messageService;
-  private _xpHandler!: xpHandler;
+  private _websiteBotService!: WebsiteBotService;
+  private _apiBotService!: ApiBotService;
+  private _messageService!: MessageService;
+  private _xpHandler!: XpHandler;
   private _hasApiConnection: boolean = false;
   private luis: any = {};
 
@@ -75,18 +70,12 @@ export class Bot implements IBot {
     return this._server;
   }
 
-  public start(
-    logger: ILogger,
-    config: IBotConfig,
-    commandsPath: string,
-    dataPath: string
-  ) {
+  public start(logger: ILogger, config: IBotConfig, commandsPath: string, dataPath: string) {
+
     this._logger = logger;
     this._config = config;
     this._server;
     this._welcomeChannel;
-    this._reportChannel;
-    this._kicksAndBansChannel;
     this._faqChannel;
 
     this.luis = new Luis(this._config.luisAppId, this._config.luisApiKey);
@@ -111,7 +100,7 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function(erMsg, code) {
+    this._client.on("disconnect", function (erMsg, code) {
       console.log(
         "----- Bot disconnected from Discord with code",
         code,
@@ -127,15 +116,14 @@ export class Bot implements IBot {
     });
 
     this._client.on('message', (msg) => {
-      if (msg.content.indexOf("https://privatepage.vip/") >= 0 || msg.content.indexOf("nakedphotos.club/") >= 0|| msg.content.indexOf("viewc.site/") >= 0) {
+      if (msg.content.indexOf("https://privatepage.vip/") >= 0 || msg.content.indexOf("nakedphotos.club/") >= 0 || msg.content.indexOf("viewc.site/") >= 0) {
         msg.member.ban("No more NSFW")
         msg.delete(0);
-        
       }
     })
 
     // Automatically reconnect if the bot errors
-    this._client.on("error", function(error) {
+    this._client.on("error", function (error) {
       console.log(`----- Bot errored ${error} -----`);
 
       let client = getClient();
@@ -152,25 +140,11 @@ export class Bot implements IBot {
       // Add bot id to main logic
       this._botId = this._client.user.id;
 
-      // If game variable is set in config files(bot.json/bot.prod.json)
-      if (this._config.game) {
-        // Set game status of bot
-        this._client.user.setGame(this._config.game);
-      } else {
-        // Default
-        this._client.user.setActivity("?commands | With Dapper Dino", {
+      // Set bot activity
+      this._client.user.setActivity(
+        "?commands | With Dapper Dino", {
           type: "PLAYING"
         });
-      }
-
-      // Check if username is set in config files
-      if (
-        this._config.username &&
-        this._client.user.username !== this._config.username
-      ) {
-        // Set username of bot
-        this._client.user.setUsername(this._config.username);
-      }
 
       // Set status to online
       this._client.user.setStatus("online");
@@ -187,30 +161,10 @@ export class Bot implements IBot {
       this._faqChannel = this._server.channels.find(
         channel => channel.name === "f-a-q"
       ) as discord.TextChannel;
-      this._reportChannel = this._server.channels.find(
-        channel => channel.name === "reports"
-      ) as discord.TextChannel;
-      this._kicksAndBansChannel = this._server.channels.find(
-        channel => channel.name === "kicks-and-bans"
-      ) as discord.TextChannel;
-      this._ticketsToAcceptChannel = this._server.channels.find(
-        channel => channel.name === "tickets-to-accept"
-      ) as discord.TextChannel;
-      this._ticketsInProgressChannel = this._server.channels.find(
-        channel => channel.name === "tickets-in-progress"
-      ) as discord.TextChannel;
-      this._completedTicketsChannel = this._server.channels.find(
-        channel => channel.name === "completed-tickets"
-      ) as discord.TextChannel;
-
-      /*
-            this._ticketsToAcceptChannel.send("Test accept channel");
-            this._ticketsInProgressChannel.send("Test progress channel");
-            this._completedTicketsChannel.send("Test completed channel");*/
 
       if (!this._hasApiConnection) {
         // Create new website bot service & startup
-        this._websiteBotService = new websiteBotService(
+        this._websiteBotService = new WebsiteBotService(
           this._client,
           this._config,
           this._server
@@ -218,7 +172,7 @@ export class Bot implements IBot {
         this._websiteBotService.startupService();
 
         // Create new api bot service & startup
-        this._apiBotService = new apiBotService(
+        this._apiBotService = new ApiBotService(
           this._client,
           this._config,
           this._server
@@ -229,10 +183,10 @@ export class Bot implements IBot {
       }
 
       // Create new discordMessage service
-      this._messageService = new messageService(this._client, this._config);
+      this._messageService = new MessageService(this._client, this._config);
 
       // Create new xp handler
-      this._xpHandler = new xpHandler(this._config);
+      this._xpHandler = new XpHandler(this._config);
     });
 
     // Fired when a user joins the server
@@ -249,8 +203,8 @@ export class Bot implements IBot {
           )
           .addField(
             "Thanks For Joining The Other " +
-              member.guild.memberCount.toString() +
-              " Of Us!",
+            member.guild.memberCount.toString() +
+            " Of Us!",
             "Sincerely, your friend, DapperBot."
           );
 
@@ -272,7 +226,7 @@ export class Bot implements IBot {
       // Send rules intro text
       member.send(
         `Hello ${
-          member.displayName
+        member.displayName
         }. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
       );
 
@@ -347,7 +301,7 @@ export class Bot implements IBot {
         // Send discordMessage to welcome channel
         this._welcomeChannel.send(
           `${
-            member.displayName
+          member.displayName
           }, it's a shame you had to leave us. We'll miss you :(`
         );
       else {
@@ -364,7 +318,7 @@ export class Bot implements IBot {
         if (
           message.channel.type === "text" &&
           (message.channel as discord.TextChannel).parent.name.toLowerCase() ===
-            "tickets"
+          "tickets"
         ) {
           this._messageService.handleMessageInTicketCategory(message);
         }
@@ -399,23 +353,25 @@ export class Bot implements IBot {
       this.handleLuisCommands(text, message);
 
       // Handle commands
-      this.handleCommands(text, message);
+      if (text.startsWith(this._config.prefix)) {
+        this.handleCommands(text, message);
+      }
     });
     this._client.login(this._config.token);
   }
 
   apiCall = (
-    data: ticketDialogueData,
-    language: proficiency,
-    framework: proficiency,
+    data: TicketDialogueData,
+    language: Proficiency,
+    framework: Proficiency,
     ticketuser: any,
     config: any
   ) => {
     // Create new proficiency object
-    let ticketObject: ticket = new ticket();
+    let ticketObject: Ticket = new Ticket();
 
     // Create new applicant object
-    ticketObject.applicant = new applicant();
+    ticketObject.applicant = new Applicant();
 
     // Fill properties of proficiency
     ticketObject.subject = data.title;
@@ -429,7 +385,7 @@ export class Bot implements IBot {
     ticketObject.languageId = language.id;
 
     // Post request to /api/Ticket/
-    new apiRequestHandler()
+    new ApiRequestHandler()
 
       // Create request and fill params
       .requestAPI(
@@ -442,7 +398,7 @@ export class Bot implements IBot {
       // If everything went well, we receive a ticketReceive object
       .then(value => {
         // Parse object
-        var ticket = JSON.parse(JSON.stringify(value)) as ticketReceive;
+        var ticket = JSON.parse(JSON.stringify(value)) as TicketReceive;
 
         console.log(ticket);
       });
@@ -598,15 +554,15 @@ export class Bot implements IBot {
               role.name.toLowerCase() === "admin"
           )
         ) {
-          let faqModel = new faq();
-          let dialogue = new faqDialogue(
+          let faqModel = new Faq();
+          let dialogue = new FaqDialogue(
             this._config,
             message.channel as discord.TextChannel,
             message.member,
             this._client
           );
 
-          let questionStep: dialogueStep<faq> = new dialogueStep<faq>(
+          let questionStep: DialogueStep<Faq> = new DialogueStep<Faq>(
             faqModel,
             dialogue.addQuestion,
             "Enter Question:",
@@ -614,7 +570,7 @@ export class Bot implements IBot {
             "Question Unsuccessful"
           );
 
-          let answerStep: dialogueStep<faq> = new dialogueStep<faq>(
+          let answerStep: DialogueStep<Faq> = new DialogueStep<Faq>(
             faqModel,
             dialogue.addAnswer,
             "Enter Answer:",
@@ -622,7 +578,7 @@ export class Bot implements IBot {
             "Answer Unsuccessful"
           );
 
-          let faqUrlVerifyStep: dialogueStep<faq> = new dialogueStep(
+          let faqUrlVerifyStep: DialogueStep<Faq> = new DialogueStep(
             faqModel,
             dialogue.startUsefulResource,
             "Would you like to add a resourceful URL related to the FAQ? (Enter 'Yes' if so, otherwise enter 'No')",
@@ -630,7 +586,7 @@ export class Bot implements IBot {
             "URL Choice Unsuccessful"
           );
 
-          let handler = new dialogueHandler(
+          let handler = new DialogueHandler(
             [questionStep, answerStep, faqUrlVerifyStep],
             faqModel
           );
@@ -675,13 +631,13 @@ export class Bot implements IBot {
           await msg.react("❌");
 
           // Array of collected info
-          let collectedInfo = new ticketDialogueData();
+          let collectedInfo = new TicketDialogueData();
 
           let handler = new RichEmbedReactionHandler<CreateTicket>(
             myEmbed,
             msg
           );
-          let dialogue = new ticketDialogue();
+          let dialogue = new TicketDialogue();
 
           handler.addCategory("tickets", new Map());
 
@@ -692,9 +648,9 @@ export class Bot implements IBot {
               // create ticket
 
               // Create category step
-              let titleStep: dialogueStep<
-                ticketDialogueData
-              > = new dialogueStep(
+              let titleStep: DialogueStep<
+                TicketDialogueData
+              > = new DialogueStep(
                 collectedInfo,
                 dialogue.titleStep,
                 "Enter a title for your ticket that quickly summarises what you are requiring assistance with: (20 - 100)",
@@ -703,9 +659,9 @@ export class Bot implements IBot {
               );
 
               // Create description step
-              let descriptionStep: dialogueStep<
-                ticketDialogueData
-              > = new dialogueStep(
+              let descriptionStep: DialogueStep<
+                TicketDialogueData
+              > = new DialogueStep(
                 collectedInfo,
                 dialogue.descriptionStep,
                 "Enter a description for your ticket. Please be as descriptive as possible so that whoever is assigned to help you knows in depth what you are struggling with: (60 - 700)",
@@ -714,7 +670,7 @@ export class Bot implements IBot {
               );
 
               // Create new dialogueHandler with a titleStep and descriptionStep
-              let handler = new dialogueHandler(
+              let handler = new DialogueHandler(
                 [titleStep, descriptionStep],
                 collectedInfo
               );
@@ -792,14 +748,14 @@ export class Bot implements IBot {
     }
   }
 
-  private static dialogueUsers = new Array<inDialogue>();
+  private static dialogueUsers = new Array<InDialogue>();
 
   public static setIsInDialogue(
     channelId: string,
     userId: string,
     timestamp: Date
   ) {
-    let ind = new inDialogue();
+    let ind = new InDialogue();
 
     ind.channelId = channelId;
     ind.userId = userId;
@@ -846,7 +802,7 @@ export class Bot implements IBot {
     for (const cmd of this._commands) {
       try {
         // Validate cmd regex, if not valid, go to the next cmd
-        if (!cmd.isValid(text)) {
+        if (!cmd.isValid(text, this._config)) {
           continue;
         }
 
@@ -863,17 +819,16 @@ export class Bot implements IBot {
         // Create new bot discordMessage for our response
         const answer = new BotMessage(message.author);
 
+        let commandData = new CommandData();
+        commandData.message = message;
+        commandData.client = this._client;
+        commandData.guild = this._server;
+        commandData.config = this._config;
+        commandData.commands = this.commands;
+        commandData.webBotService = this._websiteBotService;
+
         // Await processing of cmd
-        await cmd.process(
-          text,
-          answer,
-          message,
-          this._client,
-          this._config,
-          this._commands,
-          this._websiteBotService,
-          this._server
-        );
+        await cmd.process(commandData);
 
         // Check if response is valid
         if (answer.isValid()) {
@@ -892,33 +847,29 @@ export class Bot implements IBot {
 
   // Loads all commands that have been registered
   private loadCommands(commandsPath: string, dataPath: string) {
-    // Check if commands are existing in config files
-    if (
-      !this._config.commands ||
-      !Array.isArray(this._config.commands) ||
-      this._config.commands.length === 0
-    ) {
-      // If not, throw new error
-      throw new Error("Invalid / empty commands list");
-    }
 
-    // Loop over all command names registerd in config files
-    for (const commandName of this._config.commands) {
-      // Require the command
-      const commandClass = require(`${commandsPath}/${commandName}`).default;
+    fs.readdir(`${commandsPath}/`, (err, files) => {
 
-      // Create new commandClass
-      const command = new commandClass() as IBotCommand;
+      if (err) { return this.logger.error(err) }
 
-      // Initialize command
-      command.init(this, path.resolve(`${dataPath}/${commandName}`));
+      files.forEach(file => {
 
-      // Add to commands list
-      this._commands.push(command);
+        // Load the file at the given path
+        let commandClass = require(`${commandsPath}/${file}`).default;
 
-      // Inform that command has been loaded
-      this._logger.info(`command "${commandName}" loaded...`);
-    }
+        // Cast the file to be a bot command
+        let command = new commandClass() as IBotCommand;
+
+        // Initialize command
+        command.init(this, path.resolve(`${dataPath}/${file}`));
+
+        // Add to commands list
+        this._commands.push(command);
+
+        // Inform that command has been loaded
+        this._logger.info(`command "${file}" loaded...`);
+      });
+    });
   }
 }
 

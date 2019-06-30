@@ -1,28 +1,28 @@
-import { discordUser } from "../discordUser";
+import { DiscordUser } from "../discordUser";
 
-export interface proficiency {
+export interface Proficiency {
   id: number;
   name: string;
-  proficiencyType: proficiencyType;
+  proficiencyType: ProficiencyType;
 }
 
-export interface discordUserProficiency {
+export interface DiscordUserProficiency {
   discordUserId: number;
-  discordUser: discordUser;
+  discordUser: DiscordUser;
   proficiencyId: number;
-  proficiency: proficiency;
-  proficiencyLevel: proficiencyLevel;
+  proficiency: Proficiency;
+  proficiencyLevel: ProficiencyLevel;
 }
 
-export enum proficiencyType {
-  language = 0,
-  library = 1
+export enum ProficiencyType {
+  Language = 0,
+  Library = 1
 }
 
-export enum proficiencyLevel {
-  absoluteBeginner = 0,
-  justStarted = 1,
-  medior = 2,
-  senior = 3,
-  expert = 4
+export enum ProficiencyLevel {
+  AbsoluteBeginner = 0,
+  JustStarted = 1,
+  Medior = 2,
+  Senior = 3,
+  Expert = 4
 }

@@ -19,8 +19,7 @@
     "@types/cheerio": "^0.22.11",
     "@types/node": "^8.10.49",
     "@types/node-fetch": "^1.6.9",
-    "tslint": "^5.17.0",
-    "typescript": "^2.9.2"
+    "tslint": "^5.17.0"
   },
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
@@ -39,6 +38,7 @@
     "node-opus": "^0.3.1",
     "package.json": "^2.0.1",
     "request": "^2.88.0",
+    "signalr": "^2.4.1",
     "superagent": "^3.8.3",
     "uuid": "^3.3.2",
     "uws": "^100.0.1",

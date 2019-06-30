@@ -1,10 +1,10 @@
-import { compactDiscordUser } from "./compactDiscordUser";
+import { CompactDiscordUser } from "./compactDiscordUser";
 
-export interface registerModel extends compactDiscordUser {
-    registrationCode:string;
-    isHappyToHelp:boolean;
+export interface RegisterModel extends CompactDiscordUser {
+    registrationCode: string;
+    isHappyToHelp: boolean;
 }
 
-export class registerModel implements registerModel {
-    isHappyToHelp=false;
+export class RegisterModel implements RegisterModel {
+    isHappyToHelp = false;
 }

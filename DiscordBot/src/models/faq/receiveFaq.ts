@@ -1,11 +1,11 @@
-import { faq } from "./faq";
+import { Faq } from "./faq";
 
-export interface receiveFaq extends faq {
+export interface ReceiveFaq extends Faq {
     messageId: string;
 }
 
-export class receiveFaq implements receiveFaq {
+export class ReceiveFaq implements ReceiveFaq {
 
 }
 
-export default receiveFaq;
+export default ReceiveFaq;

@@ -1,14 +1,14 @@
-export interface message {
+export interface Message {
     messageId: string;
     channelId: string;
     guildId: string;
     timestamp: Date;
     isEmbed: boolean;
-    isDm:boolean;
-    message:string;
-    imageLink:string;
+    isDm: boolean;
+    message: string;
+    imageLink: string;
 }
 
-export class message implements message {
-    
+export class Message implements Message {
+
 }

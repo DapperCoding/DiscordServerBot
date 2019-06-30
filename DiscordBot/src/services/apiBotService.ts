@@ -1,29 +1,25 @@
-import * as discord from "discord.js";
-import * as api from "../api";
-import { compactDiscordUser } from "../models/compactDiscordUser";
-import { apiRequestHandler } from "../handlers/apiRequestHandler";
-import { email } from "../models/email";
-import * as aspnet from "@aspnet/signalr";
-import { faqMessage } from "../models/faq/faqMessage";
-import { ticket } from "../models/ticket/ticket";
-import { suggest } from "../models/suggest";
-import { channelhandler } from "../handlers/channelHandler";
-import {
-  proficiencyLevel,
-  discordUserProficiency
-} from "../models/proficiency/proficiency";
+import * as Discord from "discord.js";
+import * as API from "../api";
+import * as ASPNET from "@aspnet/signalr";
+import { CompactDiscordUser } from "../models/compactDiscordUser";
+import { ApiRequestHandler } from "../handlers/apiRequestHandler";
+import { Email } from "../models/email";
+import { Ticket } from "../models/ticket/ticket";
+import { Suggest } from "../models/suggest";
+import { ChannelHandler } from "../handlers/channelHandler";
+import {ProficiencyLevel,DiscordUserProficiency} from "../models/proficiency/proficiency";
 
 (<any>global).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
-export class apiBotService {
-  private _serverBot: discord.Client;
-  private _config: api.IBotConfig;
-  private _server: discord.Guild;
+export class ApiBotService {
+  private _serverBot: Discord.Client;
+  private _config: API.IBotConfig;
+  private _server: Discord.Guild;
 
   constructor(
-    serverBot: discord.Client,
-    config: api.IBotConfig,
-    server: discord.Guild
+    serverBot: Discord.Client,
+    config: API.IBotConfig,
+    server: Discord.Guild
   ) {
     this._serverBot = serverBot;
     this._config = config;
@@ -32,9 +28,9 @@ export class apiBotService {
 
   startupService = async () => {
     // Creates connection to our API's SignalR hub
-    const connection = new aspnet.HubConnectionBuilder()
+    const connection = new ASPNET.HubConnectionBuilder()
       .withUrl("https://api.dapperdino.co.uk//discordbothub")
-      .configureLogging(aspnet.LogLevel.Debug)
+      .configureLogging(ASPNET.LogLevel.Debug)
       .build();
 
     // Start connection
@@ -54,16 +50,16 @@ export class apiBotService {
     });
 
     // On 'TicketCreated' -> fires when ticket is created through API
-    connection.on("TicketCreated", async (ticket: ticket) => {
+    connection.on("TicketCreated", async (ticket: Ticket) => {
       let member = this._server.members.get(ticket.applicant.discordId);
       if (!member) return;
       // Create new channelHandler
-      new channelhandler(this._server)
+      new ChannelHandler(this._server)
 
         // Add author to ticket
         .createChannelTicketCommand(ticket.id, member)
         .then(async channel => {
-          let chan = channel as discord.TextChannel;
+          let chan = channel as Discord.TextChannel;
 
           if (chan && member) {
             chan.setTopic(
@@ -82,8 +78,8 @@ export class apiBotService {
       // Loop over all h2h-ers
       for (let i = 0; i < happyToHelpers.length; i++) {
         // Get information for discord user
-        new apiRequestHandler()
-          .requestAPIWithType<discordUserProficiency[]>(
+        new ApiRequestHandler()
+          .requestAPIWithType<DiscordUserProficiency[]>(
             "GET",
             null,
             "https://api.dapperdino.co.uk/api/proficiency/GetProficienciesForDiscordUser/" +
@@ -110,8 +106,8 @@ export class apiBotService {
 
                   if (
                     proficiency.proficiencyLevel !=
-                      proficiencyLevel.absoluteBeginner &&
-                    proficiency.proficiencyLevel != proficiencyLevel.justStarted
+                      ProficiencyLevel.AbsoluteBeginner &&
+                    proficiency.proficiencyLevel != ProficiencyLevel.JustStarted
                   ) {
                     if (ticket.language.id == proficiency.proficiencyId) {
                       isInLanguage = true;
@@ -126,7 +122,7 @@ export class apiBotService {
 
               if (isInFramework || isInLanguage) {
                 // Create proficiency embed
-                let ticketEmbed = new discord.RichEmbed()
+                let ticketEmbed = new Discord.RichEmbed()
                   .setTitle("Ticket: " + ticket.subject + ", has been created")
                   .setDescription(
                     ticket.applicant.username + " is in need of help!"
@@ -167,7 +163,7 @@ export class apiBotService {
       if (!guild) return "Server not found";
 
       //Create embed for helpers to know that the ticket is closed
-      let completedTicketEmbed = new discord.RichEmbed()
+      let completedTicketEmbed = new Discord.RichEmbed()
         .setTitle("Ticket: " + ticket.subject + ", has been created")
         .setColor("#2dff2d")
         .addField("Language", ticket.language.name)
@@ -187,7 +183,7 @@ export class apiBotService {
       // Get tickets to accept channel
       let ticketsToAcceptChannel = guild.channels.find(
         channel => channel.name === "tickets-to-accept"
-      ) as discord.TextChannel;
+      ) as Discord.TextChannel;
 
       if (!ticketsToAcceptChannel) return "Channel not found";
 
@@ -206,7 +202,7 @@ export class apiBotService {
     });
 
     // On 'Suggestion' -> fires when someone suggested something using the website
-    connection.on("Suggestion", (suggestion: suggest) => {
+    connection.on("Suggestion", (suggestion: Suggest) => {
       // Get user that suggested this suggestion
       const suggestor = this._serverBot.users.get(
         suggestion.discordUser.discordId
@@ -247,7 +243,7 @@ export class apiBotService {
       };
 
       // Create suggestion embed
-      const suggestionEmbed = new discord.RichEmbed({})
+      const suggestionEmbed = new Discord.RichEmbed({})
         .setTitle("Your suggestion has been created!")
         .setColor("0xff0000")
         .addField(
@@ -275,7 +271,7 @@ export class apiBotService {
         );
         const h2hChat = this._server.channels.find(
           channel => channel.name.toLowerCase() === "dapper-team"
-        ) as discord.TextChannel;
+        ) as Discord.TextChannel;
 
         h2hChat.send(suggestionEmbed);
       }
@@ -297,7 +293,7 @@ export class apiBotService {
     let allUsers = this._server.members.array();
 
     //Create an array to story all the members with the requested role
-    let usersWithRole = new Array<discord.GuildMember>();
+    let usersWithRole = new Array<Discord.GuildMember>();
 
     //Loop through all the members in the server
     for (let i = 0; i < allUsers.length; i++) {
@@ -324,7 +320,7 @@ export class apiBotService {
     let user = this._serverBot.users.find(user => user.username === username);
 
     // Create compact discord user
-    let userObject = new compactDiscordUser();
+    let userObject = new CompactDiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {
@@ -343,7 +339,7 @@ export class apiBotService {
     let user = this._serverBot.users.find(user => user.id === id);
 
     // Create compact discord user
-    let userObject = new compactDiscordUser();
+    let userObject = new CompactDiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {
@@ -359,13 +355,13 @@ export class apiBotService {
   // Get discord user by email from API
   public GetDiscordUserByEmail(emailAddress: string) {
     // Create new Email object
-    let emailObject = new email();
+    let emailObject = new Email();
 
     // Add email address to it
     emailObject.email = emailAddress;
 
     // Get response from api
-    let responseData = new apiRequestHandler().requestAPI(
+    let responseData = new ApiRequestHandler().requestAPI(
       "POST",
       emailObject,
       "https://dapperdinoapi.azurewebsites.net/api/search/user",

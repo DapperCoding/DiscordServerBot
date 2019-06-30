@@ -1,8 +1,8 @@
-export interface resourceLink {
+export interface ResourceLink {
     displayName: string;
     link: string
 }
 
-export class resourceLink implements resourceLink {
-    
+export class ResourceLink implements ResourceLink {
+
 }
