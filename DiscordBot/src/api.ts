@@ -1,5 +1,5 @@
-import * as Discord from "discord.js";
-import { CommandData } from "./models/commandData";
+import { BotCommand } from "./models/botCommand";
+import { Intent } from "./models/intent";
 
 export interface ILoggerMethod {
   (message: string, ...args: any[]): void;
@@ -33,25 +33,15 @@ export interface IBotCommandHelp {
 }
 
 export interface IBot {
-  readonly commands: IBotCommand[];
+  readonly commands: BotCommand[];
+  readonly intents: Intent[];
   readonly allUsers: IUser[];
   readonly onlineUsers: IUser[];
   start(
     logger: ILogger,
     config: IBotConfig,
-    commandsPath: string,
     dataPath: string
   ): void;
-}
-
-export interface IBotCommand {
-  readonly commandWords: string[];
-  init(bot: IBot, dataPath: string): void;
-  isValid(message: string, config: IBotConfig): boolean;
-  getHelp(): IBotCommandHelp;
-  process(commandData: CommandData): Promise<void>;
-  canUseInChannel(channel: Discord.TextChannel): boolean;
-  canUseCommand(roles: Discord.Role[], message?: Discord.Message): boolean;
 }
 
 export interface IUser {

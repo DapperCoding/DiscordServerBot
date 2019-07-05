@@ -1,11 +1,11 @@
 import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
-import { CompactDiscordUser } from "../models/compactDiscordUser";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { TicketReceive } from "../models/ticket/ticketReceive";
 import { ChannelHandler } from "../handlers/channelHandler";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { DiscordUser } from "../models/discordUser";
 
 export default class AcceptTicketCommand extends BaseCommand {
 
@@ -35,7 +35,7 @@ export default class AcceptTicketCommand extends BaseCommand {
     if (member == null) return;
 
     // Create new compactDiscordUser that's sent to the API
-    let user: CompactDiscordUser = new CompactDiscordUser();
+    let user: DiscordUser = new DiscordUser();
 
     // Fill properties
     user.discordId = commandData.message.author.id;

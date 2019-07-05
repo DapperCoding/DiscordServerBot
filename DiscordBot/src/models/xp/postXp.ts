@@ -1,7 +1,7 @@
-import { CompactDiscordUser } from '../compactDiscordUser';
 import { CompactPostXp } from './compactPostXp';
+import { DiscordUser } from '../discordUser';
 
-export interface PostXp extends CompactDiscordUser, CompactPostXp {
+export interface PostXp extends DiscordUser, CompactPostXp {
 
 }
 
