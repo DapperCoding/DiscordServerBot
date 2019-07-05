@@ -1,6 +1,6 @@
 {
   "token": "create bot.prod.json at same folder and put your discord token inside",
-  "prefix": "create bot.prod.json at same folder and put your prefix inside",
+  "prefix": "?",
   "serverId": "create bot.prod.json at same folder and put your report channel's id inside",
   "apiBearerToken": "create bot.prod.json at same folder and put your API token inside",
   "apiEmail": "create bot.prod.json at same folder and put your API email token inside",

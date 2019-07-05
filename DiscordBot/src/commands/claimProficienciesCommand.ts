@@ -39,7 +39,8 @@ export default class ClaimProficienciesCommand extends BaseCommand {
       "discord server list",
       "youtube member",
       "weapons commissar",
-      "patreon"
+      "patreon",
+      "dapper backup"
     ];
     const toRemove: Discord.Role[] = [];
 
