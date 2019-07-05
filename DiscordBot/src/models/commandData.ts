@@ -1,13 +1,14 @@
 import * as Discord from "discord.js";
-import { IBotConfig, IBotCommand } from "../api";
+import { IBotConfig } from "../api";
 import { WebsiteBotService } from "../services/websiteBotService";
+import { BotCommand } from "./botCommand";
 
 export interface CommandData {
     message: Discord.Message,
     client: Discord.Client,
     guild: Discord.Guild
     config: IBotConfig,
-    commands: IBotCommand[],
+    commands: BotCommand[],
     webBotService: WebsiteBotService,
 }
 

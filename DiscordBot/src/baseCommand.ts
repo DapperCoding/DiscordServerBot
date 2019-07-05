@@ -1,8 +1,9 @@
 import * as Discord from 'discord.js';
-import { IBotCommand, IBotCommandHelp, IBot, IBotConfig } from "./api";
+import { IBotCommandHelp, IBot, IBotConfig } from "./api";
 import { CommandData } from './models/commandData';
+import { BotCommand } from './models/botCommand';
 
-export default abstract class BaseCommand implements IBotCommand {
+export default abstract class BaseCommand implements BotCommand {
 
     public abstract commandWords: string[];
 

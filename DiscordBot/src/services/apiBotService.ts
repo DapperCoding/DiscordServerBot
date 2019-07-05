@@ -1,13 +1,13 @@
 import * as Discord from "discord.js";
 import * as API from "../api";
 import * as ASPNET from "@aspnet/signalr";
-import { CompactDiscordUser } from "../models/compactDiscordUser";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { Email } from "../models/email";
 import { Ticket } from "../models/ticket/ticket";
 import { Suggest } from "../models/suggest";
 import { ChannelHandler } from "../handlers/channelHandler";
 import {ProficiencyLevel,DiscordUserProficiency} from "../models/proficiency/proficiency";
+import { DiscordUser } from "../models/discordUser";
 
 (<any>global).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
@@ -320,7 +320,7 @@ export class ApiBotService {
     let user = this._serverBot.users.find(user => user.username === username);
 
     // Create compact discord user
-    let userObject = new CompactDiscordUser();
+    let userObject = new DiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {
@@ -339,7 +339,7 @@ export class ApiBotService {
     let user = this._serverBot.users.find(user => user.id === id);
 
     // Create compact discord user
-    let userObject = new CompactDiscordUser();
+    let userObject = new DiscordUser();
 
     // Doesn't fill if user couldn't be found
     if (user != null) {

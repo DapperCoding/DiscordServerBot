@@ -4,10 +4,10 @@ import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
 import { ChannelHandler } from "../handlers/channelHandler";
 import { TicketReceive } from "../models/ticket/ticketReceive";
-import { CompactDiscordUser } from "../models/compactDiscordUser";
 import { Bot } from "../bot";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
+import { DiscordUser } from "../models/discordUser";
 
 export default class OpenTicketsCommand extends BaseCommand {
 
@@ -145,8 +145,8 @@ export default class OpenTicketsCommand extends BaseCommand {
                 // Check if member exists in guild
                 if (member == null) return;
 
-                // Create new compactDiscordUser that's sent to the API
-                let user: CompactDiscordUser = new CompactDiscordUser();
+                // Create new DiscordUser that's sent to the API
+                let user: DiscordUser = new DiscordUser();
 
                 // Fill properties
                 user.discordId = commandData.message.author.id;

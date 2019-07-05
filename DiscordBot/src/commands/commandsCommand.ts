@@ -1,8 +1,9 @@
 import * as Discord from "discord.js";
-import { IBotCommand, IBotCommandHelp } from "../api";
+import { IBotCommandHelp } from "../api";
 import { GenericRichEmbedPageHandler } from "../genericRichEmbedPageHandler";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
+import { BotCommand } from "../models/botCommand";
 
 export default class CommandsCommand extends BaseCommand {
 
@@ -55,7 +56,7 @@ export default class CommandsCommand extends BaseCommand {
       await message.react("◀");
       await message.react("▶");
 
-      let itemHandler = (embed: Discord.RichEmbed, data: IBotCommand[]) => {
+      let itemHandler = (embed: Discord.RichEmbed, data: BotCommand[]) => {
         data.forEach(item => {
           let helpObj = item.getHelp();
 
@@ -68,7 +69,7 @@ export default class CommandsCommand extends BaseCommand {
       };
 
       // Create actual handler
-      let handler = new GenericRichEmbedPageHandler<IBotCommand>(
+      let handler = new GenericRichEmbedPageHandler<BotCommand>(
         commandData.commands,
         5,
         itemHandler,

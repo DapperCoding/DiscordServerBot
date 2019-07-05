@@ -16,4 +16,4 @@ try {
     
 }
 
-new Bot().start(logger, cfg, `${__dirname}/commands`, `${__dirname}/../data`)
+new Bot().start(logger, cfg, `${__dirname}/../data`)
