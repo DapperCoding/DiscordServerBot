@@ -11,7 +11,7 @@ export default class CloseTicketCommand extends BaseCommand {
 
   public getHelp(): IBotCommandHelp {
     return {
-      caption: "?closeTicket",
+      caption: "?closeticket",
       description:
         "Use this command inside the ticket channel to close your ticket"
     };

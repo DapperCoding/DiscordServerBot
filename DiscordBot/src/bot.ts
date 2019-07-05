@@ -324,10 +324,7 @@ export class Bot implements IBot {
     this._client.on("message", async message => {
       // Make sure that the bot isn't responding to itself
       if (message.author.id === this._botId) {
-        if (
-          message.channel.type === "text" &&
-          (message.channel as TextChannel).parent.name.toLowerCase() ===
-          "tickets"
+        if ((message.channel as TextChannel).name.toLowerCase().startsWith("ticket")
         ) {
           this._messageService.handleMessageInTicketCategory(message);
         }

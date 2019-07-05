@@ -11,8 +11,8 @@ export default abstract class BaseCommand implements BotCommand {
 
     public isValid(message: string, config: IBotConfig): boolean {
         for (let i = 0; i < this.commandWords.length; i++) {
-            const element = this.commandWords[i];
-            if (message.toLowerCase().startsWith(`${config.prefix}${element}`)) {
+            const commandWord = this.commandWords[i].toLowerCase();
+            if (message.toLowerCase().startsWith(`${config.prefix}${commandWord}`)) {
                 return true;
             }
         }

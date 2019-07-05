@@ -9,7 +9,7 @@ import { DiscordUser } from "../models/discordUser";
 
 export default class AcceptTicketCommand extends BaseCommand {
 
-  readonly commandWords = ["acceptTicket"];
+  readonly commandWords = ["acceptticket"];
 
   public getHelp(): IBotCommandHelp {
     return {

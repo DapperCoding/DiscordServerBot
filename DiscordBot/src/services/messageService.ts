@@ -73,8 +73,12 @@ export class MessageService {
         "https://api.dapperdino.co.uk/api/ticket/reaction",
         this._config
       )
-      .then(console.log)
-      .catch(console.error);
+      .then((result) => {
+        console.log(result)
+      })
+      .catch(err=>{
+        console.error(err);
+      });
   }
 
   /**

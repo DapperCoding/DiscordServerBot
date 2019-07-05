@@ -7,7 +7,7 @@ import { CommandData } from "../models/commandData";
 
 export default class ForceCloseTicketCommand extends BaseCommand {
 
-  readonly commandWords = ["forceClose"];
+  readonly commandWords = ["forceclose"];
 
   public getHelp(): IBotCommandHelp {
     return {
