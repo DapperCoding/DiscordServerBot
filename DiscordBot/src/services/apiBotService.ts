@@ -6,8 +6,12 @@ import { Email } from "../models/email";
 import { Ticket } from "../models/ticket/ticket";
 import { Suggest } from "../models/suggest";
 import { ChannelHandler } from "../handlers/channelHandler";
-import {ProficiencyLevel,DiscordUserProficiency} from "../models/proficiency/proficiency";
+import {
+  ProficiencyLevel,
+  DiscordUserProficiency
+} from "../models/proficiency/proficiency";
 import { DiscordUser } from "../models/discordUser";
+import { ConfigManager } from "../configManager";
 
 (<any>global).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
@@ -16,20 +20,17 @@ export class ApiBotService {
   private _config: API.IBotConfig;
   private _server: Discord.Guild;
 
-  constructor(
-    serverBot: Discord.Client,
-    config: API.IBotConfig,
-    server: Discord.Guild
-  ) {
+  constructor(serverBot: Discord.Client, server: Discord.Guild) {
     this._serverBot = serverBot;
-    this._config = config;
     this._server = server;
+
+    this._config = ConfigManager.GetConfig();
   }
 
   startupService = async () => {
     // Creates connection to our API's SignalR hub
     const connection = new ASPNET.HubConnectionBuilder()
-      .withUrl("https://api.dapperdino.co.uk//discordbothub")
+      .withUrl(this._config.apiUrl.replace("/api", "") + "/discordbothub")
       .configureLogging(ASPNET.LogLevel.Debug)
       .build();
 
@@ -82,9 +83,8 @@ export class ApiBotService {
           .requestAPIWithType<DiscordUserProficiency[]>(
             "GET",
             null,
-            "https://api.dapperdino.co.uk/api/proficiency/GetProficienciesForDiscordUser/" +
-              happyToHelpers[i].user.id,
-            this._config
+            "/proficiency/GetProficienciesForDiscordUser/" +
+              happyToHelpers[i].user.id
           )
           .then(proficiencies => {
             let isInLanguage = false;
@@ -364,8 +364,7 @@ export class ApiBotService {
     let responseData = new ApiRequestHandler().requestAPI(
       "POST",
       emailObject,
-      "https://dapperdinoapi.azurewebsites.net/api/search/user",
-      this._config
+      "https://dapperdinoapi.azurewebsites.net/api/search/user"
     );
 
     // Try to log data

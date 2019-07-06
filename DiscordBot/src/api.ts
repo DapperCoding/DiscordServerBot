@@ -14,6 +14,7 @@ export interface ILogger {
 }
 
 export interface IBotConfig {
+  apiUrl: string;
   token: string;
   prefix: string;
   serverId: string;
@@ -37,11 +38,7 @@ export interface IBot {
   readonly intents: Intent[];
   readonly allUsers: IUser[];
   readonly onlineUsers: IUser[];
-  start(
-    logger: ILogger,
-    config: IBotConfig,
-    dataPath: string
-  ): void;
+  start(logger: ILogger, config: IBotConfig, dataPath: string): void;
 }
 
 export interface IUser {

@@ -7,6 +7,7 @@ import { DialogueStep, DialogueHandler } from "../handlers/dialogueHandler";
 import { FaqHandler } from "../handlers/faqHandler";
 import { FaqMessage } from "../models/faq/faqMessage";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
+import { ConfigManager } from "../configManager";
 
 export class FaqDialogue {
   private _config: API.IBotConfig;
@@ -18,12 +19,11 @@ export class FaqDialogue {
    * Create dialogue for faq
    */
   constructor(
-    config: API.IBotConfig,
     channel: Discord.TextChannel,
     user: Discord.GuildMember,
     bot: Discord.Client
   ) {
-    this._config = config;
+    this._config = ConfigManager.GetConfig();
     this._channel = channel;
     this._user = user;
     this._bot = bot;
@@ -111,9 +111,7 @@ export class FaqDialogue {
           data
         );
 
-        return resolve(
-          await handler.getInput(this._channel, this._user, this._config)
-        );
+        return resolve(await handler.getInput(this._channel, this._user));
       }
 
       return resolve(data);
@@ -174,8 +172,7 @@ export class FaqDialogue {
     new ApiRequestHandler().requestAPI(
       "POST",
       faqMessageObject,
-      "https://api.dapperdino.co.uk/api/faq/AddMessageId",
-      this._config
+      "/api/faq/AddMessageId"
     );
   }
 }

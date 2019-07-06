@@ -1,49 +1,51 @@
-import { IBotCommandHelp } from '../api'
-import * as discord from 'discord.js'
-import BaseCommand from '../baseCommand';
-import { CommandData } from '../models/commandData';
-import { ConnectHandler } from '../handlers/connectHandler';
+import { IBotCommandHelp } from "../api";
+import * as discord from "discord.js";
+import BaseCommand from "../baseCommand";
+import { CommandData } from "../models/commandData";
+import { ConnectHandler } from "../handlers/connectHandler";
 
 export default class RegisterCommand extends BaseCommand {
+  readonly commandWords = ["connect"];
 
-    readonly commandWords = ["connect"];
+  public getHelp(): IBotCommandHelp {
+    return {
+      caption: "?connect codehere",
+      description:
+        "Connect your discord to your website account. You can find your code on your profile page."
+    };
+  }
 
-    public getHelp(): IBotCommandHelp {
-        return { caption: '?connect codehere', description: 'Connect your discord to your website account. You can find your code on your profile page.' }
-    }
+  public canUseInChannel(channel: discord.TextChannel): boolean {
+    return !channel.name.toLowerCase().startsWith("ticket");
+  }
 
-    public canUseInChannel(channel: discord.TextChannel): boolean {
-        return !channel.name.toLowerCase().startsWith("ticket");
-    }
+  public async process(commandData: CommandData): Promise<void> {
+    // if (msg.toLowerCase().trim() === "?connect") {
+    //     let model = false;
+    //     let dialogue = new connectDialogue(config, msgObj.channel as discord.TextChannel, msgObj.member, client);
 
-    public async process(commandData: CommandData): Promise<void> {
+    //     let connectStep: dialogueStep<boolean> = new dialogueStep<boolean>(
+    //         model,
+    //         dialogue.getConnectCode,
+    //         "Enter your connect code:",
+    //         "",
+    //         "");
 
-        // if (msg.toLowerCase().trim() === "?connect") {
-        //     let model = false;
-        //     let dialogue = new connectDialogue(config, msgObj.channel as discord.TextChannel, msgObj.member, client);
+    //     let handler = new dialogueHandler([connectStep], model);
 
-        //     let connectStep: dialogueStep<boolean> = new dialogueStep<boolean>(
-        //         model,
-        //         dialogue.getConnectCode,
-        //         "Enter your connect code:",
-        //         "",
-        //         "");
+    //     await handler
+    //     .getInput(msgObj.channel as discord.TextChannel, msgObj.member, config as IBotConfig)
+    //     .then((connected) => {
 
-        //     let handler = new dialogueHandler([connectStep], model);
+    //     });
+    // } else {
+    //     new connectHandler(client, config)
+    //     .registerDiscord(msgObj)
+    //     .then()
+    // }
 
-        //     await handler
-        //     .getInput(msgObj.channel as discord.TextChannel, msgObj.member, config as IBotConfig)
-        //     .then((connected) => {
-
-        //     });
-        // } else {
-        //     new connectHandler(client, config)
-        //     .registerDiscord(msgObj)
-        //     .then()
-        // }
-
-        new ConnectHandler(commandData.client, commandData.config)
-            .registerDiscord(commandData.message)
-            .then()
-    }
+    new ConnectHandler(commandData.client)
+      .registerDiscord(commandData.message)
+      .then();
+  }
 }

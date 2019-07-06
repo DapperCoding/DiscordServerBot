@@ -8,7 +8,6 @@ import { CommandData } from "../models/commandData";
 import { DiscordUser } from "../models/discordUser";
 
 export default class AcceptTicketCommand extends BaseCommand {
-
   readonly commandWords = ["acceptticket"];
 
   public getHelp(): IBotCommandHelp {
@@ -25,7 +24,6 @@ export default class AcceptTicketCommand extends BaseCommand {
   }
 
   public async process(commandData: CommandData): Promise<void> {
-
     // Get member from guild
     let member = commandData.client.guilds
       .first()
@@ -42,16 +40,13 @@ export default class AcceptTicketCommand extends BaseCommand {
     user.username = commandData.message.author.username;
     let sent = 0;
     // Post request to /api/Ticket/{ticketId}/AddAssignee to add current user to db as Assignee
-    new ApiRequestHandler(commandData.client, commandData.config)
+    new ApiRequestHandler(commandData.client)
 
       // Set params for requestAPI
       .requestAPI(
         "POST",
         user,
-        `https://api.dapperdino.co.uk/api/ticket/${
-        commandData.message.content.split(" ")[1]
-        }/addAssignee`,
-        commandData.config
+        `/api/ticket/${commandData.message.content.split(" ")[1]}/addAssignee`
       )
 
       // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
@@ -62,7 +57,9 @@ export default class AcceptTicketCommand extends BaseCommand {
         ) as TicketReceive;
 
         let acceptedTicketembed = new Discord.RichEmbed()
-          .setTitle(`${commandData.message.author.username} is here to help you!`)
+          .setTitle(
+            `${commandData.message.author.username} is here to help you!`
+          )
           .setThumbnail(commandData.message.author.avatarURL)
           .setColor("#2dff2d")
           .setDescription(
@@ -87,7 +84,9 @@ export default class AcceptTicketCommand extends BaseCommand {
 
           .catch(err => {
             // Something went wrong, log error
-            commandData.message.reply(`Whoops, something went wrong. \n ${err}`);
+            commandData.message.reply(
+              `Whoops, something went wrong. \n ${err}`
+            );
           });
       })
       .catch(err => {

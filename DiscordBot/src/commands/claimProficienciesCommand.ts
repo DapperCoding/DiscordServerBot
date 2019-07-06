@@ -2,11 +2,13 @@ import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { DiscordUserProficiency, ProficiencyLevel } from "../models/proficiency/proficiency";
+import {
+  DiscordUserProficiency,
+  ProficiencyLevel
+} from "../models/proficiency/proficiency";
 import { CommandData } from "../models/commandData";
 
 export default class ClaimProficienciesCommand extends BaseCommand {
-
   readonly commandWords = ["claimproficiencies"];
 
   public getHelp(): IBotCommandHelp {
@@ -51,20 +53,25 @@ export default class ClaimProficienciesCommand extends BaseCommand {
     });
 
     if (toRemove.length > 0) {
-      await commandData.message.member.removeRoles(toRemove).catch(console.error);
+      await commandData.message.member
+        .removeRoles(toRemove)
+        .catch(console.error);
     }
 
     new ApiRequestHandler()
       .requestAPIWithType<DiscordUserProficiency[]>(
         "GET",
         null,
-        "https://api.dapperdino.co.uk/api/proficiency/GetProficienciesForDiscordUser/" +
-        commandData.message.author.id,
-        commandData.config
+        "/proficiency/GetProficienciesForDiscordUser/" +
+          commandData.message.author.id
       )
       .then(proficiencies => {
         const addRoles: Discord.Role[] = [];
-        const actualProficiencies = proficiencies.filter(x => x.proficiencyLevel != ProficiencyLevel.AbsoluteBeginner && x.proficiencyLevel != ProficiencyLevel.JustStarted);
+        const actualProficiencies = proficiencies.filter(
+          x =>
+            x.proficiencyLevel != ProficiencyLevel.AbsoluteBeginner &&
+            x.proficiencyLevel != ProficiencyLevel.JustStarted
+        );
         for (let i = 0; i < actualProficiencies.length; i++) {
           let proficiency = actualProficiencies[i];
 

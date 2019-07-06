@@ -11,12 +11,18 @@ import { InDialogue } from "./models/inDialogue";
 import { BotMessage } from "./botMessage";
 import { CommandData } from "./models/commandData";
 import { BotCommand } from "./models/botCommand";
-import { Client, Guild, TextChannel, RichEmbed, CategoryChannel, Message } from "discord.js";
+import {
+  Client,
+  Guild,
+  TextChannel,
+  RichEmbed,
+  CategoryChannel,
+  Message
+} from "discord.js";
 import { Intent } from "./models/intent";
 import { IntentData } from "./models/intentData";
 
 export class Bot implements IBot {
-
   public get commands(): BotCommand[] {
     return this._commands;
   }
@@ -68,7 +74,6 @@ export class Bot implements IBot {
   }
 
   public start(logger: ILogger, config: IBotConfig, dataPath: string) {
-
     this._logger = logger;
     this._config = config;
     this._server;
@@ -81,7 +86,7 @@ export class Bot implements IBot {
     this.loadCommands(`${__dirname}/commands`, dataPath);
 
     //Load all intents
-    this.loadIntents(`${__dirname}/intents`, dataPath)
+    this.loadIntents(`${__dirname}/intents`, dataPath);
 
     // Missing discord token
     if (!this._config.token) {
@@ -100,7 +105,7 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function (erMsg, code) {
+    this._client.on("disconnect", function(erMsg, code) {
       console.log(
         "----- Bot disconnected from Discord with code",
         code,
@@ -115,24 +120,31 @@ export class Bot implements IBot {
       client.login(config.token);
     });
 
-    this._client.on('message', (msg) => {
-      if (msg.content.indexOf("https://privatepage.vip/") >= 0 || msg.content.indexOf("nakedphotos.club/") >= 0 || msg.content.indexOf("viewc.site/") >= 0) {
-        msg.member.ban("No more NSFW")
+    this._client.on("message", msg => {
+      if (
+        msg.content.indexOf("https://privatepage.vip/") >= 0 ||
+        msg.content.indexOf("nakedphotos.club/") >= 0 ||
+        msg.content.indexOf("viewc.site/") >= 0
+      ) {
+        msg.member.ban("No more NSFW");
         msg.delete(0);
       }
 
       if (msg.embeds.length >= 1 && !msg.author.bot) {
         if (msg.embeds.filter(embed => embed.type === "rich").length > 0) {
           msg.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
-          msg.member.ban().then(member => {
-            console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`)
-          }).catch(console.error);
+          msg.member
+            .ban()
+            .then(member => {
+              console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`);
+            })
+            .catch(console.error);
         }
       }
-    })
+    });
 
     // Automatically reconnect if the bot errors
-    this._client.on("error", function (error) {
+    this._client.on("error", function(error) {
       console.log(`----- Bot errored ${error} -----`);
 
       let client = getClient();
@@ -150,10 +162,9 @@ export class Bot implements IBot {
       this._botId = this._client.user.id;
 
       // Set bot activity
-      this._client.user.setActivity(
-        "?commands | With Dapper Dino", {
-          type: "PLAYING"
-        });
+      this._client.user.setActivity("?commands | With Dapper Dino", {
+        type: "PLAYING"
+      });
 
       // Set status to online
       this._client.user.setStatus("online");
@@ -175,17 +186,12 @@ export class Bot implements IBot {
         // Create new website bot service & startup
         this._websiteBotService = new WebsiteBotService(
           this._client,
-          this._config,
           this._server
         );
         this._websiteBotService.startupService();
 
         // Create new api bot service & startup
-        this._apiBotService = new ApiBotService(
-          this._client,
-          this._config,
-          this._server
-        );
+        this._apiBotService = new ApiBotService(this._client, this._server);
         this._apiBotService.startupService();
 
         this._hasApiConnection = true;
@@ -195,7 +201,7 @@ export class Bot implements IBot {
       this._messageService = new MessageService(this._client, this._config);
 
       // Create new xp handler
-      this._xpHandler = new XpHandler(this._config);
+      this._xpHandler = new XpHandler();
     });
 
     // Fired when a user joins the server
@@ -212,8 +218,8 @@ export class Bot implements IBot {
           )
           .addField(
             "Thanks For Joining The Other " +
-            member.guild.memberCount.toString() +
-            " Of Us!",
+              member.guild.memberCount.toString() +
+              " Of Us!",
             "Sincerely, your friend, DapperBot."
           );
 
@@ -235,7 +241,7 @@ export class Bot implements IBot {
       // Send rules intro text
       member.send(
         `Hello ${
-        member.displayName
+          member.displayName
         }. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
       );
 
@@ -310,7 +316,7 @@ export class Bot implements IBot {
         // Send discordMessage to welcome channel
         this._welcomeChannel.send(
           `${
-          member.displayName
+            member.displayName
           }, it's a shame you had to leave us. We'll miss you :(`
         );
       else {
@@ -324,7 +330,10 @@ export class Bot implements IBot {
     this._client.on("message", async message => {
       // Make sure that the bot isn't responding to itself
       if (message.author.id === this._botId) {
-        if ((message.channel as TextChannel).name.toLowerCase().startsWith("ticket")
+        if (
+          (message.channel as TextChannel).name
+            .toLowerCase()
+            .startsWith("ticket")
         ) {
           this._messageService.handleMessageInTicketCategory(message);
         }
@@ -369,7 +378,11 @@ export class Bot implements IBot {
   async handleLuisCommands(text: string, message: Message) {
     let chan = message.channel as TextChannel;
 
-    if (chan.parent.name.toLowerCase() !== "languages" && chan.parent.name.toLowerCase() !== "frameworks-libraries") return;
+    if (
+      chan.parent.name.toLowerCase() !== "languages" &&
+      chan.parent.name.toLowerCase() !== "frameworks-libraries"
+    )
+      return;
     if (text.length <= 0) return;
     if (text.length > 500) text = text.substr(0, 500);
     try {
@@ -383,17 +396,17 @@ export class Bot implements IBot {
       if (this.luis.response.topScoringIntent.score < 0.9) return;
 
       for (const intent of this._intents) {
+        if (!intent.isValid(intentWord)) {
+          continue;
+        }
 
-        if (!intent.isValid(intentWord)) { continue; }
-
-        let intentData = new IntentData()
+        let intentData = new IntentData();
         intentData.message = message;
         intentData.client = this._client;
         intentData.config = this._config;
 
         await intent.process(intentData);
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -474,7 +487,6 @@ export class Bot implements IBot {
         commandData.message = message;
         commandData.client = this._client;
         commandData.guild = this._server;
-        commandData.config = this._config;
         commandData.commands = this.commands;
         commandData.webBotService = this._websiteBotService;
 
@@ -498,13 +510,12 @@ export class Bot implements IBot {
 
   // Loads all commands
   private loadCommands(commandsPath: string, dataPath: string) {
-
     fs.readdir(`${commandsPath}/`, (err, files) => {
-
-      if (err) { return this.logger.error(err) }
+      if (err) {
+        return this.logger.error(err);
+      }
 
       files.forEach(file => {
-
         // Load the file at the given path
         let commandClass = require(`${commandsPath}/${file}`).default;
 
@@ -525,18 +536,17 @@ export class Bot implements IBot {
 
   // Loads all Intents
   private loadIntents(intentsPath: string, dataPath: string) {
-
     fs.readdir(`${intentsPath}/`, (err, files) => {
-
-      if (err) { return this.logger.error(err) }
+      if (err) {
+        return this.logger.error(err);
+      }
 
       files.forEach(file => {
-
         // Load the file at the given path
         let intentClass = require(`${intentsPath}/${file}`).default;
 
         // Cast the file to be a bot command
-        let intent = new intentClass() as Intent
+        let intent = new intentClass() as Intent;
 
         // Add to commands list
         this._intents.push(intent);

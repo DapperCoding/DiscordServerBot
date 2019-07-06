@@ -7,14 +7,12 @@ import { ValidationError } from "../error";
 
 export class SuggestionDialogue {
   private _message: discord.Message;
-  private _config: api.IBotConfig;
 
   /**
    *
    */
-  constructor(message: discord.Message, config: api.IBotConfig) {
+  constructor(message: discord.Message) {
     this._message = message;
-    this._config = config;
   }
 
   /**
@@ -94,12 +92,7 @@ export class SuggestionDialogue {
       }
 
       return new ApiRequestHandler()
-        .requestAPIWithType<Suggest>(
-          "POST",
-          suggestion,
-          "https://api.dapperdino.co.uk/api/suggestion",
-          this._config
-        )
+        .requestAPIWithType<Suggest>("POST", suggestion, "/suggestion")
         .then(resolve)
         .catch(reject); // TODO: Create json file with ticket info (if you want to get crazy: with automated cleanup system for the json files node-schedule)
     });

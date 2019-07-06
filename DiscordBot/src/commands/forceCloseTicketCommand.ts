@@ -6,7 +6,6 @@ import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 
 export default class ForceCloseTicketCommand extends BaseCommand {
-
   readonly commandWords = ["forceclose"];
 
   public getHelp(): IBotCommandHelp {
@@ -43,7 +42,8 @@ export default class ForceCloseTicketCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     // Get ticket channel id from channel name
-    let ticketChannelId = (commandData.message.channel as Discord.TextChannel).name
+    let ticketChannelId = (commandData.message
+      .channel as Discord.TextChannel).name
       .toString()
       .replace("ticket", "")
       .toString();
@@ -56,8 +56,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
       .requestAPIWithType<TicketReceive>(
         "POST",
         null,
-        `https://api.dapperdino.co.uk/api/ticket/${ticketChannelId}/close`,
-        commandData.config
+        `/ticket/${ticketChannelId}/close`
       )
       .then(ticketReceive => {
         // Get current guild
@@ -71,7 +70,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
           .setColor("#ff0000")
           .setDescription(
             `${
-            ticketReceive.applicant.username
+              ticketReceive.applicant.username
             }'s problem has now been resolved, good job`
           );
 

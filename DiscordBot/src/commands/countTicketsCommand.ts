@@ -5,7 +5,6 @@ import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 
 export default class CountTicketsCommand extends BaseCommand {
-
   readonly commandWords = ["counttickets"];
 
   public canUseCommand(roles: Discord.Role[]) {
@@ -41,12 +40,12 @@ export default class CountTicketsCommand extends BaseCommand {
   }
 
   public async process(commandData: CommandData): Promise<void> {
-    new ApiRequestHandler(commandData.client, commandData.config)
+    new ApiRequestHandler(commandData.client)
 
       // Set params for requestAPI
       .requestAPIWithType<
         { id: number; count: number; subject: string; description: string }[]
-      >("GET", null, `https://api.dapperdino.co.uk/api/ticket/opentickets`, commandData.config)
+      >("GET", null, `/ticket/opentickets`)
 
       // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
       .then(tickets => {

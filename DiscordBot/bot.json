@@ -8,5 +8,6 @@
   "luisAppId": "create bot.prod.json at same folder and put your API id inside",
   "luisApiKey": "create bot.prod.json at same folder and put your API key inside",
   "welcomeChannel": "create bot.prod.json at same folder and put your welcome channel id inside",
-  "faqChannel": "create bot.prod.json at same folder and put your faq channel id inside"
+  "faqChannel": "create bot.prod.json at same folder and put your faq channel id inside",
+  "apiUrl": "create bot.prod.json at same folder and put your api url inside"
 }

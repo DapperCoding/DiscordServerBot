@@ -10,7 +10,6 @@ import BaseCommand from "../baseCommand";
 import { DiscordUser } from "../models/discordUser";
 
 export default class OpenTicketsCommand extends BaseCommand {
-
   readonly commandWords = ["opentickets"];
 
   private bot: Bot | null = null;
@@ -55,17 +54,12 @@ export default class OpenTicketsCommand extends BaseCommand {
       .setColor("#ff0000")
       .setTitle("All open tickets");
 
-    new ApiRequestHandler(commandData.client, commandData.config)
+    new ApiRequestHandler(commandData.client)
 
       // Set params for requestAPI
       .requestAPIWithType<
         { id: number; count: number; subject: string; description: string }[]
-      >(
-        "GET",
-        null,
-        `https://api.dapperdino.co.uk/api/ticket/opentickets`,
-        commandData.config
-      )
+      >("GET", null, `/ticket/opentickets`)
 
       // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
       .then(async tickets => {
@@ -140,7 +134,9 @@ export default class OpenTicketsCommand extends BaseCommand {
                 // Get member from guild
                 let member = commandData.client.guilds
                   .first()
-                  .members.find(member => member.id === commandData.message.author.id);
+                  .members.find(
+                    member => member.id === commandData.message.author.id
+                  );
 
                 // Check if member exists in guild
                 if (member == null) return;
@@ -153,16 +149,13 @@ export default class OpenTicketsCommand extends BaseCommand {
                 user.username = commandData.message.author.username;
                 let sent = 0;
                 // Post request to /api/Ticket/{ticketId}/AddAssignee to add current user to db as Assignee
-                new ApiRequestHandler(commandData.client, commandData.config)
+                new ApiRequestHandler(commandData.client)
 
                   // Set params for requestAPI
                   .requestAPI(
                     "POST",
                     user,
-                    `https://api.dapperdino.co.uk/api/ticket/${
-                    data.ticket.id
-                    }/addAssignee`,
-                    commandData.config
+                    `/api/ticket/${data.ticket.id}/addAssignee`
                   )
 
                   // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
@@ -177,7 +170,9 @@ export default class OpenTicketsCommand extends BaseCommand {
 
                     let acceptedTicketembed = new Discord.RichEmbed()
                       .setTitle(
-                        `${commandData.message.author.username} is here to help you!`
+                        `${
+                          commandData.message.author.username
+                        } is here to help you!`
                       )
                       .setThumbnail(commandData.message.author.avatarURL)
                       .setColor("#2dff2d")
@@ -212,7 +207,9 @@ export default class OpenTicketsCommand extends BaseCommand {
                     sent++;
                     if (sent == 1)
                       // Something went wrong, log error
-                      commandData.message.reply(`Whoops, something went wrong. \n ${err}`);
+                      commandData.message.reply(
+                        `Whoops, something went wrong. \n ${err}`
+                      );
                   });
 
                 return { category: "tickets", embed };
@@ -223,11 +220,11 @@ export default class OpenTicketsCommand extends BaseCommand {
             // Add to embed
             embed.addField(
               `Ticket${currentTicket.id} (${
-              currentTicket.count
+                currentTicket.count
               } team member(s) helping)`,
               currentTicket.subject +
-              "\n https://dapperdino.co.uk/HappyToHelp/Ticket?id=" +
-              currentTicket.id
+                "\n https://dapperdino.co.uk/HappyToHelp/Ticket?id=" +
+                currentTicket.id
             );
 
             currentIndex++;

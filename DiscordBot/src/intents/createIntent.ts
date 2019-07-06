@@ -1,7 +1,10 @@
 import BaseIntent from "../baseIntent";
 import { IntentData } from "../models/intentData";
 import { RichEmbed, TextChannel, Message } from "discord.js";
-import { TicketDialogueData, TicketDialogue } from "../dialogues/ticketDialogue";
+import {
+  TicketDialogueData,
+  TicketDialogue
+} from "../dialogues/ticketDialogue";
 import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
 import { DialogueStep, DialogueHandler } from "../handlers/dialogueHandler";
 import { TicketProficiencyDialogue } from "../dialogues/ticketProficiencyDialogue";
@@ -12,7 +15,6 @@ import { Proficiency } from "../models/proficiency/proficiency";
 import { Applicant } from "../models/ticket/applicant";
 
 export default class CreateIntent extends BaseIntent {
-
   intent = "ticket.create";
 
   public async process(intentData: IntentData): Promise<void> {
@@ -35,10 +37,7 @@ export default class CreateIntent extends BaseIntent {
       // Array of collected info
       let collectedInfo = new TicketDialogueData();
 
-      let handler = new RichEmbedReactionHandler<CreateTicket>(
-        myEmbed,
-        msg
-      );
+      let handler = new RichEmbedReactionHandler<CreateTicket>(myEmbed, msg);
       let dialogue = new TicketDialogue();
 
       handler.addCategory("tickets", new Map());
@@ -50,9 +49,7 @@ export default class CreateIntent extends BaseIntent {
           // create ticket
 
           // Create category step
-          let titleStep: DialogueStep<
-            TicketDialogueData
-          > = new DialogueStep(
+          let titleStep: DialogueStep<TicketDialogueData> = new DialogueStep(
             collectedInfo,
             dialogue.titleStep,
             "Enter a title for your ticket that quickly summarises what you are requiring assistance with: (20 - 100)",
@@ -84,20 +81,17 @@ export default class CreateIntent extends BaseIntent {
           await handler
             .getInput(
               intentData.message.channel as TextChannel,
-              intentData.message.member,
-              intentData.config
+              intentData.message.member
             )
             .then(async data => {
               // TODO: Create reaction handlers
               let reactionHandler = new TicketProficiencyDialogue();
 
               let language = await reactionHandler.SelectLanguage(
-                intentData.message,
-                intentData.config
+                intentData.message
               );
               let framework = await reactionHandler.SelectFramework(
-                intentData.message,
-                intentData.config
+                intentData.message
               );
 
               //API CALL
@@ -105,8 +99,7 @@ export default class CreateIntent extends BaseIntent {
                 data,
                 language,
                 framework,
-                intentData.message.member,
-                intentData.config
+                intentData.message.member
               );
 
               // Create ticket embed
@@ -150,8 +143,7 @@ export default class CreateIntent extends BaseIntent {
     data: TicketDialogueData,
     language: Proficiency,
     framework: Proficiency,
-    ticketuser: any,
-    config: any
+    ticketuser: any
   ) => {
     // Create new proficiency object
     let ticketObject: Ticket = new Ticket();
@@ -174,12 +166,7 @@ export default class CreateIntent extends BaseIntent {
     new ApiRequestHandler()
 
       // Create request and fill params
-      .requestAPI(
-        "POST",
-        ticketObject,
-        "https://api.dapperdino.co.uk/api/ticket",
-        config
-      )
+      .requestAPI("POST", ticketObject, "/api/ticket")
 
       // If everything went well, we receive a ticketReceive object
       .then(value => {

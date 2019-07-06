@@ -6,7 +6,6 @@ import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 
 export default class TicketInfoCommand extends BaseCommand {
-
   readonly commandWords = ["info"];
 
   public getHelp(): IBotCommandHelp {
@@ -42,13 +41,8 @@ export default class TicketInfoCommand extends BaseCommand {
     let curChannel = commandData.message.channel as Discord.TextChannel;
     let id = curChannel.name.toLowerCase().replace("ticket", "");
 
-    new ApiRequestHandler(commandData.client, commandData.config)
-      .requestAPIWithType<Ticket>(
-        "GET",
-        null,
-        `https://api.dapperdino.co.uk/api/ticket/${id}`,
-        commandData.config
-      )
+    new ApiRequestHandler(commandData.client)
+      .requestAPIWithType<Ticket>("GET", null, `/ticket/${id}`)
       .then(ticket => {
         // Add ticket info
         let ticketEmbed = new Discord.RichEmbed()

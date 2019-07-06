@@ -26,12 +26,7 @@ export class MessageService {
 
     // Request API and add our reaction to the database.
     new ApiRequestHandler()
-      .requestAPI(
-        "POST",
-        discordMessage,
-        "https://api.dapperdino.co.uk/api/discordMessage",
-        this._config
-      )
+      .requestAPI("POST", discordMessage, "/api/discordMessage")
       .catch(console.error);
   }
 
@@ -57,7 +52,8 @@ export class MessageService {
 
     reaction.discordMessage = new Message();
 
-    reaction.discordMessage.message = message.content;
+    reaction.discordMessage.message =
+      message.content.length > 0 ? message.content : "EMPTY";
     reaction.discordMessage.messageId = message.id;
     reaction.discordMessage.timestamp = new Date(message.createdTimestamp);
     reaction.discordMessage.guildId = message.guild.id;
@@ -67,16 +63,11 @@ export class MessageService {
 
     // Request API and add our reaction to the database.
     new ApiRequestHandler()
-      .requestAPI(
-        "POST",
-        reaction,
-        "https://api.dapperdino.co.uk/api/ticket/reaction",
-        this._config
-      )
-      .then((result) => {
-        console.log(result)
+      .requestAPI("POST", reaction, "/ticket/reaction")
+      .then(result => {
+        console.log(result);
       })
-      .catch(err=>{
+      .catch(err => {
         console.error(err);
       });
   }
@@ -128,5 +119,4 @@ export class MessageService {
         .catch(reject);
     });
   }
-
 }

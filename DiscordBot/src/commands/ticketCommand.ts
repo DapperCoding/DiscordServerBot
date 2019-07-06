@@ -5,14 +5,16 @@ import { Applicant } from "../models/ticket/applicant";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { DialogueHandler, DialogueStep } from "../handlers/dialogueHandler";
 import { TicketReceive } from "../models/ticket/ticketReceive";
-import { TicketDialogueData, TicketDialogue } from "../dialogues/ticketDialogue";
+import {
+  TicketDialogueData,
+  TicketDialogue
+} from "../dialogues/ticketDialogue";
 import { TicketProficiencyDialogue } from "../dialogues/ticketProficiencyDialogue";
 import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 
 export default class TicketCommand extends BaseCommand {
-
   readonly commandWords = ["help"];
 
   public getHelp(): IBotCommandHelp {
@@ -59,7 +61,6 @@ export default class TicketCommand extends BaseCommand {
   }
 
   public async process(commandData: CommandData): Promise<void> {
-
     // Array of collected info
     let collectedInfo = new TicketDialogueData();
 
@@ -97,18 +98,21 @@ export default class TicketCommand extends BaseCommand {
     await handler
       .getInput(
         commandData.message.channel as discord.TextChannel,
-        commandData.message.member,
-        commandData.config as IBotConfig
+        commandData.message.member
       )
       .then(async data => {
         // TODO: Create reaction handlers
         let reactionHandler = new TicketProficiencyDialogue();
 
-        let language = await reactionHandler.SelectLanguage(commandData.message, commandData.config);
-        let framework = await reactionHandler.SelectFramework(commandData.message, commandData.config);
+        let language = await reactionHandler.SelectLanguage(
+          commandData.message
+        );
+        let framework = await reactionHandler.SelectFramework(
+          commandData.message
+        );
 
         //API CALL
-        this.apiCall(data, language, framework, commandData.message.member, commandData.config);
+        this.apiCall(data, language, framework, commandData.message.member);
 
         // Create proficiency embed
         let ticketEmbed = new discord.RichEmbed()
@@ -129,8 +133,7 @@ export default class TicketCommand extends BaseCommand {
     data: TicketDialogueData,
     language: Proficiency,
     framework: Proficiency,
-    ticketuser: any,
-    config: any
+    ticketuser: any
   ) => {
     // Create new proficiency object
     let ticketObject: Ticket = new Ticket();
@@ -153,12 +156,7 @@ export default class TicketCommand extends BaseCommand {
     new ApiRequestHandler()
 
       // Create request and fill params
-      .requestAPI(
-        "POST",
-        ticketObject,
-        "https://api.dapperdino.co.uk/api/ticket",
-        config
-      )
+      .requestAPI("POST", ticketObject, "/api/ticket")
 
       // If everything went well, we receive a ticketReceive object
       .then(value => {

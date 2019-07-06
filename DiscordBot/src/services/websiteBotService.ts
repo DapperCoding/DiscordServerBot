@@ -10,9 +10,13 @@ import { TicketReaction } from "../models/ticket/ticketReaction";
 import { Message } from "../models/message";
 import TicketEmbed from "../models/ticket/ticketEmbed";
 import { ChannelHandler } from "../handlers/channelHandler";
-import { DiscordUserProficiency, ProficiencyLevel } from "../models/proficiency/proficiency";
+import {
+  DiscordUserProficiency,
+  ProficiencyLevel
+} from "../models/proficiency/proficiency";
 import { Ticket } from "../models/ticket/ticket";
 import { DiscordUser } from "../models/discordUser";
+import { ConfigManager } from "../configManager";
 
 (<any>global).XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
@@ -21,14 +25,11 @@ export class WebsiteBotService {
   private _config: API.IBotConfig;
   private _server: Discord.Guild;
 
-  constructor(
-    serverBot: Discord.Client,
-    config: API.IBotConfig,
-    server: Discord.Guild
-  ) {
+  constructor(serverBot: Discord.Client, server: Discord.Guild) {
     this._serverBot = serverBot;
-    this._config = config;
     this._server = server;
+
+    this._config = ConfigManager.GetConfig();
   }
 
   startupService = () => {
@@ -46,7 +47,7 @@ export class WebsiteBotService {
 
     // Auto reconnect
     connection.onclose(() => {
-      setTimeout(function () {
+      setTimeout(function() {
         connection
           .start()
           .then(() => console.log("t"))
@@ -55,8 +56,10 @@ export class WebsiteBotService {
     });
 
     // On 'ReceiveMessage' -> test method
-    connection.on("NewOrder", (order) => {
-      let channel = this._server.channels.find(x=>x.name.toLowerCase() == "dapper-coding") as Discord.TextChannel;
+    connection.on("NewOrder", order => {
+      let channel = this._server.channels.find(
+        x => x.name.toLowerCase() == "dapper-coding"
+      ) as Discord.TextChannel;
 
       if (channel) {
         channel.send(`New order with id ${order.id}`);
@@ -117,12 +120,7 @@ export class WebsiteBotService {
 
         // Request API and add our reaction to the database.
         new ApiRequestHandler()
-          .requestAPIWithType<any>(
-            "POST",
-            reaction,
-            "https://api.dapperdino.co.uk/api/ticket/reaction",
-            this._config
-          )
+          .requestAPIWithType<any>("POST", reaction, "/ticket/reaction")
           .then(console.log)
           .catch(console.error);
       });
@@ -162,9 +160,8 @@ export class WebsiteBotService {
           .requestAPIWithType<DiscordUserProficiency[]>(
             "GET",
             null,
-            "https://api.dapperdino.co.uk/api/proficiency/GetProficienciesForDiscordUser/" +
-            happyToHelpers[i].user.id,
-            this._config
+            "/proficiency/GetProficienciesForDiscordUser/" +
+              happyToHelpers[i].user.id
           )
           .then(proficiencies => {
             let isInLanguage = false;
@@ -186,7 +183,7 @@ export class WebsiteBotService {
 
                   if (
                     proficiency.proficiencyLevel !=
-                    ProficiencyLevel.AbsoluteBeginner &&
+                      ProficiencyLevel.AbsoluteBeginner &&
                     proficiency.proficiencyLevel != ProficiencyLevel.JustStarted
                   ) {
                     if (ticket.language.id == proficiency.proficiencyId) {
@@ -212,7 +209,7 @@ export class WebsiteBotService {
                   .addField(
                     "Thank you ",
                     happyToHelpers[i].displayName +
-                    " for being willing to assist others in our server."
+                      " for being willing to assist others in our server."
                   )
                   .addField("Language", ticket.language.name)
                   .addField("Framework", ticket.framework.name)
@@ -226,7 +223,7 @@ export class WebsiteBotService {
                   )
                   .setURL(
                     `https://dapperdino.co.uk/HappyToHelp/Ticket?id=${
-                    ticket.id
+                      ticket.id
                     }`
                   )
                   .setFooter("Thanks for all your help :)");
@@ -449,7 +446,7 @@ export class WebsiteBotService {
             )
             .setFooter("With ❤ by the DapperCoding team");
           testUser.send(productEnquiryEmbed).catch(console.error);
-        } catch (e) { }
+        } catch (e) {}
       }
       return true;
     });
@@ -466,7 +463,7 @@ export class WebsiteBotService {
       let hostingEmbed = new Discord.RichEmbed()
         .setTitle(
           `A user has requested contact regarding the hosting ${
-          enquiry.packageType
+            enquiry.packageType
           }`
         )
         .setColor("0x00ff00")
@@ -499,12 +496,12 @@ export class WebsiteBotService {
             .addField(
               "Information",
               `You'll receive more information about hosting package: ${
-              enquiry.package
+                enquiry.package
               }, soon.`
             )
             .setFooter("With ❤ by the DapperCoding team");
           discordUser.send(hostingEnquiryEmbed).catch(console.error);
-        } catch (e) { }
+        } catch (e) {}
       }
       return true;
     });
@@ -552,7 +549,7 @@ export class WebsiteBotService {
             )
             .setFooter("With ❤ by the DapperCoding team");
           discordUser.send(appliedEmbed).catch(console.error);
-        } catch (e) { }
+        } catch (e) {}
       }
       return true;
     });
@@ -602,7 +599,7 @@ export class WebsiteBotService {
         .setColor("#ff0000")
         .setDescription(
           `${
-          information.ticket.applicant.username
+            information.ticket.applicant.username
           }'s problem has now been resolved, good job`
         );
 
@@ -759,10 +756,10 @@ export class WebsiteBotService {
         .setURL(url)
         .addField(
           "Please download the zip file " +
-          info.ticket.applicant.username +
-          ".",
+            info.ticket.applicant.username +
+            ".",
           info.user.username +
-          " asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
+            " asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
         )
         .addField(
           "Video explanation:",
@@ -953,8 +950,7 @@ export class WebsiteBotService {
     let responseData = new ApiRequestHandler().requestAPI(
       "POST",
       emailObject,
-      "https://dapperdinoapi.azurewebsites.net/api/search/user",
-      this._config
+      "https://dapperdinoapi.azurewebsites.net/api/search/user"
     );
 
     // Try to log data

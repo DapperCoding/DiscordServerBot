@@ -8,18 +8,17 @@ export class TicketProficiencyDialogue {
   /**
    * test
    */
-  public SelectLanguage(message: Message, config: IBotConfig) {
+  public SelectLanguage(message: Message) {
     return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Choose the language");
 
-      new ApiRequestHandler(message.client, config)
+      new ApiRequestHandler(message.client)
 
         // Set params for requestAPI
         .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
-          `https://api.dapperdino.co.uk/api/proficiency/getlanguages`,
-          config
+          `/proficiency/getlanguages`
         )
 
         // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
@@ -104,18 +103,17 @@ export class TicketProficiencyDialogue {
     });
   }
 
-  public SelectFramework(message: Message, config: IBotConfig) {
+  public SelectFramework(message: Message) {
     return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Select the framework");
 
-      new ApiRequestHandler(message.client, config)
+      new ApiRequestHandler(message.client)
 
         // Set params for requestAPI
         .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
-          `https://api.dapperdino.co.uk/api/proficiency/getFrameworks`,
-          config
+          `/proficiency/getFrameworks`
         )
 
         // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel

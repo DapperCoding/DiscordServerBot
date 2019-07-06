@@ -7,7 +7,6 @@ export interface CommandData {
     message: Discord.Message,
     client: Discord.Client,
     guild: Discord.Guild
-    config: IBotConfig,
     commands: BotCommand[],
     webBotService: WebsiteBotService,
 }

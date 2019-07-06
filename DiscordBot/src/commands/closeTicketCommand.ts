@@ -6,7 +6,6 @@ import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 
 export default class CloseTicketCommand extends BaseCommand {
-
   readonly commandWords = ["close", "stop"];
 
   public getHelp(): IBotCommandHelp {
@@ -41,7 +40,8 @@ export default class CloseTicketCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     // Get ticket channel id from channel name
-    let ticketChannelId = (commandData.message.channel as Discord.TextChannel).name
+    let ticketChannelId = (commandData.message
+      .channel as Discord.TextChannel).name
       .toString()
       .replace("ticket", "")
       .toString();
@@ -53,8 +53,7 @@ export default class CloseTicketCommand extends BaseCommand {
       .requestAPIWithType<TicketReceive>(
         "GET",
         null,
-        `https://api.dapperdino.co.uk/api/ticket/${ticketChannelId}`,
-        commandData.config
+        `/ticket/${ticketChannelId}`
       )
 
       // All went okay
@@ -71,8 +70,7 @@ export default class CloseTicketCommand extends BaseCommand {
           new ApiRequestHandler().requestAPI(
             "POST",
             null,
-            `https://api.dapperdino.co.uk/api/ticket/${ticketChannelId}/close`,
-            commandData.config
+            `/api/ticket/${ticketChannelId}/close`
           );
 
           // Get current guild
@@ -86,7 +84,7 @@ export default class CloseTicketCommand extends BaseCommand {
             .setColor("#ff0000")
             .setDescription(
               `${
-              ticketReceive.applicant.username
+                ticketReceive.applicant.username
               }'s problem has now been resolved, good job`
             );
 
@@ -107,7 +105,7 @@ export default class CloseTicketCommand extends BaseCommand {
           let endTicketEmbed = new Discord.RichEmbed()
             .setTitle(
               `${
-              commandData.message.author.username
+                commandData.message.author.username
               } thinks that this ticket can be closed now`
             )
             .setThumbnail(commandData.message.author.avatarURL)
