@@ -148,14 +148,14 @@ export default class OpenTicketsCommand extends BaseCommand {
                 user.discordId = commandData.message.author.id;
                 user.username = commandData.message.author.username;
                 let sent = 0;
-                // Post request to /api/Ticket/{ticketId}/AddAssignee to add current user to db as Assignee
+                // Post request to /ticket/{ticketId}/AddAssignee to add current user to db as Assignee
                 new ApiRequestHandler(commandData.client)
 
                   // Set params for requestAPI
                   .requestAPI(
                     "POST",
                     user,
-                    `/api/ticket/${data.ticket.id}/addAssignee`
+                    `/ticket/${data.ticket.id}/addAssignee`
                   )
 
                   // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel

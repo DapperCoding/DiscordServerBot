@@ -63,15 +63,16 @@ export default class CloseTicketCommand extends BaseCommand {
 
         // Check if current user is creator
         if (commandData.message.author.id == creatorId) {
-          // Delete discordMessage
-          commandData.message.channel.delete();
 
           // Close ticket through API
           new ApiRequestHandler().requestAPI(
             "POST",
             null,
-            `/api/ticket/${ticketChannelId}/close`
-          );
+            `/ticket/${ticketChannelId}/close`
+          ).then(() => {
+            // Delete discordMessage
+            commandData.message.channel.delete();
+          })
 
           // Get current guild
           let guild = commandData.message.guild;
@@ -84,7 +85,7 @@ export default class CloseTicketCommand extends BaseCommand {
             .setColor("#ff0000")
             .setDescription(
               `${
-                ticketReceive.applicant.username
+              ticketReceive.applicant.username
               }'s problem has now been resolved, good job`
             );
 
@@ -105,7 +106,7 @@ export default class CloseTicketCommand extends BaseCommand {
           let endTicketEmbed = new Discord.RichEmbed()
             .setTitle(
               `${
-                commandData.message.author.username
+              commandData.message.author.username
               } thinks that this ticket can be closed now`
             )
             .setThumbnail(commandData.message.author.avatarURL)

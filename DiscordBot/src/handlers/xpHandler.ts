@@ -1,5 +1,4 @@
 import * as Discord from "discord.js";
-import * as API from "../api";
 import { ApiRequestHandler } from "./apiRequestHandler";
 import { PostXp } from "../models/xp/postXp";
 import { ReceiveXp } from "../models/xp/receiveXp";
@@ -7,11 +6,11 @@ import { CompactPostXp } from "../models/xp/compactPostXp";
 import { ConfigManager } from "../configManager";
 
 export class XpHandler {
-  private baseUrl = "/xp/";
+  private baseUrl: string;
 
   constructor() {
     const config = ConfigManager.GetConfig();
-    this.baseUrl = config.apiUrl + "/xp/";
+    this.baseUrl = config.apiUrl + "xp/";
   }
 
   public async IncreaseXpOnMessage(message: Discord.Message) {
@@ -23,7 +22,12 @@ export class XpHandler {
     xpObject.discordId = message.author.id;
     xpObject.username = message.author.username;
 
-    new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL);
+    new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL)
+      .then((data) => {
+        console.log(data);
+      }).catch((err) => {
+        console.log(err);
+      });
   }
 
   public async IncreaseXp(message: Discord.Message, xp: number) {

@@ -70,7 +70,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
           .setColor("#ff0000")
           .setDescription(
             `${
-              ticketReceive.applicant.username
+            ticketReceive.applicant.username
             }'s problem has now been resolved, good job`
           );
 

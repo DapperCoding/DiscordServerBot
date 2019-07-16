@@ -46,7 +46,7 @@ export default class AcceptTicketCommand extends BaseCommand {
       .requestAPI(
         "POST",
         user,
-        `/api/ticket/${commandData.message.content.split(" ")[1]}/addAssignee`
+        `/ticket/${commandData.message.content.split(" ")[1]}/addAssignee`
       )
 
       // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel

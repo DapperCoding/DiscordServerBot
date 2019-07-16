@@ -42,7 +42,7 @@ export class ApiBotService {
 
     // Auto reconnect
     connection.onclose(() => {
-      setTimeout(function() {
+      setTimeout(function () {
         connection
           .start()
           .then(() => console.log("t"))
@@ -65,9 +65,9 @@ export class ApiBotService {
           if (chan && member) {
             chan.setTopic(
               `This ticket is created by ${
-                member.user.username
+              member.user.username
               } \n\n\n Subject:\n${ticket.subject} \n\n Description:\n${
-                ticket.description
+              ticket.description
               }`
             );
           }
@@ -84,7 +84,7 @@ export class ApiBotService {
             "GET",
             null,
             "/proficiency/GetProficienciesForDiscordUser/" +
-              happyToHelpers[i].user.id
+            happyToHelpers[i].user.id
           )
           .then(proficiencies => {
             let isInLanguage = false;
@@ -106,7 +106,7 @@ export class ApiBotService {
 
                   if (
                     proficiency.proficiencyLevel !=
-                      ProficiencyLevel.AbsoluteBeginner &&
+                    ProficiencyLevel.AbsoluteBeginner &&
                     proficiency.proficiencyLevel != ProficiencyLevel.JustStarted
                   ) {
                     if (ticket.language.id == proficiency.proficiencyId) {
@@ -134,7 +134,7 @@ export class ApiBotService {
                   .addField(
                     "Thank you ",
                     happyToHelpers[i].displayName +
-                      " for being willing to assist others in our server."
+                    " for being willing to assist others in our server."
                   )
                   .addField(
                     "Ticket Portal V0.1",
@@ -146,7 +146,7 @@ export class ApiBotService {
                   )
                   .setURL(
                     `https://dapperdino.co.uk/HappyToHelp/Ticket?id=${
-                      ticket.id
+                    ticket.id
                     }`
                   )
                   .setFooter("Thanks for all your help :)");
@@ -266,7 +266,7 @@ export class ApiBotService {
         suggestionEmbed.setTitle(`${suggestor.username} suggested something.`);
         suggestionEmbed.setDescription(
           `Happy To Help link: https://dapperdino.co.uk/HappyToHelp/Suggestion/${
-            suggestion.id
+          suggestion.id
           }`
         );
         const h2hChat = this._server.channels.find(
@@ -350,26 +350,5 @@ export class ApiBotService {
 
     // Returns compact discord user that's either empty or filled with the information gotten from the server
     return userObject;
-  }
-
-  // Get discord user by email from API
-  public GetDiscordUserByEmail(emailAddress: string) {
-    // Create new Email object
-    let emailObject = new Email();
-
-    // Add email address to it
-    emailObject.email = emailAddress;
-
-    // Get response from api
-    let responseData = new ApiRequestHandler().requestAPI(
-      "POST",
-      emailObject,
-      "https://dapperdinoapi.azurewebsites.net/api/search/user"
-    );
-
-    // Try to log data
-    console.log(responseData);
-
-    /// THIS METHOD NEEDS TO BE REFACTORED
   }
 }

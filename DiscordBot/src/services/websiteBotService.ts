@@ -937,25 +937,4 @@ export class WebsiteBotService {
     // Returns compact discord user that's either empty or filled with the information gotten from the server
     return userObject;
   }
-
-  // Get discord user by email from API
-  public GetDiscordUserByEmail(emailAddress: string) {
-    // Create new Email object
-    let emailObject = new Email();
-
-    // Add email address to it
-    emailObject.email = emailAddress;
-
-    // Get response from api
-    let responseData = new ApiRequestHandler().requestAPI(
-      "POST",
-      emailObject,
-      "https://dapperdinoapi.azurewebsites.net/api/search/user"
-    );
-
-    // Try to log data
-    console.log(responseData);
-
-    /// THIS METHOD NEEDS TO BE REFACTORED
-  }
 }

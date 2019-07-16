@@ -17,10 +17,12 @@ import {
   TextChannel,
   RichEmbed,
   CategoryChannel,
-  Message
+  Message,
+  DMChannel
 } from "discord.js";
 import { Intent } from "./models/intent";
 import { IntentData } from "./models/intentData";
+import { ApiRequestHandler } from "./handlers/apiRequestHandler";
 
 export class Bot implements IBot {
   public get commands(): BotCommand[] {
@@ -105,7 +107,7 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function(erMsg, code) {
+    this._client.on("disconnect", function (erMsg, code) {
       console.log(
         "----- Bot disconnected from Discord with code",
         code,
@@ -120,31 +122,8 @@ export class Bot implements IBot {
       client.login(config.token);
     });
 
-    this._client.on("message", msg => {
-      if (
-        msg.content.indexOf("https://privatepage.vip/") >= 0 ||
-        msg.content.indexOf("nakedphotos.club/") >= 0 ||
-        msg.content.indexOf("viewc.site/") >= 0
-      ) {
-        msg.member.ban("No more NSFW");
-        msg.delete(0);
-      }
-
-      if (msg.embeds.length >= 1 && !msg.author.bot) {
-        if (msg.embeds.filter(embed => embed.type === "rich").length > 0) {
-          msg.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
-          msg.member
-            .ban()
-            .then(member => {
-              console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`);
-            })
-            .catch(console.error);
-        }
-      }
-    });
-
     // Automatically reconnect if the bot errors
-    this._client.on("error", function(error) {
+    this._client.on("error", function (error) {
       console.log(`----- Bot errored ${error} -----`);
 
       let client = getClient();
@@ -202,6 +181,9 @@ export class Bot implements IBot {
 
       // Create new xp handler
       this._xpHandler = new XpHandler();
+
+      //Regenerate bearer token
+      new ApiRequestHandler().generateNewToken(this._config);
     });
 
     // Fired when a user joins the server
@@ -218,8 +200,8 @@ export class Bot implements IBot {
           )
           .addField(
             "Thanks For Joining The Other " +
-              member.guild.memberCount.toString() +
-              " Of Us!",
+            member.guild.memberCount.toString() +
+            " Of Us!",
             "Sincerely, your friend, DapperBot."
           );
 
@@ -241,7 +223,7 @@ export class Bot implements IBot {
       // Send rules intro text
       member.send(
         `Hello ${
-          member.displayName
+        member.displayName
         }. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
       );
 
@@ -316,7 +298,7 @@ export class Bot implements IBot {
         // Send discordMessage to welcome channel
         this._welcomeChannel.send(
           `${
-            member.displayName
+          member.displayName
           }, it's a shame you had to leave us. We'll miss you :(`
         );
       else {
@@ -330,7 +312,10 @@ export class Bot implements IBot {
     this._client.on("message", async message => {
       // Make sure that the bot isn't responding to itself
       if (message.author.id === this._botId) {
-        if (
+        if ((message.channel.type === "dm")) {
+          return;
+        }
+        else if (
           (message.channel as TextChannel).name
             .toLowerCase()
             .startsWith("ticket")
@@ -339,6 +324,19 @@ export class Bot implements IBot {
         }
         return;
       }
+
+      if (message.embeds.length >= 1 && !message.author.bot) {
+        if (message.embeds.filter(embed => embed.type === "rich").length > 0) {
+          message.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
+          message.member
+            .ban()
+            .then(member => {
+              console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`);
+            })
+            .catch(console.error);
+        }
+      }
+
       let a = Bot.isInDialogue(message.channel.id, message.author.id);
       if (a) return;
 
@@ -348,21 +346,18 @@ export class Bot implements IBot {
       // Log to console
       this._logger.debug(`[${message.author.tag}] ${text}`);
 
-      // Check proficiencycordMessage is NOT sent in dm
-      if (message.channel.type !== "dm") {
-        // Add xp
-        this._xpHandler.IncreaseXpOnMessage(message);
+      // Add xp
+      this._xpHandler.IncreaseXpOnMessage(message);
 
-        // Get ticket categoryproficiency
-        let ticketCategory = message.guild.channels.find(
-          category => category.name === "Tickets"
-        ) as CategoryChannel;
+      // Get ticket categoryproficiency
+      let ticketCategory = message.guild.channels.find(
+        category => category.name === "Tickets"
+      ) as CategoryChannel;
 
-        // Check if discordMessage is sent in ticket category
-        if ((message.channel as TextChannel).parent == ticketCategory) {
-          // Handle messages for tickets
-          this._messageService.handleMessageInTicketCategory(message);
-        }
+      // Check if discordMessage is sent in ticket category
+      if ((message.channel as TextChannel).parent == ticketCategory) {
+        // Handle messages for tickets
+        this._messageService.handleMessageInTicketCategory(message);
       }
 
       this.handleLuisCommands(text, message);

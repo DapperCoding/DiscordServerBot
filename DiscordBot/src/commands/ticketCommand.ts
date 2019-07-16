@@ -152,7 +152,7 @@ export default class TicketCommand extends BaseCommand {
     ticketObject.frameworkId = framework.id;
     ticketObject.languageId = language.id;
 
-    // Post request to /api/Ticket/
+    // Post request to /ticket/
     new ApiRequestHandler()
 
       // Create request and fill params

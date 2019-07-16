@@ -1,5 +1,5 @@
 import * as Discord from "discord.js";
-import { IBotConfig, IBotCommandHelp } from "../api";
+import { IBotCommandHelp } from "../api";
 import { Faq } from "../models/faq/faq";
 import { DialogueHandler, DialogueStep } from "../handlers/dialogueHandler";
 import { FaqDialogue } from "../dialogues/faqDialogue";

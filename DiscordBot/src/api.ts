@@ -14,7 +14,6 @@ export interface ILogger {
 }
 
 export interface IBotConfig {
-  apiUrl: string;
   token: string;
   prefix: string;
   serverId: string;
@@ -25,6 +24,7 @@ export interface IBotConfig {
   luisApiKey: any;
   welcomeChannel: string;
   faqChannel: string;
+  apiUrl: string;
 }
 
 export interface IBotCommandHelp {

@@ -162,11 +162,11 @@ export default class CreateIntent extends BaseIntent {
     ticketObject.frameworkId = framework.id;
     ticketObject.languageId = language.id;
 
-    // Post request to /api/Ticket/
+    // Post request to /ticket/
     new ApiRequestHandler()
 
       // Create request and fill params
-      .requestAPI("POST", ticketObject, "/api/ticket")
+      .requestAPI("POST", ticketObject, "/ticket")
 
       // If everything went well, we receive a ticketReceive object
       .then(value => {
