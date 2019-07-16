@@ -6,7 +6,6 @@ export class ApiRequestHandler {
   constructor(serverBot?: Discord.Client) {
     if (serverBot) this._serverBot = serverBot;
   }
-  private static bearerToken = "";
 
   private _headers = {
     "User-Agent": "DapperBot/0.0.1",
@@ -99,7 +98,8 @@ export class ApiRequestHandler {
   ) {
     return new Promise<T>(async (resolve, reject) => {
       const config = ConfigManager.GetConfig();
-      this._headers.Authorization = `Bearer ${config.apiBearerToken}`;
+      const token = ConfigManager.GetMemoryConfig("bearer");
+      this._headers.Authorization = `Bearer ${token}`;
       const apiUrl = config.apiUrl;
       var options = {
         url: apiUrl + requestUrl,
@@ -132,6 +132,8 @@ export class ApiRequestHandler {
           console.log("Unauthorized");
           reject("403");
           return;
+        } else if (response.statusCode == 404) {
+            console.log("NOT FOUND");
         } else if (response.statusCode == 500) {
           reject("500");
           return;

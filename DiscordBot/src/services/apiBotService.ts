@@ -30,7 +30,7 @@ export class ApiBotService {
   startupService = async () => {
     // Creates connection to our API's SignalR hub
     const connection = new ASPNET.HubConnectionBuilder()
-      .withUrl(this._config.apiUrl.replace("/api", "") + "/discordbothub")
+      .withUrl(this._config.apiUrl.replace("/api/", "") + "/discordbothub")
       .configureLogging(ASPNET.LogLevel.Debug)
       .build();
 

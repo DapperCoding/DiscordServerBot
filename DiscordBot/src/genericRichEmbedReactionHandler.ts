@@ -159,9 +159,9 @@ export class RichEmbedReactionHandler<
       throw new Error("no categories");
 
     let cat = this.categories.get(category);
-
-    if (!cat) throw "no category";
-
+    if (!cat) this.categories.set(category, new Map());
+    cat = this.categories.get(category);
+    if (!cat) throw new Error("no category");
     this.currentCategory = cat;
   }
 
