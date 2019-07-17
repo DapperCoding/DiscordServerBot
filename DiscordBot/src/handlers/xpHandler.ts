@@ -66,7 +66,7 @@ export class XpHandler {
     // Return new Promise<receiveXp>
     return new Promise<ReceiveXp>(async (resolve, reject) => {
       // Create xp url
-      let xpUrl = `${this.baseUrl}${discordId}`;
+      let xpUrl = `xp/${discordId}`;
 
       // Request API
       new ApiRequestHandler()

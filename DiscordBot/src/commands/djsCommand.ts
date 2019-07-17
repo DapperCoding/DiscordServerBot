@@ -3,6 +3,8 @@ import { IBotCommandHelp } from '../api'
 import BaseCommand from '../baseCommand';
 import { CommandData } from '../models/commandData';
 
+const fetch = require('node-fetch');
+
 export default class DjsCommand extends BaseCommand {
 
     readonly commandWords = ["djs"];
@@ -18,6 +20,7 @@ export default class DjsCommand extends BaseCommand {
     public async process(commandData: CommandData): Promise<void> {
 
         let args = commandData.message.content.split(" ");
+        let command = args.shift();
         let flag = args.pop() || "";
 
         let v = 'stable';
