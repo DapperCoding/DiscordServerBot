@@ -5,7 +5,6 @@ import { XpHandler } from "../../handlers/xpHandler";
 import { LuisCommandHandler } from "../../handlers/luisCommandHandler";
 import { CommandHandler } from "../../handlers/commandHandler";
 import { ConfigManager } from "../../configManager";
-import { ChannelHelper } from "../../helpers/channelHelper";
 import { GuildHelper } from "../../helpers/guildHelper";
 
 export class MessageEvent {

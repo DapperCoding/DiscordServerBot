@@ -47,7 +47,7 @@ export default class LevelCommand extends BaseCommand {
 
   private createLevelEmbed(message) {
     return new Promise<Discord.RichEmbed>(async (resolve, reject) => {
-      new XpHandler().getLevelDataById(message.author.id).then(levelData => {
+      XpHandler.instance.getLevelDataById(message.author.id).then(levelData => {
         let xpEmbed = new Discord.RichEmbed()
           .setTitle(message.author.username)
           .setColor("#ff00ff")
