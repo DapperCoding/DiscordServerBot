@@ -133,7 +133,7 @@ export class ApiRequestHandler {
           reject("403");
           return;
         } else if (response.statusCode == 404) {
-            console.log("NOT FOUND");
+          console.log("NOT FOUND");
         } else if (response.statusCode == 500) {
           reject("500");
           return;

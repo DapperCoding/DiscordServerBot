@@ -13,6 +13,8 @@ export class XpHandler {
     this.baseUrl = config.apiUrl + "xp/";
   }
 
+  public static instance = new XpHandler();
+
   public async IncreaseXpOnMessage(message: Discord.Message) {
     let userXpURL = this.baseUrl + message.author.id;
 
@@ -22,10 +24,12 @@ export class XpHandler {
     xpObject.discordId = message.author.id;
     xpObject.username = message.author.username;
 
-    new ApiRequestHandler().requestAPI("POST", xpObject, userXpURL)
-      .then((data) => {
+    new ApiRequestHandler()
+      .requestAPI("POST", xpObject, userXpURL)
+      .then(data => {
         console.log(data);
-      }).catch((err) => {
+      })
+      .catch(err => {
         console.log(err);
       });
   }
