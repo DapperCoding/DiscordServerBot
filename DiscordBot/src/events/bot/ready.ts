@@ -7,7 +7,6 @@ import { WebsiteBotService } from "../../services/websiteBotService";
 import { ApiBotService } from "../../services/apiBotService";
 import { ChannelHelper } from "../../helpers/channelHelper";
 import { MessageService } from "../../services/messageService";
-import { XpHandler } from "../../handlers/xpHandler";
 import { ApiRequestHandler } from "../../handlers/apiRequestHandler";
 
 export class ReadyEvent {

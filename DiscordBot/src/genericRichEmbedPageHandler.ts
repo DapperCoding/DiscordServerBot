@@ -54,6 +54,8 @@ export class GenericRichEmbedPageHandler<T> {
     this.showPage();
   };
 
+  public GetPageNumber = () => this.currentPage;
+
   public showPage() {
     // Get the start index, if page == 1, the index is 0
     let start =

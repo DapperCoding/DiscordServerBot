@@ -77,4 +77,18 @@ export class XpHandler {
         });
     });
   }
+
+  public async getTop100() {
+    // Return new Promise<receiveXp>
+    return new Promise<ReceiveXp[]>(async (resolve, reject) => {
+      const url = "xp";
+      // Request API
+      new ApiRequestHandler()
+        .requestAPIWithType<ReceiveXp[]>("GET", null, url)
+        .then(xpReturnObject => {
+          // Resolve if all went okay
+          return resolve(xpReturnObject);
+        });
+    });
+  }
 }
