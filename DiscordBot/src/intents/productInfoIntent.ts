@@ -1,7 +1,8 @@
 import BaseIntent from "../baseIntent";
 import { IntentData } from "../models/intentData";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { RichEmbed } from "discord.js";
+import { RichEmbed, TextChannel } from "discord.js";
+import { ProductHelper } from "../helpers/productHelper";
 
 export default class ProductInfoIntent extends BaseIntent {
   intent = "productinfo";
@@ -21,45 +22,6 @@ export default class ProductInfoIntent extends BaseIntent {
 
     console.log(this.id);
 
-    new ApiRequestHandler(intentData.client)
-      .requestAPIWithType<any>("GET", null, "product/" + this.id)
-      .then(product => {
-        const embed = new RichEmbed()
-          .setTitle(
-            `Information about our '${product.name}' ($${product.price})`
-          )
-          .setDescription(product.description)
-          .setURL("https://dapperdino.co.uk/Products/Information/" + product.id)
-          .setFooter("Click on the title to open in your web browser");
-
-        if (product.instructions) {
-          embed.addField(
-            product.instructions.name,
-            product.instructions.description
-          );
-        }
-
-        if (product.categories && product.categories.length > 0) {
-          let categoryField = "";
-          for (let i = 0; i < product.categories.length; i++) {
-            let cat = product.categories[i].productCategory;
-            categoryField += `${cat.name} (${cat.description}) \n`;
-          }
-          embed.addField("Categories", categoryField);
-        }
-
-        if (product.productImages && product.productImages.length > 0) {
-          for (let i = 0; i < product.productImages.length; i++) {
-            let image = product.productImages[i];
-
-            if (image.isHeaderImage) {
-              embed.setImage(image.url);
-            }
-          }
-        }
-
-        intentData.message.channel.send(embed);
-      })
-      .catch(console.error);
+    ProductHelper.createProductInfoReactionHandler(this.id, intentData.client, intentData.message.author.id, intentData.message.channel as TextChannel, null);
   }
 }
