@@ -34,7 +34,7 @@ export class LuisCommandHandler {
 
     try {
       let intentWord = this.luis.intent();
-      if (this.luis.response.topScoringIntent.score < 0.9) return;
+      if (this.luis.response.topScoringIntent.score < 0.8) return;
 
       for (const intent of this.intents) {
         if (!intent.isValid(intentWord)) {
