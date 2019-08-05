@@ -25,15 +25,15 @@ export class MessageEvent {
     }
 
     if (message.embeds.length >= 1 && !message.author.bot) {
-      if (message.embeds.filter(embed => embed.type === "rich").length > 0) {
-        message.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
-        message.member
-          .ban()
-          .then(member => {
-            console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`);
-          })
-          .catch(console.error);
-      }
+      // if (message.embeds.filter(embed => embed.type === "rich").length > 0) {
+      //   message.author.send("USE A SELFBOT 4HEAD - GG INSTABAN");
+      //   message.member
+      //     .ban()
+      //     .then(member => {
+      //       console.log(`[SELFBOT BAN] Tag: ${member.user.tag}`);
+      //     })[SELFBOT BAN]
+      //     .catch(console.error);
+      // }
     }
 
     let a = Bot.isInDialogue(message.channel.id, message.author.id);
