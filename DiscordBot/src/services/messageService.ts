@@ -38,6 +38,7 @@ export class MessageService {
     // }
 
     // Get ticket channel id from channel name
+    if (message.channel.type !== "text") return;
     let ticketChannelId = (message.channel as Discord.TextChannel).name
       .toString()
       .replace("ticket", "")
