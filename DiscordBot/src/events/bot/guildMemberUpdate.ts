@@ -10,11 +10,7 @@ export class GuildMemberUpdateEvent {
 
     let id: string = "";
 
-    if (oldMember !== null) {
-      id = oldMember.id;
-    } else {
-      id = newMember.id;
-    }
+    id = oldMember ? oldMember.id : newMember.id;
 
     new ApiRequestHandler(newMember.client)
       .requestAPI(
