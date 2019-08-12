@@ -7,12 +7,15 @@ export class GuildMemberUpdateEvent {
   }
 
   private static SyncUser(oldMember: GuildMember, newMember: GuildMember) {
-    if (oldMember === null || newMember === null) { return; }
+
+    let id: string = "";
+
+    id = oldMember ? oldMember.id : newMember.id;
 
     new ApiRequestHandler(newMember.client)
       .requestAPI(
         "GET",
         null,
-        `discorduser/syncuser/${newMember.id}`);
+        `discorduser/syncuser/${id}`);
   }
 }
