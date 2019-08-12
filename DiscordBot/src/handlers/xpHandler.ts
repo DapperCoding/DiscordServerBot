@@ -9,8 +9,7 @@ export class XpHandler {
   private baseUrl: string;
 
   constructor() {
-    const config = ConfigManager.GetConfig();
-    this.baseUrl = config.apiUrl + "xp/";
+    this.baseUrl =  "xp/";
   }
 
   public static instance = new XpHandler();
