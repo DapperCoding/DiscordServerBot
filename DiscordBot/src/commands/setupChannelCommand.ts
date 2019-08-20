@@ -20,7 +20,7 @@ export default class MirrorCommand extends BaseCommand {
   }
 
   public canUseInChannel(channel: Discord.TextChannel): boolean {
-    return !channel.name.toLowerCase().startsWith("ticket");
+    return channel.name.toLowerCase().startsWith("ticket");
   }
 
   public async process(commandData: CommandData): Promise<void> {
@@ -32,7 +32,7 @@ export default class MirrorCommand extends BaseCommand {
       .requestAPIWithType<Ticket>(
         "GET",
         null,
-        `/tickets/${channel.name.toLowerCase().replace("ticket", "")}`
+        `/ticket/${channel.name.toLowerCase().replace("ticket", "")}`
       )
       .then(ticket => {
         // Get member that created the ticket
