@@ -8,6 +8,7 @@ import {
 } from "../../models/proficiency/proficiency";
 import { ConfigManager } from "../../configManager";
 import { GuildHelper } from "../../helpers/guildHelper";
+import { TicketHelper } from "../../helpers/ticketHelper";
 
 export class TicketCreatedEvent {
   public static handle = (ticket: Ticket, server: Guild) => {
@@ -19,19 +20,7 @@ export class TicketCreatedEvent {
       // Add author to ticket
       .createChannelTicketCommand(ticket.id, member)
       .then(async channel => {
-        let chan = channel as TextChannel;
-
-        if (chan && member) {
-          chan.setTopic(
-            `This ticket is created by ${
-              member.user.username
-            } \n\n\n Subject:\n${ticket.subject} \n\n Description:\n${
-              ticket.description
-            } \n\n Framework:\n ${ticket.framework.name} \n\n Language: \n ${
-              ticket.language.name
-            }`
-          );
-        }
+        TicketHelper.updateTopic(member as GuildMember, ticket);
       });
 
     console.log("hi");
