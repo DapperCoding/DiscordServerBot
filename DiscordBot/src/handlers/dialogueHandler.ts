@@ -7,7 +7,7 @@ export class DialogueHandler<T> {
   private _steps: DialogueStep<T>[] | DialogueStep<T>;
   private _data: T;
   private _currentStep: DialogueStep<T>;
-  private _channel?: Discord.TextChannel;
+  private _channel?: Discord.TextChannel | Discord.DMChannel;
   private _removeMessages: Discord.Message[];
   private _cancelDialogue: boolean;
 
@@ -44,14 +44,15 @@ export class DialogueHandler<T> {
   }
 
   public async getInput(
-    channel: Discord.TextChannel,
-    user: Discord.GuildMember
+    channel: Discord.TextChannel | Discord.DMChannel,
+    user: Discord.User,
+    deleteMessage: boolean = true
   ): Promise<T> {
     return new Promise<T>(async (resolve, reject) => {
       this._channel = channel;
 
       // Set in dialogue
-      Bot.setIsInDialogue(this._channel.id, user.user.id, new Date());
+      Bot.setIsInDialogue(this._channel.id, user.id, new Date());
 
       // Loop over each step
       for (const step of this._steps as DialogueStep<T>[]) {
@@ -62,17 +63,18 @@ export class DialogueHandler<T> {
         this._currentStep = step;
 
         // Filter for current user
-        const filter = m => m.member == user;
+        const filter = message => message.author == user;
 
         let message = new Discord.RichEmbed()
-          .setTitle("Hi " + user.user.username)
+          .setTitle("Hi " + user.username)
           .setDescription(step.beforeMessage)
           .addField("Notification for", user)
           .setFooter("You can cancel the process by responding with ?cancel");
 
         // Send before discordMessage
         await channel.send(message).then(newMsg => {
-          this._removeMessages.push(newMsg as Discord.Message);
+          if (deleteMessage)
+            this._removeMessages.push(newMsg as Discord.Message);
         });
 
         // Handle callback + validation
@@ -80,7 +82,7 @@ export class DialogueHandler<T> {
       }
 
       // Set in dialogue state to false
-      Bot.removeIsInDialogue(channel.id, user.user.id).catch(e => {
+      Bot.removeIsInDialogue(channel.id, user.id).catch(e => {
         console.error(
           "--- dialogueHandler error (can't remove from isInDialogue)"
         );
@@ -89,8 +91,9 @@ export class DialogueHandler<T> {
 
       // Remove all messages that have been sent by looping over them (https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach)
       this._removeMessages.forEach(message => {
-        // Delete message
-        message.delete(0);
+        if (deleteMessage)
+          // Delete message
+          message.delete(0);
       });
 
       // If the user cancelled, reject else resolve with the data that has been modified throughout the steps
@@ -122,7 +125,7 @@ export class DialogueHandler<T> {
         if (response.content === "?cancel") {
           // Set variable _cancelDialogue to true so we can break out of the step loop
           this._cancelDialogue = true;
-
+          if (this._channel) this._channel.send("You cancelled the dialogue.");
           // Stop callback
           return;
         }

@@ -1,5 +1,5 @@
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { Message, RichEmbed } from "discord.js";
+import { Message, RichEmbed, Client, TextChannel, DMChannel } from "discord.js";
 import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
 import { Proficiency } from "../models/proficiency/proficiency";
 import { IBotConfig } from "../api";
@@ -8,11 +8,15 @@ export class TicketProficiencyDialogue {
   /**
    * test
    */
-  public SelectLanguage(message: Message) {
+  public SelectLanguage(
+    client: Client,
+    channel: TextChannel | DMChannel,
+    authorId: string
+  ) {
     return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Choose the language");
 
-      new ApiRequestHandler(message.client)
+      new ApiRequestHandler(client)
 
         // Set params for requestAPI
         .requestAPIWithType<Proficiency[]>(
@@ -28,7 +32,7 @@ export class TicketProficiencyDialogue {
           let endIndex = startIndex + perPage;
           let max = proficiencies.length;
 
-          let sentEmbed = (await message.channel
+          let sentEmbed = (await channel
             .send(startupEmbed)
             .catch(console.error)) as Message;
           let handler = new RichEmbedReactionHandler<TicketLangueWithHandler>(
@@ -82,7 +86,7 @@ export class TicketProficiencyDialogue {
             currentIndex++;
           }
 
-          handler.startCollecting(message.author.id);
+          handler.startCollecting(authorId);
 
           sentEmbed.edit(embed);
         });
@@ -103,11 +107,15 @@ export class TicketProficiencyDialogue {
     });
   }
 
-  public SelectFramework(message: Message) {
+  public SelectFramework(
+    client: Client,
+    channel: TextChannel | DMChannel,
+    authorId: string
+  ) {
     return new Promise<Proficiency>((resolve, reject) => {
       let startupEmbed = new RichEmbed().setTitle("Select the framework");
 
-      new ApiRequestHandler(message.client)
+      new ApiRequestHandler(client)
 
         // Set params for requestAPI
         .requestAPIWithType<Proficiency[]>(
@@ -123,7 +131,7 @@ export class TicketProficiencyDialogue {
           let endIndex = startIndex + perPage;
           let max = proficiencies ? proficiencies.length : 0;
 
-          let sentEmbed = (await message.channel
+          let sentEmbed = (await channel
             .send(startupEmbed)
             .catch(console.error)) as Message;
           let handler = new RichEmbedReactionHandler<TicketLangueWithHandler>(
@@ -174,7 +182,7 @@ export class TicketProficiencyDialogue {
             currentIndex++;
           }
 
-          handler.startCollecting(message.author.id);
+          handler.startCollecting(authorId);
 
           sentEmbed.edit(embed);
         });

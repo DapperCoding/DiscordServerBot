@@ -61,7 +61,7 @@ export default class AddFaqCommand extends BaseCommand {
     await handler
       .getInput(
         commandData.message.channel as Discord.TextChannel,
-        commandData.message.member
+        commandData.message.author
       )
       .then(faq => {
         dialogue.finalizeSteps(faq);

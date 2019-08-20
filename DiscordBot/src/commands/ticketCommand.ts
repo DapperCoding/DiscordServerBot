@@ -61,6 +61,20 @@ export default class TicketCommand extends BaseCommand {
   }
 
   public async process(commandData: CommandData): Promise<void> {
+    let dm = {} as discord.Message;
+    try {
+      dm = (await commandData.message.author.send(
+        "Create your ticket"
+      )) as discord.Message;
+      commandData.message.channel.send(
+        "Check your dms! You can continue creating a ticket in your dms."
+      );
+    } catch (e) {
+      commandData.message.channel.send(
+        "Please use the web portal or enable dms to use this feature."
+      );
+      return;
+    }
     // Array of collected info
     let collectedInfo = new TicketDialogueData();
 
@@ -91,24 +105,26 @@ export default class TicketCommand extends BaseCommand {
       collectedInfo
     );
 
-    // Add current message for if the user cancels the dialogue
-    handler.addRemoveMessage(commandData.message);
-
     // Collect info from steps
     await handler
       .getInput(
-        commandData.message.channel as discord.TextChannel,
-        commandData.message.member
+        dm.channel as discord.DMChannel,
+        commandData.message.author,
+        false
       )
       .then(async data => {
         // TODO: Create reaction handlers
         let reactionHandler = new TicketProficiencyDialogue();
 
         let language = await reactionHandler.SelectLanguage(
-          commandData.message
+          commandData.client,
+          dm.channel as discord.DMChannel,
+          commandData.message.author.id
         );
         let framework = await reactionHandler.SelectFramework(
-          commandData.message
+          commandData.client,
+          dm.channel as discord.DMChannel,
+          commandData.message.author.id
         );
 
         //API CALL
@@ -121,11 +137,11 @@ export default class TicketCommand extends BaseCommand {
           .addField("Your Title:", data.title, false)
           .addField("Your Description:", data.description, false)
           .setFooter(
-            "Happy new year everyone! Please expect some delay in ticket handling this holiday season."
+            "Thanks for being patient while we revamp the Happy to Help team."
           );
 
         // Send ticketEmbed
-        commandData.message.channel.send(ticketEmbed);
+        commandData.message.author.send(ticketEmbed);
       });
   }
 

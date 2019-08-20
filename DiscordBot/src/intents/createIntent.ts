@@ -1,6 +1,6 @@
 import BaseIntent from "../baseIntent";
 import { IntentData } from "../models/intentData";
-import { RichEmbed, TextChannel, Message } from "discord.js";
+import { RichEmbed, TextChannel, Message, DMChannel } from "discord.js";
 import {
   TicketDialogueData,
   TicketDialogue
@@ -47,6 +47,20 @@ export default class CreateIntent extends BaseIntent {
       handler.addEmoji("tickets", "✅", {
         clickHandler: async data => {
           // create ticket
+          let dm = {} as Message;
+          try {
+            dm = (await intentData.message.author.send(
+              "Create your ticket"
+            )) as Message;
+            intentData.message.channel.send(
+              "Check your dms! You can continue creating a ticket in your dms."
+            );
+          } catch (e) {
+            intentData.message.channel.send(
+              "Please use the web portal or enable dms to use this feature."
+            );
+            return;
+          }
 
           // Create category step
           let titleStep: DialogueStep<TicketDialogueData> = new DialogueStep(
@@ -75,23 +89,24 @@ export default class CreateIntent extends BaseIntent {
           );
 
           // Add current message for if the user cancels the dialogue
-          handler.addRemoveMessage(intentData.message);
+          //handler.addRemoveMessage(intentData.message);
 
           // Collect info from steps
           await handler
-            .getInput(
-              intentData.message.channel as TextChannel,
-              intentData.message.member
-            )
+            .getInput(dm.channel as DMChannel, intentData.message.author, false)
             .then(async data => {
               // TODO: Create reaction handlers
               let reactionHandler = new TicketProficiencyDialogue();
 
               let language = await reactionHandler.SelectLanguage(
-                intentData.message
+                intentData.client,
+                dm.channel as DMChannel,
+                intentData.message.author.id
               );
               let framework = await reactionHandler.SelectFramework(
-                intentData.message
+                intentData.client,
+                dm.channel as DMChannel,
+                intentData.message.author.id
               );
 
               //API CALL

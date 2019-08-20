@@ -55,7 +55,7 @@ export default class AddIntent extends BaseIntent {
       await handler
         .getInput(
           intentData.message.channel as TextChannel,
-          intentData.message.member
+          intentData.message.author
         )
         .then(faq => {
           dialogue.finalizeSteps(faq);

@@ -111,7 +111,7 @@ export class FaqDialogue {
           data
         );
 
-        return resolve(await handler.getInput(this._channel, this._user));
+        return resolve(await handler.getInput(this._channel, this._user.user));
       }
 
       return resolve(data);
