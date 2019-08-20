@@ -1,4 +1,4 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember, TextChannel, Guild } from "discord.js";
 import { Ticket } from "../models/ticket/ticket";
 
 export class TicketHelper {
@@ -21,5 +21,72 @@ export class TicketHelper {
         ticket.framework.name
       } \n\n Language: \n ${ticket.language.name}`
     );
+  }
+
+  public static async fixPermissions(guild: Guild, ticket: Ticket) {
+    // Find channel
+    let channel = guild.channels.find(
+      c => c.name.toLowerCase() === `ticket${ticket.id}`
+    ) as TextChannel;
+
+    // Do nothing if we can't find the channel
+    if (!channel) {
+      return;
+    }
+
+    // Set parent to the category channel
+    await channel.setParent(
+      guild.channels.find(c => c.name.toLowerCase() === "tickets")
+    );
+
+    //Find the role 'Admin'
+    var adminRole = guild.roles.find(role => role.name === "Admin");
+
+    //Find the role 'Dapper Bot'
+    var dapperRole = guild.roles.find(role => role.name === "Dapper Bot");
+
+    //Find the role 'DapperWeb'
+    var dapperWebRole = guild.roles.find(
+      role => role.name === "DapperWeb"
+    );
+
+    // Add permissions for creator
+    channel.overwritePermissions(ticket.applicant.discordId, {
+      READ_MESSAGE_HISTORY: true,
+      SEND_MESSAGES: true,
+      VIEW_CHANNEL: true,
+      EMBED_LINKS: true
+    });
+
+    // Add permissions for admins
+    channel.overwritePermissions(adminRole, {
+      READ_MESSAGE_HISTORY: true,
+      SEND_MESSAGES: true,
+      VIEW_CHANNEL: true,
+      EMBED_LINKS: true
+    });
+
+    // Add permissions for dapper bot
+    channel.overwritePermissions(dapperRole, {
+      READ_MESSAGE_HISTORY: true,
+      SEND_MESSAGES: true,
+      VIEW_CHANNEL: true,
+      EMBED_LINKS: true
+    });
+
+    // Add permissions for dapper bot
+    channel.overwritePermissions(dapperWebRole, {
+      READ_MESSAGE_HISTORY: true,
+      SEND_MESSAGES: true,
+      VIEW_CHANNEL: true,
+      EMBED_LINKS: true
+    });
+
+    // Remove permissions for everyone else
+    channel.overwritePermissions(guild.id, {
+      READ_MESSAGE_HISTORY: false,
+      SEND_MESSAGES: false,
+      VIEW_CHANNEL: false
+    });
   }
 }

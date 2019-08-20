@@ -42,6 +42,7 @@ export default class MirrorCommand extends BaseCommand {
 
         // Update topic
         TicketHelper.updateTopic(member, ticket);
+        TicketHelper.fixPermissions(commandData.guild, ticket);
       });
   }
 }
