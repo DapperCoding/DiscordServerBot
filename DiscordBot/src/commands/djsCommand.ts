@@ -32,7 +32,7 @@ export default class DjsCommand extends BaseCommand {
         }
         const response = args.join(' ');
 
-        const url = `https://djsdocs.sorta.moe/main/${v}/embed?q=${encodeURIComponent(response)}`;
+        const url = `https://djsdocs.sorta.moe/v2/embed?src=${v}&q=${encodeURIComponent(response)}`;
 
         fetch(url)
             .then(res => res.json())
