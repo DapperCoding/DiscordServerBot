@@ -43,12 +43,15 @@ export class TicketHelper {
     var adminRole = guild.roles.find(role => role.name === "Admin");
 
     //Find the role 'Dapper Bot'
-    var dapperRole = guild.roles.find(role => role.name === "Dapper Bot");
+    var dapperBotRole = guild.roles.find(role => role.name === "DapperBot");
+
+    //Find the role 'Dapper Coding'
+    var dapperCodingRole = guild.roles.find(
+      role => role.name === "DapperCoding"
+    );
 
     //Find the role 'DapperWeb'
-    var dapperWebRole = guild.roles.find(
-      role => role.name === "DapperWeb"
-    );
+    var dapperWebRole = guild.roles.find(role => role.name === "DapperWeb");
 
     // Add permissions for creator
     channel.overwritePermissions(ticket.applicant.discordId, {
@@ -66,8 +69,8 @@ export class TicketHelper {
       EMBED_LINKS: true
     });
 
-    // Add permissions for dapper bot
-    channel.overwritePermissions(dapperRole, {
+    // Add permissions for dapper coding
+    channel.overwritePermissions(dapperCodingRole, {
       READ_MESSAGE_HISTORY: true,
       SEND_MESSAGES: true,
       VIEW_CHANNEL: true,
@@ -75,6 +78,14 @@ export class TicketHelper {
     });
 
     // Add permissions for dapper bot
+    channel.overwritePermissions(dapperBotRole, {
+      READ_MESSAGE_HISTORY: true,
+      SEND_MESSAGES: true,
+      VIEW_CHANNEL: true,
+      EMBED_LINKS: true
+    });
+
+    // Add permissions for dapper web
     channel.overwritePermissions(dapperWebRole, {
       READ_MESSAGE_HISTORY: true,
       SEND_MESSAGES: true,
