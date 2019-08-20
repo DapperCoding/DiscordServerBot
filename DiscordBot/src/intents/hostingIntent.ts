@@ -30,7 +30,7 @@ export default class HostingIntent extends BaseIntent {
 
                     const requestContactEmbed = new RichEmbed()
                         .setTitle("A user requested contact about the hosting services")
-                        .setDescription(`user ${user.username}#${user.tag} (${user.id}) requested contact`);
+                        .setDescription(`user ${user.tag} (${user.id}) requested contact`);
                     const channel = msg.guild.channels.find(x=>x.name.toLowerCase() === "dapper-coding") as TextChannel;
 
                     channel.send(requestContactEmbed);
