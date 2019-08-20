@@ -181,7 +181,7 @@ export default class OpenTicketsCommand extends BaseCommand {
                       );
 
                     // Create new channel handler
-                    new ChannelHandler(this.bot.getServer())
+                    new ChannelHandler(commandData.guild)
 
                       // Add h2h-er to proficiency channel
                       .addPermissionsToChannelTicketCommand(
