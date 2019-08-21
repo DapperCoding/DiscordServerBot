@@ -111,7 +111,7 @@ export class TicketCreatedEvent {
       .setColor("#2dff2d")
       .addField("Language", ticket.language.name)
       .addField("Framework", ticket.framework.name)
-      .addField("Their description", ticket.description)
+      .addField("Their Description", ticket.description)
       .addField(
         "Ticket Portal V0.1",
         `To read all messages sent in this ticket, click on the title of this embed to open the ticket in the Ticket Portal.`
