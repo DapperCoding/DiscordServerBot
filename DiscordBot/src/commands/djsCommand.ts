@@ -39,7 +39,7 @@ export default class DjsCommand extends BaseCommand {
             .then(embed => {
                 if (embed && !embed.error) {
                     commandData.message.channel.send({ embed }).then(async m => {
-                        await (m as Message).react('🗑')
+                        await (m as Message).react('🗑');
                         const collector = (m as Message).createReactionCollector((reaction, user) => user.id === commandData.message.author.id, { time: 10000 });
 
                         collector.on('collect', r => {
@@ -58,10 +58,10 @@ export default class DjsCommand extends BaseCommand {
                 } else {
                     commandData.message.reply(`I'm sorry I couldn't find what you're looking for!`);
                 }
-            })
+            });
             .catch(e => {
                 console.error(e);
                 commandData.message.reply('Sorry it seems like im having difficulties');
-            })
+            });
     }
 }
