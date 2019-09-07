@@ -58,7 +58,7 @@ export default class DjsCommand extends BaseCommand {
                 } else {
                     commandData.message.reply(`I'm sorry I couldn't find what you're looking for!`);
                 }
-            });
+            })
             .catch(e => {
                 console.error(e);
                 commandData.message.reply('Sorry it seems like im having difficulties');
