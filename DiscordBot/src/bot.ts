@@ -13,6 +13,7 @@ import { MessageEvent } from "./events/bot/message";
 import { LuisCommandHandler } from "./handlers/luisCommandHandler";
 import { CommandHandler } from "./handlers/commandHandler";
 import { GuildMemberUpdateEvent } from "./events/bot/guildMemberUpdate";
+import { MessageUpdateEvent } from "./events/bot/messageUpdate";
 
 export class Bot implements IBot {
   public get commands(): BotCommand[] {
@@ -76,12 +77,12 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function (erMsg, code) {
+    this._client.on("disconnect", function(erMsg, code) {
       DisconnectEvent.handle(getClient(), code, erMsg);
     });
 
     // Automatically reconnect if the bot errors
-    this._client.on("error", function (error) {
+    this._client.on("error", function(error) {
       BotErrorEvent.handle(getClient(), error);
     });
 
@@ -105,8 +106,13 @@ export class Bot implements IBot {
       MessageEvent.handle(message);
     });
 
+    // Fires every time a member says something in a channel
+    this._client.on("messageUpdate", async (oldMessage, newMessage) => {
+      MessageUpdateEvent.handle(newMessage);
+    });
+
     // Fires every time a member's role, name, icon, etc... updates
-    this._client.on("guildMemberUpdate", function (oldMember, newMember) {
+    this._client.on("guildMemberUpdate", function(oldMember, newMember) {
       GuildMemberUpdateEvent.handle(newMember, oldMember);
     });
 

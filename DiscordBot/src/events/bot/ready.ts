@@ -57,5 +57,11 @@ export class ReadyEvent {
 
     //Regenerate bearer token
     new ApiRequestHandler().generateNewToken(config);
+
+    // server.members
+    //   .filter(member => !member.roles.find(r => r.name === "Member"))
+    //   .forEach(member => {
+    //     member.addRole(server.roles.find(r => r.name === "Member"));
+    //   });
   }
 }

@@ -3,6 +3,7 @@ import * as API from "../api";
 import { Message } from "../models/message";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { TicketReaction } from "../models/ticket/ticketReaction";
+import { TeacherFormReplyModel } from "../models/forms/formReplies";
 
 export class MessageService {
   private _serverBot: Discord.Client;
@@ -62,15 +63,126 @@ export class MessageService {
     reaction.discordMessage.isEmbed = false;
     reaction.discordMessage.isDm = false;
 
-    // Request API and add our reaction to the database.
     new ApiRequestHandler()
-      .requestAPI("POST", reaction, "/ticket/reaction")
-      .then(result => {
-        console.log(result);
+      .requestAPIWithType<number>(
+        "GET",
+        null,
+        `discordMessage/${message.id}/${message.channel.id}/${message.guild.id}`
+      )
+      .then(id => {
+        if (id < 0) {
+          new ApiRequestHandler()
+            .requestAPI("POST", reaction, "ticket/reaction")
+            .then(result => {
+              console.log(result);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        } else {
+          new ApiRequestHandler()
+            .requestAPI(
+              "POST",
+              reaction.discordMessage,
+              `discordMessage/${message.id}/${message.channel.id}/${message.guild.id}`
+            )
+            .then(result => {
+              console.log(result);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
       })
       .catch(err => {
         console.error(err);
       });
+
+    // Request API and add our reaction to the database.
+  }
+
+  public handleMessageInInterviewChannel(message: Discord.Message) {
+    // Now using luis
+    // if (message.content.indexOf("TypeError [ERR_INVALID_ARG_TYPE]: The \"file\" argument must be of type string.") >= 0) {
+    //     let embed = this.createYtdlEmbed(message.member, message);
+    //     message.channel.send(embed);
+    // }
+
+    // Get ticket channel id from channel name
+    if (message.channel.type !== "text") return;
+    let channelName = (message.channel as Discord.TextChannel).name.toString();
+    let channelNameParts = channelName.split("-");
+    if (channelNameParts.length < 2) {
+      // TOOD: shouldn't ever happen
+      return;
+    }
+    let id = channelNameParts[1];
+    let reaction = {} as TeacherFormReplyModel;
+
+    // Fill ticket reaction model
+    reaction.formId = parseInt(id);
+    reaction.discordId = message.author.id;
+
+    reaction.discordMessage = new Message();
+
+    reaction.discordMessage.message =
+      message.content.length > 0 ? message.content : "EMPTY";
+    reaction.discordMessage.messageId = message.id;
+    reaction.discordMessage.timestamp = new Date(message.createdTimestamp);
+    reaction.discordMessage.guildId = message.guild.id;
+    reaction.discordMessage.channelId = message.channel.id;
+    reaction.discordMessage.isEmbed = false;
+    reaction.discordMessage.isDm = false;
+
+    new ApiRequestHandler()
+      .requestAPIWithType<number>(
+        "GET",
+        null,
+        `discordMessage/${message.id}/${message.channel.id}/${message.guild.id}`
+      )
+      .then(id => {
+        if (id < 0) {
+          new ApiRequestHandler()
+            .requestAPI(
+              "POST",
+              reaction,
+              `forms/${this.TransformNamePartToUrlPart(
+                channelNameParts[0]
+              )}/${id}/reply`
+            )
+            .then(result => {
+              console.log(result);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        } else {
+          new ApiRequestHandler()
+            .requestAPI(
+              "POST",
+              reaction.discordMessage,
+              `discordMessage/${message.id}/${message.channel.id}/${message.guild.id}`
+            )
+            .then(result => {
+              console.log(result);
+            })
+            .catch(err => {
+              console.error(err);
+            });
+        }
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }
+
+  private TransformNamePartToUrlPart(namePart: string) {
+    switch (namePart) {
+      case "architect":
+        return "ideas/architect";
+      default:
+        return namePart;
+    }
   }
 
   /**

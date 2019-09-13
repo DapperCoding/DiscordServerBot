@@ -147,12 +147,12 @@ export class ApiRequestHandler {
       const config = ConfigManager.GetConfig();
       const baseUrl = config.apiUrl;
       var options = {
-        url: baseUrl + "/account/login",
+        url: baseUrl + "account/login",
         method: "POST",
         headers: this._headers,
         json: {
-          Email: config.apiEmail,
-          Password: config.apiPassword
+          email: config.apiEmail,
+          password: config.apiPassword
         }
       };
       try {
@@ -170,23 +170,16 @@ export class ApiRequestHandler {
           } else {
             // Something is wrong, maybe a wrong password
             console.error(
-              `We tried to let the bot login but we got HTTP code:${
-                response.statusCode
-              }`
+              `We tried to let the bot login but we got HTTP code:${response.statusCode}`
             );
             if (body) {
               console.log(`With body: ${body}`);
             }
           }
-        })
-          .then(async a => {
-            return resolve();
-          })
-          .catch(err => {
-            console.error(err);
-            reject(err);
-          });
-      } catch (error) {}
+        });
+      } catch (error) {
+        console.error(error);
+      }
     });
   }
 
@@ -195,7 +188,7 @@ export class ApiRequestHandler {
       const config = ConfigManager.GetConfig();
       const baseUrl = config.apiUrl;
       var options = {
-        url: baseUrl + "/account/login",
+        url: baseUrl + "account/login",
         method: "POST",
         headers: this._headers,
         json: {
@@ -217,9 +210,7 @@ export class ApiRequestHandler {
           } else {
             // Something is wrong, maybe a wrong password
             console.error(
-              `We tried to let the bot login but we got HTTP code:${
-                response.statusCode
-              }`
+              `We tried to let the bot login but we got HTTP code:${response.statusCode}`
             );
             if (body) {
               console.log(`With body: ${body}`);

@@ -130,7 +130,7 @@ export default class EditTicketCommand extends BaseCommand {
             if (member) TicketHelper.updateTopic(member, updatedTicket);
           })
           .catch(console.error);
-      });
+      }).catch(console.error);
 
     /**
          * let language = await reactionHandler.SelectLanguage(

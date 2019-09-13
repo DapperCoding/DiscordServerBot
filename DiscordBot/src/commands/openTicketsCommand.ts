@@ -71,6 +71,7 @@ export default class OpenTicketsCommand extends BaseCommand {
         let sentEmbed = (await commandData.message.channel
           .send(startupEmbed)
           .catch(console.error)) as Discord.Message;
+
         let handler = new RichEmbedReactionHandler<OpenTicket>(
           startupEmbed,
           sentEmbed
