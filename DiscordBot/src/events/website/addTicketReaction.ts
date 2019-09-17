@@ -49,7 +49,7 @@ export class AddTicketReactionEvent {
 
       // Request API and add our reaction to the database.
       new ApiRequestHandler()
-        .requestAPIWithType<any>("POST", reaction, "/ticket/reaction")
+        .requestAPIWithType<any>("POST", reaction, "ticket/reaction")
         .then(console.log)
         .catch(console.error);
     });

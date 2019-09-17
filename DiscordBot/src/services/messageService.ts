@@ -26,7 +26,7 @@ export class MessageService {
 
     // Request API and add our reaction to the database.
     new ApiRequestHandler()
-      .requestAPI("POST", discordMessage, "/discordMessage")
+      .requestAPI("POST", discordMessage, "discordMessage")
       .catch(console.error);
   }
 
@@ -64,7 +64,7 @@ export class MessageService {
 
     // Request API and add our reaction to the database.
     new ApiRequestHandler()
-      .requestAPI("POST", reaction, "/ticket/reaction")
+      .requestAPI("POST", reaction, "ticket/reaction")
       .then(result => {
         console.log(result);
       })

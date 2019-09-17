@@ -15,7 +15,7 @@ export class FaqHandler {
     return new Promise<ReceiveFaq>(async (resolve, reject) => {
       // Return finished request
       return new ApiRequestHandler()
-        .requestAPIWithType<ReceiveFaq>("POST", faqObject, "/faq")
+        .requestAPIWithType<ReceiveFaq>("POST", faqObject, "faq")
         .then(faqReturnObject => {
           return resolve(faqReturnObject);
         })
@@ -51,7 +51,7 @@ export class FaqHandler {
     new ApiRequestHandler().requestAPI(
       "POST",
       faqMessageObject,
-      "/faq/AddMessageId"
+      "faq/AddMessageId"
     );
   }
 }

@@ -172,7 +172,7 @@ export class FaqDialogue {
     new ApiRequestHandler().requestAPI(
       "POST",
       faqMessageObject,
-      "/api/faq/AddMessageId"
+      "api/faq/AddMessageId"
     );
   }
 }

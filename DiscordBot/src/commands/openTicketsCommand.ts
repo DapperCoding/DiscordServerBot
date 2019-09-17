@@ -59,7 +59,7 @@ export default class OpenTicketsCommand extends BaseCommand {
       // Set params for requestAPI
       .requestAPIWithType<
         { id: number; count: number; subject: string; description: string }[]
-      >("GET", null, `/ticket/opentickets`)
+      >("GET", null, `ticket/opentickets`)
 
       // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
       .then(async tickets => {
@@ -155,7 +155,7 @@ export default class OpenTicketsCommand extends BaseCommand {
                   .requestAPI(
                     "POST",
                     user,
-                    `/ticket/${data.ticket.id}/addAssignee`
+                    `ticket/${data.ticket.id}/addAssignee`
                   )
 
                   // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel

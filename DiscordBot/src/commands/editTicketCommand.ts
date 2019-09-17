@@ -37,7 +37,7 @@ export default class EditTicketCommand extends BaseCommand {
     );
 
     new ApiRequestHandler()
-      .requestAPIWithType<Ticket>("GET", null, `/ticket/${ticketId}`)
+      .requestAPIWithType<Ticket>("GET", null, `ticket/${ticketId}`)
       .then(async ticket => {
         let data = commandData.message.content
           .slice(1)
@@ -122,7 +122,7 @@ export default class EditTicketCommand extends BaseCommand {
         }
 
         new ApiRequestHandler()
-          .requestAPIWithType<Ticket>("POST", ticket, "/ticket/update")
+          .requestAPIWithType<Ticket>("POST", ticket, "ticket/update")
           .then(updatedTicket => {
             let member = commandData.guild.members.get(
               updatedTicket.applicant.discordId

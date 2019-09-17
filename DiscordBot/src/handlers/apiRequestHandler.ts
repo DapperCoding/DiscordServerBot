@@ -147,12 +147,12 @@ export class ApiRequestHandler {
       const config = ConfigManager.GetConfig();
       const baseUrl = config.apiUrl;
       var options = {
-        url: baseUrl + "/account/login",
+        url: baseUrl + "account/login",
         method: "POST",
         headers: this._headers,
         json: {
-          Email: config.apiEmail,
-          Password: config.apiPassword
+          email: config.apiEmail,
+          password: config.apiPassword
         }
       };
       try {
@@ -199,8 +199,8 @@ export class ApiRequestHandler {
         method: "POST",
         headers: this._headers,
         json: {
-          Email: config.apiEmail,
-          Password: config.apiPassword
+          email: config.apiEmail,
+          password: config.apiPassword
         }
       };
       try {

@@ -35,7 +35,7 @@ export class TicketCreatedEvent {
         .requestAPIWithType<DiscordUserProficiency[]>(
           "GET",
           null,
-          "/proficiency/GetProficienciesForDiscordUser/" +
+          "proficiency/GetProficienciesForDiscordUser/" +
             happyToHelpers[i].user.id
         )
         .then(proficiencies => {
