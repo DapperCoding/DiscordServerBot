@@ -14,7 +14,7 @@ export default class MirrorCommand extends BaseCommand {
     return {
       caption: "?syncTickets",
       description: "Sync the open & closed ticket channels",
-      roles: ["admin", "happy to help", "dappercoding"]
+      roles: ["admin", "teacher", "dappercoding"]
     };
   }
 
@@ -85,9 +85,7 @@ export default class MirrorCommand extends BaseCommand {
       .filter(
         x =>
           x.name.toLowerCase().startsWith("ticket") &&
-          !["tickets", "tickets-in-progress", "tickets-to-accept"].includes(
-            x.name.toLowerCase()
-          )
+          !["tickets"].includes(x.name.toLowerCase())
       )
       .map(x => x.name.replace("ticket", ""))
       .forEach(x => {

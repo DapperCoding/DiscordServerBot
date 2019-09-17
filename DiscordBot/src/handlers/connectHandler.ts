@@ -29,7 +29,7 @@ export class ConnectHandler {
 
       if (
         message.member.roles.find(
-          role => role.name.toLowerCase() === "happy to help"
+          role => role.name.toLowerCase() === "teacher"
         )
       ) {
         model.isHappyToHelp = true;

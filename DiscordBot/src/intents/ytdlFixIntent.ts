@@ -21,7 +21,7 @@ export default class YtdlFixIntent extends BaseIntent {
             .setURL(url)
             .addField(
                 "Please download the zip file " + intentData.message.member.displayName + ".",
-                "The Happy To Help team asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
+                "The teacher team asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
             )
             .addField(
                 "Video explanation:",

@@ -36,7 +36,7 @@ export class SuggestionEvent {
 
       suggestionEmbed.setTitle(`${suggestor.username} suggested something.`);
       suggestionEmbed.setDescription(
-        `Happy To Help link: https://dapperdino.co.uk/HappyToHelp/Suggestion/${
+        `teacher link: https://dapperdino.co.uk/HappyToHelp/Suggestion/${
           suggestion.id
         }`
       );

@@ -11,7 +11,7 @@ export class ApplicationEvent {
     ) as GuildMember[];
     const discordUser = server.members.get(application.discordId);
     const applicationEmbed = new RichEmbed()
-      .setTitle(`A user has applied for the happy to help role`)
+      .setTitle(`A user has applied for the teacher role`)
       .addField("First name", application.firstName)
       .addField("Last name", application.lastName)
       .addField("Explanation", application.explanation)

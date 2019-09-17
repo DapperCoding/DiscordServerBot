@@ -36,28 +36,5 @@ export class AcceptTicketEvent {
       );
 
     (channel as TextChannel).send(acceptedTicketembed);
-
-    //Create embed for helpers to know that the proficiency is closed
-    let inProgressEmbed = new RichEmbed()
-      .setTitle(
-        `Ticket ${info.ticket.id} has been accepted by ${user.displayName}!`
-      )
-      .setColor("#ffdd05")
-      .setDescription(`Thank you for your time and efforts :)`);
-
-    //If the user has a profile pic we will set it in the embed
-    if (user.user.avatarURL != null) {
-      inProgressEmbed.setThumbnail(user.user.avatarURL);
-    }
-
-    // Get completed tickets channel
-    let inProgressChannel = server.channels.find(
-      channel => channel.name === "tickets-in-progress"
-    ) as TextChannel;
-
-    if (!inProgressChannel) return "Channel not found";
-
-    //Send the embed to completed tickets channel
-    inProgressChannel.send(inProgressEmbed);
   }
 }

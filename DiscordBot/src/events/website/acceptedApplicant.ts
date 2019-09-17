@@ -7,14 +7,12 @@ export class AcceptedApplicantEvent {
     );
     if (member == null) return true;
 
-    let role = server.roles.find(
-      role => role.name.toLowerCase() == "happy to help"
-    );
+    let role = server.roles.find(role => role.name.toLowerCase() == "teacher");
     if (role == null) return true;
 
     member.addRole(role).catch(console.error);
     member.send(
-      "Please use the `?commands` command in the #h2h-admin-commands"
+      "Please use the `?commands` command in the #dapper-team-commands"
     );
 
     let channel = server.channels.find(

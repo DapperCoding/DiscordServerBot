@@ -24,9 +24,9 @@ export class TicketCreatedEvent {
       });
 
     console.log("hi");
-    // Get all members with happy to help (h2h) role
+    // Get all members with teacher (h2h) role
     let happyToHelpers = GuildHelper.GetAllWithRole(
-      "Happy To Help"
+      "teacher"
     ) as GuildMember[];
     // Loop over all h2h-ers
     for (let i = 0; i < happyToHelpers.length; i++) {
@@ -105,33 +105,6 @@ export class TicketCreatedEvent {
           }
         });
     }
-    //Create embed for helpers to know that the ticket is closed
-    let completedTicketEmbed = new RichEmbed()
-      .setTitle("Ticket: " + ticket.subject + ", has been created")
-      .setColor("#2dff2d")
-      .addField("Language", ticket.language.name)
-      .addField("Framework", ticket.framework.name)
-      .addField("Their Description", ticket.description)
-      .addField(
-        "Ticket Portal V0.1",
-        `To read all messages sent in this ticket, click on the title of this embed to open the ticket in the Ticket Portal.`
-      )
-      .addField(
-        "If you would like to help with this request then please type:",
-        "?acceptTicket " + ticket.id
-      )
-      .setURL(`https://dapperdino.co.uk/HappyToHelp/Ticket?id=${ticket.id}`)
-      .setFooter("Thanks for all your help :)");
-
-    // Get tickets to accept channel
-    let ticketsToAcceptChannel = server.channels.find(
-      channel => channel.name === "tickets-to-accept"
-    ) as TextChannel;
-
-    if (!ticketsToAcceptChannel) return "Channel not found";
-
-    //Send the embed to the tickets to accept channel
-    ticketsToAcceptChannel.send(completedTicketEmbed);
     return true;
   };
 }

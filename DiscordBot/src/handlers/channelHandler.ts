@@ -166,29 +166,6 @@ export class ChannelHandler {
       });
 
       (channel as Discord.TextChannel).send(embed);
-
-      //Create embed for helpers to know that the ticket is closed
-      let inProgressEmbed = new Discord.RichEmbed()
-        .setTitle(
-          `Ticket ${ticketId} has been accepted by ${message.member.displayName}!`
-        )
-        .setColor("#ffdd05")
-        .setDescription(`Thank you for your time and efforts :)`);
-
-      //If the user has a profile pic we will set it in the embed
-      if (message.author.avatarURL != null) {
-        inProgressEmbed.setThumbnail(message.author.avatarURL);
-      }
-
-      // Get completed tickets channel
-      let inProgressChannel = this._guild.channels.find(
-        channel => channel.name === "tickets-in-progress"
-      ) as Discord.TextChannel;
-
-      if (!inProgressChannel) return "Channel not found";
-
-      //Send the embed to completed tickets channel
-      inProgressChannel.send(inProgressEmbed);
     }
   }
 

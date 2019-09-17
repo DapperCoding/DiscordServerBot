@@ -18,7 +18,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
     return {
       caption: "?openApplications",
       description: "Sends a list of all joinable applications to your dms",
-      roles: ["admin", "happy to help"]
+      roles: ["admin", "teacher"]
     };
   }
 

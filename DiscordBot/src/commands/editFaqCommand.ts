@@ -27,7 +27,7 @@ export default class EditTicketCommand extends BaseCommand {
   }
 
   public canUseInChannel(channel: Discord.TextChannel): boolean {
-    return channel.name === "h2h-admin-commands";
+    return channel.name === "dapper-team-commands";
   }
 
   public async process(commandData: CommandData): Promise<void> {

@@ -39,8 +39,8 @@ export default class DjsCommand extends BaseCommand {
             .then(embed => {
                 if (embed && !embed.error) {
                     commandData.message.channel.send({ embed }).then(async m => {
-                        await (m as Message).react('🗑');
-                        const collector = (m as Message).createReactionCollector((reaction, user) => user.id === commandData.message.author.id, { time: 10000 });
+                        await (m as Discord.Message).react('🗑');
+                        const collector = (m as Discord.Message).createReactionCollector((reaction, user) => user.id === commandData.message.author.id, { time: 10000 });
 
                         collector.on('collect', r => {
                             if (r.emoji.name === '🗑') {
@@ -51,9 +51,9 @@ export default class DjsCommand extends BaseCommand {
 
                         collector.on('end', r => {
                             if (r.size <= 0) {
-                                (m as Message).reactions.removeAll();
+                                (m as Discord.Message).reactions.clear();
                             }
-                        })
+                        });
                     });
                 } else {
                     commandData.message.reply(`I'm sorry I couldn't find what you're looking for!`);

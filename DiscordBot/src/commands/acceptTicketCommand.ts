@@ -14,13 +14,13 @@ export default class AcceptTicketCommand extends BaseCommand {
     return {
       caption: "?acceptTicket",
       description:
-        "For happy to help-ers to get access to the ticket channel on discord",
-      roles: ["happy to help", "admin"]
+        "For teacher-ers to get access to the ticket channel on discord",
+      roles: ["teacher", "admin"]
     };
   }
 
   public canUseInChannel(channel: Discord.TextChannel): boolean {
-    return channel.name.toLowerCase() === "h2h-admin-commands";
+    return channel.name.toLowerCase() === "dapper-team-commands";
   }
 
   public async process(commandData: CommandData): Promise<void> {

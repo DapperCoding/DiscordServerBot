@@ -13,7 +13,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
       caption: "?forceClose",
       description:
         "Use this command inside the ticket channel to force close a ticket",
-      roles: ["happy to help", "admin"]
+      roles: ["teacher", "admin"]
     };
   }
 
@@ -58,31 +58,6 @@ export default class ForceCloseTicketCommand extends BaseCommand {
         null,
         `ticket/${ticketChannelId}/close`
       )
-      .then(ticketReceive => {
-        // Get current guild
-        let guild = commandData.message.guild;
-
-        if (!guild) return "Server not found";
-
-        //Create embed for helpers to know that the ticket is closed
-        let completedTicketEmbed = new Discord.RichEmbed()
-          .setTitle(`Ticket ${ticketChannelId} has been completed!`)
-          .setColor("#ff0000")
-          .setDescription(
-            `${
-            ticketReceive.applicant.username
-            }'s problem has now been resolved, good job`
-          );
-
-        // Get completed tickets channel
-        let completedTicketsChannel = guild.channels.find(
-          channel => channel.name === "completed-tickets"
-        ) as Discord.TextChannel;
-
-        if (!completedTicketsChannel) return "Channel not found";
-
-        //Send the embed to completed tickets channel
-        completedTicketsChannel.send(completedTicketEmbed);
-      });
+      .then(ticketReceive => {});
   }
 }

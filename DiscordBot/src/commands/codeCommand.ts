@@ -8,7 +8,7 @@ export default class CodeCommand extends BaseCommand {
     readonly commandWords = ["code"];
 
     public getHelp(): IBotCommandHelp {
-        return { caption: '?code', description: 'Use in ticket channels, ask for their code', roles: ['admin', 'happy to help'] }
+        return { caption: '?code', description: 'Use in ticket channels, ask for their code', roles: ['admin', 'teacher'] }
     }
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {

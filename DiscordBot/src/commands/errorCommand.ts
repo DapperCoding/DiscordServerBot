@@ -8,7 +8,7 @@ export default class ErrorCommand extends BaseCommand {
     readonly commandWords = ["error"];
 
     public getHelp(): IBotCommandHelp {
-        return { caption: '?error', description: 'Use in ticket channels, ask for error information', roles: ['admin', 'happy to help'] }
+        return { caption: '?error', description: 'Use in ticket channels, ask for error information', roles: ['admin', 'teacher'] }
     }
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {

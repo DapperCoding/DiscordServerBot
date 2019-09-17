@@ -8,7 +8,7 @@ export default class YtdlFixCommand extends BaseCommand {
     readonly commandWords = ["ytdlfix"];
 
     public getHelp(): IBotCommandHelp {
-        return { caption: '?ytdlfix', description: 'Send the automated ytdl-fix message', roles: ["happy to help", "admin"] }
+        return { caption: '?ytdlfix', description: 'Send the automated ytdl-fix message', roles: ["teacher", "admin"] }
     }
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {

@@ -63,41 +63,13 @@ export default class CloseTicketCommand extends BaseCommand {
 
         // Check if current user is creator
         if (commandData.message.author.id == creatorId) {
-
           // Close ticket through API
-          new ApiRequestHandler().requestAPI(
-            "POST",
-            null,
-            `ticket/${ticketChannelId}/close`
-          ).then(() => {
-            // Delete discordMessage
-            commandData.message.channel.delete();
-          })
-
-          // Get current guild
-          let guild = commandData.message.guild;
-
-          if (!guild) return "Server not found";
-
-          //Create embed for helpers to know that the ticket is closed
-          let completedTicketEmbed = new Discord.RichEmbed()
-            .setTitle(`Ticket ${ticketChannelId} has been completed!`)
-            .setColor("#ff0000")
-            .setDescription(
-              `${
-              ticketReceive.applicant.username
-              }'s problem has now been resolved, good job`
-            );
-
-          // Get completed tickets channel
-          let completedTicketsChannel = guild.channels.find(
-            channel => channel.name === "completed-tickets"
-          ) as Discord.TextChannel;
-
-          if (!completedTicketsChannel) return "Channel not found";
-
-          //Send the embed to completed tickets channel
-          completedTicketsChannel.send(completedTicketEmbed);
+          new ApiRequestHandler()
+            .requestAPI("POST", null, `ticket/${ticketChannelId}/close`)
+            .then(() => {
+              // Delete discordMessage
+              commandData.message.channel.delete();
+            });
         } else {
           // Delete discordMessage if it's not the creator
           commandData.message.delete(0);
@@ -105,9 +77,7 @@ export default class CloseTicketCommand extends BaseCommand {
           // Create embed that tells the creator to close the ticket
           let endTicketEmbed = new Discord.RichEmbed()
             .setTitle(
-              `${
-              commandData.message.author.username
-              } thinks that this ticket can be closed now`
+              `${commandData.message.author.username} thinks that this ticket can be closed now`
             )
             .setThumbnail(commandData.message.author.avatarURL)
             .setColor("#2dff2d")

@@ -12,7 +12,7 @@ export default class AddIntent extends BaseIntent {
     if (
       intentData.message.member.roles.find(
         role =>
-          role.name.toLowerCase() === "happy to help" ||
+          role.name.toLowerCase() === "teacher" ||
           role.name.toLowerCase() === "admin"
       )
     ) {

@@ -8,7 +8,7 @@ export default class DebuggerCommand extends BaseCommand {
     readonly commandWords = ["debugger"];
 
     public getHelp(): IBotCommandHelp {
-        return { caption: '?debugger @user', description: 'Send information how to use a debugger in vscode', roles: ["admin", "happy to help"] }
+        return { caption: '?debugger @user', description: 'Send information how to use a debugger in vscode', roles: ["admin", "teacher"] }
     }
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {

@@ -8,7 +8,7 @@ export default class FreeUserCommand extends BaseCommand {
     readonly commandWords = ["free"];
 
     public getHelp(): IBotCommandHelp {
-        return { caption: '?free', description: 'Free a user (remove user permissions from current channel)', roles: ["admin", "happy to help"] }
+        return { caption: '?free', description: 'Free a user (remove user permissions from current channel)', roles: ["admin", "teacher"] }
     }
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {
