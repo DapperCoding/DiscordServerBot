@@ -38,7 +38,23 @@ export default class DjsCommand extends BaseCommand {
             .then(res => res.json())
             .then(embed => {
                 if (embed && !embed.error) {
-                    commandData.message.channel.send({ embed });
+                    commandData.message.channel.send({ embed }).then(async m => {
+                        await (m as Message).react('🗑');
+                        const collector = (m as Message).createReactionCollector((reaction, user) => user.id === commandData.message.author.id, { time: 10000 });
+
+                        collector.on('collect', r => {
+                            if (r.emoji.name === '🗑') {
+                                r.message.delete();
+                                commandData.message.delete();
+                            }
+                        });
+
+                        collector.on('end', r => {
+                            if (r.size <= 0) {
+                                (m as Message).reactions.removeAll();
+                            }
+                        })
+                    });
                 } else {
                     commandData.message.reply(`I'm sorry I couldn't find what you're looking for!`);
                 }
@@ -46,6 +62,6 @@ export default class DjsCommand extends BaseCommand {
             .catch(e => {
                 console.error(e);
                 commandData.message.reply('Sorry it seems like im having difficulties');
-            })
+            });
     }
 }
