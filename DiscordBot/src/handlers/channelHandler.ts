@@ -114,11 +114,11 @@ export class ChannelHandler {
   }
 
   /**
-   * @name:
-   * @description:
-   * @param {interviewType} String 
-   * @param {formId} Number 
-   * @param {applicant} GuildMember 
+   * @name: createChannelForInterview
+   * @description: Creates a channel for an interview and sets permissions for the applicant and the recruiter requesting an interview
+   * @param {interviewType} String
+   * @param {formId} Number
+   * @param {applicant} GuildMember
    * @param {recruiter} GuildMember
    */
   public async createChannelForInterview(
