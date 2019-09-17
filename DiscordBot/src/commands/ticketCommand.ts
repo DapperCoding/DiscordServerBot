@@ -137,7 +137,7 @@ export default class TicketCommand extends BaseCommand {
           .addField("Your Title:", data.title, false)
           .addField("Your Description:", data.description, false)
           .setFooter(
-            "Thanks for being patient while we revamp the Happy to Help team."
+            "Don't forget: We're closing down the server for a week starting on the 17th of September, all tickets that are still open will be force closed on this day."
           );
 
         // Send ticketEmbed
@@ -172,7 +172,7 @@ export default class TicketCommand extends BaseCommand {
     new ApiRequestHandler()
 
       // Create request and fill params
-      .requestAPI("POST", ticketObject, "/ticket")
+      .requestAPI("POST", ticketObject, "ticket")
 
       // If everything went well, we receive a ticketReceive object
       .then(value => {

@@ -32,7 +32,7 @@ export default class MirrorCommand extends BaseCommand {
       .requestAPIWithType<Ticket>(
         "GET",
         null,
-        `/ticket/${channel.name.toLowerCase().replace("ticket", "")}`
+        `ticket/${channel.name.toLowerCase().replace("ticket", "")}`
       )
       .then(ticket => {
         // Get member that created the ticket

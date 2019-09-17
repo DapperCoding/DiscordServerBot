@@ -28,7 +28,7 @@ export default class MirrorCommand extends BaseCommand {
       // Set params for requestAPI
       .requestAPIWithType<
         { id: number; count: number; subject: string; description: string }[]
-      >("GET", null, `/ticket/opentickets`)
+      >("GET", null, `ticket/opentickets`)
 
       // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
       .then(tickets => {
@@ -62,7 +62,7 @@ export default class MirrorCommand extends BaseCommand {
         .requestAPIWithType<TicketReceive>(
           "GET",
           null,
-          `/ticket/${openTicket.id}`
+          `ticket/${openTicket.id}`
         )
         .then(ticket => {
           TicketCreatedEvent.handle(ticket, commandData.message.guild);

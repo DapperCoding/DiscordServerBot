@@ -56,7 +56,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
       .requestAPIWithType<TicketReceive>(
         "POST",
         null,
-        `/ticket/${ticketChannelId}/close`
+        `ticket/${ticketChannelId}/close`
       )
       .then(ticketReceive => {
         // Get current guild

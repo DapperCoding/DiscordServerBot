@@ -62,7 +62,7 @@ export default class ClaimProficienciesCommand extends BaseCommand {
       .requestAPIWithType<DiscordUserProficiency[]>(
         "GET",
         null,
-        "/proficiency/GetProficienciesForDiscordUser/" +
+        "proficiency/GetProficienciesForDiscordUser/" +
           commandData.message.author.id
       )
       .then(proficiencies => {

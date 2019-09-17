@@ -22,7 +22,7 @@ export class TicketProficiencyDialogue {
         .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
-          `/proficiency/getlanguages`
+          `proficiency/getlanguages`
         )
 
         // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
@@ -121,7 +121,7 @@ export class TicketProficiencyDialogue {
         .requestAPIWithType<Proficiency[]>(
           "GET",
           null,
-          `/proficiency/getFrameworks`
+          `proficiency/getFrameworks`
         )
 
         // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel

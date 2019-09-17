@@ -92,7 +92,7 @@ export class SuggestionDialogue {
       }
 
       return new ApiRequestHandler()
-        .requestAPIWithType<Suggest>("POST", suggestion, "/suggestion")
+        .requestAPIWithType<Suggest>("POST", suggestion, "suggestion")
         .then(resolve)
         .catch(reject); // TODO: Create json file with ticket info (if you want to get crazy: with automated cleanup system for the json files node-schedule)
     });

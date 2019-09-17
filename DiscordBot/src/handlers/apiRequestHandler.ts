@@ -192,8 +192,8 @@ export class ApiRequestHandler {
         method: "POST",
         headers: this._headers,
         json: {
-          Email: config.apiEmail,
-          Password: config.apiPassword
+          email: config.apiEmail,
+          password: config.apiPassword
         }
       };
       try {

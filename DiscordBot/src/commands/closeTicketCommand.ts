@@ -53,7 +53,7 @@ export default class CloseTicketCommand extends BaseCommand {
       .requestAPIWithType<TicketReceive>(
         "GET",
         null,
-        `/ticket/${ticketChannelId}`
+        `ticket/${ticketChannelId}`
       )
 
       // All went okay
@@ -68,7 +68,7 @@ export default class CloseTicketCommand extends BaseCommand {
           new ApiRequestHandler().requestAPI(
             "POST",
             null,
-            `/ticket/${ticketChannelId}/close`
+            `ticket/${ticketChannelId}/close`
           ).then(() => {
             // Delete discordMessage
             commandData.message.channel.delete();
