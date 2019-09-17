@@ -181,7 +181,7 @@ export default class CreateIntent extends BaseIntent {
     new ApiRequestHandler()
 
       // Create request and fill params
-      .requestAPI("POST", ticketObject, "/ticket")
+      .requestAPI("POST", ticketObject, "ticket")
 
       // If everything went well, we receive a ticketReceive object
       .then(value => {

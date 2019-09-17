@@ -73,7 +73,7 @@ export default class AcceptApplicationCommand extends BaseCommand {
           .requestAPIWithType<FormBase>(
             "POST",
             { reason: info.reason },
-            `/forms/${channelNameParts[0]}/${channelNameParts[1]}/accept/${member.id}`
+            `forms/${channelNameParts[0]}/${channelNameParts[1]}/accept/${member.id}`
           )
 
           // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
@@ -114,11 +114,13 @@ export default class AcceptApplicationCommand extends BaseCommand {
 
             commandData.message.channel.delete();
 
-            commandData.guild.member(applicant).addRole(
-              commandData.guild.roles.find(
-                r => r.name.toLowerCase() === channelNameParts[0]
-              )
-            );
+            commandData.guild
+              .member(applicant)
+              .addRole(
+                commandData.guild.roles.find(
+                  r => r.name.toLowerCase() === channelNameParts[0]
+                )
+              );
           })
           .catch(err => {
             sent++;

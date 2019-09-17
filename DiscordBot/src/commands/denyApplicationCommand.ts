@@ -72,7 +72,7 @@ export default class DenyApplicatioNCommand extends BaseCommand {
           .requestAPIWithType<FormBase>(
             "POST",
             { reason: info.reason },
-            `/forms/${channelNameParts[0]}/${channelNameParts[1]}/reject/${member.id}`
+            `forms/${channelNameParts[0]}/${channelNameParts[1]}/reject/${member.id}`
           )
 
           // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel

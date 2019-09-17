@@ -15,7 +15,7 @@ export class ConnectHandler {
     // Return new promise
     return new Promise(async (resolve, reject) => {
       // Register url
-      let registerDiscordUrl = "/Account/RegisterDiscord/";
+      let registerDiscordUrl = "Account/RegisterDiscord/";
 
       // Create new registerModel
       let model = new RegisterModel();
@@ -28,9 +28,7 @@ export class ConnectHandler {
       //model.registrationCode = message.content.replace("?connect ", "");
 
       if (
-        message.member.roles.find(
-          role => role.name.toLowerCase() === "teacher"
-        )
+        message.member.roles.find(role => role.name.toLowerCase() === "teacher")
       ) {
         model.isHappyToHelp = true;
       }

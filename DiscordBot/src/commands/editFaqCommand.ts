@@ -39,7 +39,7 @@ export default class EditTicketCommand extends BaseCommand {
       .requestAPIWithType<{ id: number; question: string; answer: string }[]>(
         "GET",
         null,
-        "/faq"
+        "faq"
       )
       .then(async data => {
         let startIndex = 0;
@@ -201,7 +201,7 @@ export default class EditTicketCommand extends BaseCommand {
                     new ApiRequestHandler().requestAPIWithType(
                       "POST",
                       identifierData.faq,
-                      `/faq?id=${identifierData.faq.id}`
+                      `faq?id=${identifierData.faq.id}`
                     );
                   });
 

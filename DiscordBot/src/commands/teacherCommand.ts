@@ -143,7 +143,7 @@ export default class TicketCommand extends BaseCommand {
         data.discordDiscordId = commandData.message.author.id;
 
         new ApiRequestHandler(commandData.client)
-          .requestAPIWithType("POST", data, "/forms/teacher/add")
+          .requestAPIWithType("POST", data, "forms/teacher/add")
           .then(x => {
             let applicationEmbed = new discord.RichEmbed()
               .setTitle("Application Created Successfully!")

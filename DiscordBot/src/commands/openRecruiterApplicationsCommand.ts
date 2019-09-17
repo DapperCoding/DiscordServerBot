@@ -41,7 +41,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
       .requestAPIWithType<ArchitectForm[]>(
         "GET",
         null,
-        `/forms/recruiter/OpenInPerspective/${commandData.message.author.id}`
+        `forms/recruiter/OpenInPerspective/${commandData.message.author.id}`
       )
 
       // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
@@ -128,7 +128,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                   .requestAPIWithType<any>(
                     "POST",
                     { reason: "Want to interview the person" },
-                    `/forms/recruiter/${data.application.id}/interview/${commandData.message.author.id}`
+                    `forms/recruiter/${data.application.id}/interview/${commandData.message.author.id}`
                   )
 
                   // When everything went right, we receive a proficiency back, so we add the h2h-er to the proficiency channel
@@ -143,7 +143,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                         .requestAPIWithType<any>(
                           "POST",
                           { reason: "Applicant left the server" },
-                          `/forms/recruiter/${data.application.id}/reject/${commandData.message.author.id}`
+                          `forms/recruiter/${data.application.id}/reject/${commandData.message.author.id}`
                         );
                       commandData.message.channel.send(
                         `The applicant for form ${data.application.id} has left the server`
