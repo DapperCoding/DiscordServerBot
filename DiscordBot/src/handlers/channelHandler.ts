@@ -8,12 +8,10 @@ export class ChannelHandler {
   }
 
   /**
-   * name: createChannelTicketCommand
-   * description: Creates a ticket channel based on the ticket command
-   * params:
-   * - messageHandler: Function that's fired on each discordMessage
-   * - discordMessage: Message by creator
-   * - ticketId: Ticket id gotten from POST to API
+   * @name: createChannelTicketCommand
+   * @description: Creates a ticket channel based on the ticket command
+   * @param {ticketId} Number
+   * @param {member} GuildMember
    */
   public async createChannelTicketCommand(
     ticketId: number,
@@ -21,19 +19,6 @@ export class ChannelHandler {
   ) {
     // Return new promise, contains the discord channel if it's resolved
     return new Promise<Discord.Channel>(async (resolve, reject) => {
-      //Find the role 'Admin'
-      var adminRole = this._guild.roles.find(role => role.name === "Admin");
-
-      //Find the role 'Dapper Bot'
-      var dapperRole = this._guild.roles.find(
-        role => role.name === "Dapper Bot"
-      );
-
-      //Find the role 'DapperWeb'
-      var dapperWebRole = this._guild.roles.find(
-        role => role.name === "DapperWeb"
-      );
-
       // Find category 'Tickets'
       var category = this._guild.channels.find(
         role => role.name === "Tickets"
@@ -47,13 +32,7 @@ export class ChannelHandler {
 
       // Create channel for ticket
       return await this._guild
-        .createChannel(`ticket${ticketId}`, "text", [
-          {
-            id: this._guild.id,
-            allow: [],
-            deny: ["READ_MESSAGE_HISTORY", "SEND_MESSAGES", "VIEW_CHANNEL"]
-          }
-        ])
+        .createChannel(`ticket${ticketId}`, "text")
 
         // If ticket channel is created
         .then(async channel => {
@@ -62,41 +41,8 @@ export class ChannelHandler {
 
           // Add permissions for creator
           channel.overwritePermissions(member, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
             VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for admins
-          channel.overwritePermissions(adminRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for dapper bot
-          channel.overwritePermissions(dapperRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for dapper bot
-          channel.overwritePermissions(dapperWebRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Remove permissions for everyone else
-          channel.overwritePermissions(this._guild.id, {
-            READ_MESSAGE_HISTORY: false,
-            SEND_MESSAGES: false,
-            VIEW_CHANNEL: false
+            READ_MESSAGES: true
           });
 
           let ticketChannelEmbed = new Discord.RichEmbed()
@@ -139,11 +85,11 @@ export class ChannelHandler {
   }
 
   /**
-   * name: addPermissionsToChannelTicketCommand
-   * description: add permissions for this channel to the h2h-er that used ?acceptTicket {ticketId}
-   * params:
-   * - ticketId = ticket id got from api/signalR
-   * - discordMessage = h2h-er accept discordMessage
+   * @name: addPermissionsToChannelTicketCommand
+   * @description: add permissions for this channel to the h2h-er that used ?acceptTicket {ticketId}
+   * @param {ticketId} Number
+   * @param {message} Message
+   * @param {embed} RichEmbed
    */
   public async addPermissionsToChannelTicketCommand(
     ticketId: number,
@@ -159,16 +105,22 @@ export class ChannelHandler {
     if (channel) {
       // Add premissions to channel for h2h-er
       channel.overwritePermissions(message.author, {
-        READ_MESSAGE_HISTORY: true,
-        SEND_MESSAGES: true,
         VIEW_CHANNEL: true,
-        EMBED_LINKS: true
+        READ_MESSAGES: true
       });
 
       (channel as Discord.TextChannel).send(embed);
     }
   }
 
+  /**
+   * @name:
+   * @description:
+   * @param {interviewType} String 
+   * @param {formId} Number 
+   * @param {applicant} GuildMember 
+   * @param {recruiter} GuildMember
+   */
   public async createChannelForInterview(
     interviewType: string,
     formId: number,
@@ -177,19 +129,6 @@ export class ChannelHandler {
   ) {
     // Return new promise, contains the discord channel if it's resolved
     return new Promise<Discord.Channel>(async (resolve, reject) => {
-      //Find the role 'Admin'
-      var adminRole = this._guild.roles.find(role => role.name === "Admin");
-
-      //Find the role 'Dapper Bot'
-      var dapperRole = this._guild.roles.find(
-        role => role.name === "Dapper Bot"
-      );
-
-      //Find the role 'DapperWeb'
-      var dapperWebRole = this._guild.roles.find(
-        role => role.name === "DapperWeb"
-      );
-
       // Find category 'Tickets'
       var category = this._guild.channels.find(
         role => role.name === "interviews"
@@ -203,65 +142,22 @@ export class ChannelHandler {
 
       // Create channel for ticket
       return await this._guild
-        .createChannel(`${interviewType}-${formId}`, "text", [
-          {
-            id: this._guild.id,
-            allow: [],
-            deny: ["READ_MESSAGE_HISTORY", "SEND_MESSAGES", "VIEW_CHANNEL"]
-          }
-        ])
+        .createChannel(`${interviewType}-${formId}`, "text")
 
         // If ticket channel is created
         .then(async channel => {
           // Set parent to the category channel
           await channel.setParent(category);
 
-          // Add permissions for creator
-          channel.overwritePermissions(applicant, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
+          const addPermissions = {
             VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
+            READ_MESSAGES: true
+          };
+          // Add permissions for creator
+          await channel.overwritePermissions(applicant, addPermissions);
 
           // Add permissions for recruiter
-          channel.overwritePermissions(recruiter, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for admins
-          channel.overwritePermissions(adminRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for dapper bot
-          channel.overwritePermissions(dapperRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Add permissions for dapper bot
-          channel.overwritePermissions(dapperWebRole, {
-            READ_MESSAGE_HISTORY: true,
-            SEND_MESSAGES: true,
-            VIEW_CHANNEL: true,
-            EMBED_LINKS: true
-          });
-
-          // Remove permissions for everyone else
-          channel.overwritePermissions(this._guild.id, {
-            READ_MESSAGE_HISTORY: false,
-            SEND_MESSAGES: false,
-            VIEW_CHANNEL: false
-          });
+          await channel.overwritePermissions(recruiter, addPermissions);
 
           let ticketChannelEmbed = new Discord.RichEmbed()
             .setTitle(

@@ -1,12 +1,8 @@
 import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { TicketReceive } from "../models/ticket/ticketReceive";
-import { ChannelHandler } from "../handlers/channelHandler";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
-import { DiscordUser } from "../models/discordUser";
-import { TeacherForm } from "../models/forms/forms";
 import { FormBase } from "../models/forms/formBase";
 import {
   ApplicationDialogueData,

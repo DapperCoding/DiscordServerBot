@@ -14,7 +14,7 @@ export default class AcceptTicketCommand extends BaseCommand {
     return {
       caption: "?acceptTicket",
       description:
-        "For teacher-ers to get access to the ticket channel on discord",
+        "For teachers to get access to the ticket channel on discord",
       roles: ["teacher", "admin"]
     };
   }
@@ -24,14 +24,6 @@ export default class AcceptTicketCommand extends BaseCommand {
   }
 
   public async process(commandData: CommandData): Promise<void> {
-    // Get member from guild
-    let member = commandData.client.guilds
-      .first()
-      .members.find(member => member.id === commandData.message.author.id);
-
-    // Check if member exists in guild
-    if (member == null) return;
-
     // Create new compactDiscordUser that's sent to the API
     let user: DiscordUser = new DiscordUser();
 
