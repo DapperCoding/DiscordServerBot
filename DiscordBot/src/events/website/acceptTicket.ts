@@ -1,6 +1,7 @@
 import { RichEmbed, TextChannel, Guild } from "discord.js";
 import { GuildHelper } from "../../helpers/guildHelper";
 import TicketEmbed from "../../models/ticket/ticketEmbed";
+import { Constants } from "../../constants";
 
 export class AcceptTicketEvent {
   public static handle(server: Guild, info: TicketEmbed) {
@@ -30,7 +31,7 @@ export class AcceptTicketEvent {
     let acceptedTicketembed = new RichEmbed()
       .setTitle(`${info.user.username} is here to help you!`)
       .setThumbnail(user.user.avatarURL)
-      .setColor("#2dff2d")
+      .setColor(Constants.EmbedColors.GREEN)
       .setDescription(
         "Please treat them nicely and they will treat you nicely back :)"
       );

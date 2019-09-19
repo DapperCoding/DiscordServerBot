@@ -2,6 +2,8 @@ import * as Discord from "discord.js";
 import * as API from "../api";
 import { ValidationError } from "../error";
 import { Bot } from "../bot";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export class DialogueHandler<T> {
   private _steps: DialogueStep<T>[] | DialogueStep<T>;
@@ -69,6 +71,7 @@ export class DialogueHandler<T> {
           .setTitle("Hi " + user.username)
           .setDescription(step.beforeMessage)
           .addField("Notification for", user)
+          .setColor(Constants.EmbedColors.YELLOW)
           .setFooter("You can cancel the process by responding with ?cancel");
 
         // Send before discordMessage
@@ -150,7 +153,7 @@ export class DialogueHandler<T> {
               if (this._channel != null)
                 // Send validation error
                 this._channel
-                  .send(e.message)
+                  .send(ErrorEmbed.Build(e.message))
 
                   // If the message is sent
                   .then(newMsg => {

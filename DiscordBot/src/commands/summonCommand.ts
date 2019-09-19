@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class SummonCommand extends BaseCommand {
   readonly commandWords = ["summon"];
@@ -78,7 +79,7 @@ export default class SummonCommand extends BaseCommand {
   ): Discord.RichEmbed {
     // Create embed for command user
     return new Discord.RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.GREEN)
       .setTitle(`You have summoned ${user.displayName}`)
       .setDescription(
         `Please join the conversation over at #${
@@ -94,7 +95,7 @@ export default class SummonCommand extends BaseCommand {
   ): Discord.RichEmbed {
     // Create embed for summoned user
     return new Discord.RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.GREEN)
       .setTitle(`You have been summoned by ${message.author.username}`)
       .setDescription(
         `Please join the conversation over at #${

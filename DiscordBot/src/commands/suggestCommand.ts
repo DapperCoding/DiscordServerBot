@@ -7,6 +7,7 @@ import {
 } from "../dialogues/suggestionDialogue";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class SuggestCommand extends BaseCommand {
   readonly commandWords = ["suggest"];
@@ -84,7 +85,7 @@ export default class SuggestCommand extends BaseCommand {
             .then(newData => {
               let suggestionEmbed = new Discord.RichEmbed()
                 .setTitle("Thank You For Leaving A Suggestion")
-                .setColor("#ff0000")
+                .setColor(Constants.EmbedColors.GREEN)
                 .addField(
                   commandData.message.author.username,
                   "Suggested Dapper Dino to: " + newData.description,
@@ -103,9 +104,12 @@ export default class SuggestCommand extends BaseCommand {
             })
             .catch(err => {
               console.error(err);
-              commandData.message.reply(
-                "Something went wrong leaving your suggestion, please contact an admin"
-              );
+              const embed = new Discord.RichEmbed()
+                .setTitle("Something went wrong leaving your suggestion")
+                .setDescription("please contact an admin")
+                .setColor(Constants.EmbedColors.RED)
+                .setFooter("With ❤ the DapperCoding team");
+              commandData.message.channel.send(embed);
             });
         }
       });

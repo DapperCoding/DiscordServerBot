@@ -1,5 +1,6 @@
 import { Client, RichEmbed } from "discord.js";
 import { SuggestionConverters } from "../../converters/suggestionConverters";
+import { Constants } from "../../constants";
 
 export class SuggestionUpdateEvent {
   public static handle(serverBot: Client, suggestion: any) {
@@ -11,7 +12,7 @@ export class SuggestionUpdateEvent {
       // Create suggestion embed
       let suggestionUpdateEmbed = new RichEmbed({})
         .setTitle("Your suggestion has been updated!")
-        .setColor("0xff0000")
+        .setColor(Constants.EmbedColors.GREEN)
         .addField(
           "Here you will find the information about your updated suggestion:",
           `https://dapperdino.co.uk/Client/Suggestion/${suggestion.id}`
@@ -29,7 +30,7 @@ export class SuggestionUpdateEvent {
           "Thanks as always for being a part of the community.",
           "It means a lot!"
         )
-        .setFooter("With ❤ By the DapperCoding team");
+        .setFooter("With ❤ the DapperCoding team");
 
       // Send embed to suggestor
       suggestor.send(suggestionUpdateEmbed).catch(console.error);

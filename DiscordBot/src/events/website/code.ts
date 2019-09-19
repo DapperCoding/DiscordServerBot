@@ -1,6 +1,7 @@
 import { Guild, Client, TextChannel, RichEmbed } from "discord.js";
 import TicketEmbed from "../../models/ticket/ticketEmbed";
 import { GuildHelper } from "../../helpers/guildHelper";
+import { Constants } from "../../constants";
 
 export class CodeEvent {
   public static handle(server: Guild, serverBot: Client, info: TicketEmbed) {
@@ -26,7 +27,7 @@ export class CodeEvent {
 
     // Create embed that tells the creator to send their errors
     let errorEmbed = new RichEmbed()
-      .setColor("#00ff00")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle(`Please send us your code`)
       .setDescription(`${user.user.username} asks you to send your code`)
       .addField(

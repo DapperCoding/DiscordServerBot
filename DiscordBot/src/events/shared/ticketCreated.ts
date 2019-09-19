@@ -9,6 +9,7 @@ import {
 import { ConfigManager } from "../../configManager";
 import { GuildHelper } from "../../helpers/guildHelper";
 import { TicketHelper } from "../../helpers/ticketHelper";
+import { Constants } from "../../constants";
 
 export class TicketCreatedEvent {
   public static handle = (ticket: Ticket, server: Guild) => {
@@ -25,9 +26,7 @@ export class TicketCreatedEvent {
 
     console.log("hi");
     // Get all members with teacher (h2h) role
-    let happyToHelpers = GuildHelper.GetAllWithRole(
-      "teacher"
-    ) as GuildMember[];
+    let happyToHelpers = GuildHelper.GetAllWithRole("teacher") as GuildMember[];
     // Loop over all h2h-ers
     for (let i = 0; i < happyToHelpers.length; i++) {
       // Get information for discord user
@@ -77,7 +76,7 @@ export class TicketCreatedEvent {
                 .setDescription(
                   ticket.applicant.username + " is in need of help!"
                 )
-                .setColor("#ffdd05")
+                .setColor(Constants.EmbedColors.GREEN)
                 .addField("Language", ticket.language.name)
                 .addField("Framework", ticket.framework.name)
                 .addField("Their description:", ticket.description)

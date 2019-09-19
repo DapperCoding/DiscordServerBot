@@ -2,6 +2,7 @@ import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class ServerInfoCommand extends BaseCommand {
   readonly commandWords = ["serverinfo"];
@@ -39,7 +40,7 @@ export default class ServerInfoCommand extends BaseCommand {
     let embed = new Discord.RichEmbed();
 
     embed.setDescription("Server Information");
-    embed.setColor("0xff0000");
+    embed.setColor(Constants.EmbedColors.YELLOW);
     embed.setThumbnail(commandData.guild.icon);
     embed.addField(
       "The best server ever:",

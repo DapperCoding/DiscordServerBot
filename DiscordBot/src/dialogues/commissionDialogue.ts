@@ -6,6 +6,7 @@ import {
   CommissionForm
 } from "../models/forms/commissionForm";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
+import { Constants } from "../constants";
 
 export class CommissionDialogue {
   public nameStep(response: Message, data: CommissionDialogueData) {
@@ -158,8 +159,8 @@ export class CommissionDialogue {
             )
             .addField("Description:", commission.description)
             .addField("Status", commission.status)
-            .setFooter("With ❤ by the DapperCoding team")
-            .setColor("FF0000");
+            .setFooter("With ❤ the DapperCoding team")
+            .setColor(Constants.EmbedColors.GREEN);
 
           member.send(embed);
           channel.send(

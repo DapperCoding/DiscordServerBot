@@ -1,36 +1,37 @@
 import BaseIntent from "../baseIntent";
-import { RichEmbed } from "discord.js"
+import { RichEmbed } from "discord.js";
 import { IntentData } from "../models/intentData";
+import { Constants } from "../constants";
 
 export default class YtdlFixIntent extends BaseIntent {
+  intent = "ytdlfix";
 
-    intent = "ytdlfix";
+  public async process(intentData: IntentData): Promise<void> {
+    let matches = intentData.message.content.match(/\bhttps?:\/\/\S+/gi);
+    let url = "https://dapperdino.co.uk/ytdl-fix.zip";
 
-    public async process(intentData: IntentData): Promise<void> {
-
-        let matches = intentData.message.content.match(/\bhttps?:\/\/\S+/gi);
-        let url = "https://dapperdino.co.uk/ytdl-fix.zip";
-
-        if (matches != null) {
-            url = matches[0];
-        }
-
-        let rtfmEmbed = new RichEmbed()
-            .setColor("#ff0000")
-            .setTitle("The YTDL Fix")
-            .setURL(url)
-            .addField(
-                "Please download the zip file " + intentData.message.member.displayName + ".",
-                "The teacher team asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
-            )
-            .addField(
-                "Video explanation:",
-                "https://www.youtube.com/watch?v=MsMYrxyYNZc"
-            )
-            .setFooter(
-                "If you keep experiencing errors, feel free to ask your question in a ticket."
-            );
-
-        intentData.message.channel.send(rtfmEmbed);
+    if (matches != null) {
+      url = matches[0];
     }
+
+    let rtfmEmbed = new RichEmbed()
+      .setColor(Constants.EmbedColors.YELLOW)
+      .setTitle("The YTDL Fix")
+      .setURL(url)
+      .addField(
+        "Please download the zip file " +
+          intentData.message.member.displayName +
+          ".",
+        "The teacher team asks you to download the zip file and extract the files to your node_modules folder (overwrite files)."
+      )
+      .addField(
+        "Video explanation:",
+        "https://www.youtube.com/watch?v=MsMYrxyYNZc"
+      )
+      .setFooter(
+        "If you keep experiencing errors, feel free to ask your question in a ticket."
+      );
+
+    intentData.message.channel.send(rtfmEmbed);
+  }
 }

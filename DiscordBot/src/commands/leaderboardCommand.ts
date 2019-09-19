@@ -5,6 +5,7 @@ import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 import { ReceiveXp } from "../models/xp/receiveXp";
 import { GenericRichEmbedPageHandler } from "../genericRichEmbedPageHandler";
+import { Constants } from "../constants";
 
 export default class LevelCommand extends BaseCommand {
   readonly commandWords = ["leaderboard", "lb"];
@@ -51,7 +52,7 @@ export default class LevelCommand extends BaseCommand {
     return new Promise<Discord.RichEmbed>(async (resolve, reject) => {
       let xpEmbed = new Discord.RichEmbed()
         .setTitle("The current top 100 based on xp")
-        .setColor("#ff00ff");
+        .setColor(Constants.EmbedColors.YELLOW);
 
       let sentMessage = (await message.channel.send(
         xpEmbed

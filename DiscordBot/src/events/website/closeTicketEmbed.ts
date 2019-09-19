@@ -1,6 +1,7 @@
 import { GuildHelper } from "../../helpers/guildHelper";
 import { Guild, TextChannel, RichEmbed } from "discord.js";
 import TicketEmbed from "../../models/ticket/ticketEmbed";
+import { Constants } from "../../constants";
 
 export class CloseTicketEmbedEvent {
   public static handle(server: Guild, info: TicketEmbed) {
@@ -24,7 +25,7 @@ export class CloseTicketEmbedEvent {
         `${info.user.username} thinks that this ticket can be closed now`
       )
       .setThumbnail(user.user.avatarURL)
-      .setColor("#2dff2d")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setDescription(
         "If you agree that this ticket should be closed then please type the following command:\n__**?closeTicket**__"
       );

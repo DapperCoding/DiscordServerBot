@@ -1,6 +1,7 @@
 import { Client, RichEmbed, TextChannel, Guild } from "discord.js";
 import { SuggestionConverters } from "../../converters/suggestionConverters";
 import { Suggest } from "../../models/suggest";
+import { Constants } from "../../constants";
 
 export class SuggestionEvent {
   public static handle(server: Guild, serverBot: Client, suggestion: Suggest) {
@@ -10,7 +11,7 @@ export class SuggestionEvent {
     // Create suggestion embed
     const suggestionEmbed = new RichEmbed({})
       .setTitle("Your suggestion has been created!")
-      .setColor("0xff0000")
+      .setColor(Constants.EmbedColors.GREEN)
       .addField(
         "Here you will find the information about the suggestion:",
         `https://dapperdino.co.uk/Client/Suggestion/${suggestion.id}`
@@ -36,9 +37,7 @@ export class SuggestionEvent {
 
       suggestionEmbed.setTitle(`${suggestor.username} suggested something.`);
       suggestionEmbed.setDescription(
-        `teacher link: https://dapperdino.co.uk/HappyToHelp/Suggestion/${
-          suggestion.id
-        }`
+        `teacher link: https://dapperdino.co.uk/HappyToHelp/Suggestion/${suggestion.id}`
       );
       const h2hChat = server.channels.find(
         channel => channel.name.toLowerCase() === "dapper-team"

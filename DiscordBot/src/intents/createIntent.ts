@@ -13,6 +13,7 @@ import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { Ticket } from "../models/ticket/ticket";
 import { Proficiency } from "../models/proficiency/proficiency";
 import { Applicant } from "../models/ticket/applicant";
+import { Constants } from "../constants";
 
 export default class CreateIntent extends BaseIntent {
   intent = "ticket.create";
@@ -120,7 +121,7 @@ export default class CreateIntent extends BaseIntent {
               // Create ticket embed
               let ticketEmbed = new RichEmbed()
                 .setTitle("Ticket Created Successfully!")
-                .setColor("#ffdd05")
+                .setColor(Constants.EmbedColors.GREEN)
                 .addField("Your Title:", data.title, false)
                 .addField("Your Description:", data.description, false)
                 .setFooter(

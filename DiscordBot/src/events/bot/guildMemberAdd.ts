@@ -2,6 +2,7 @@ import { ChannelHelper } from "../../helpers/channelHelper";
 import { RichEmbed, GuildMember } from "discord.js";
 import { ClientHelper } from "../../helpers/clientHelper";
 import MissingChannelIdError from "../../error";
+import { Constants } from "../../constants";
 
 export class GuildMemberAddEvent {
   public static handle(member: GuildMember) {
@@ -14,7 +15,7 @@ export class GuildMemberAddEvent {
       // Create welcome rules
       let welcomeEmbed = new RichEmbed()
         .setTitle("Welcome " + member.user.username + "!")
-        .setColor("#ff0000")
+        .setColor(Constants.EmbedColors.GREEN)
         .addField(
           "Information",
           "I've just sent you a PM with some details about the server, it would mean a lot if you were to give them a quick read."
@@ -43,9 +44,7 @@ export class GuildMemberAddEvent {
 
     // Send rules intro text
     member.send(
-      `Hello ${
-        member.displayName
-      }. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
+      `Hello ${member.displayName}. Thanks for joining the server. If you wish to use our bot then simply use the command '?commands' in any channel and you'll recieve a pm with a list about all our commands. Anyway, here are the server rules:`
     );
 
     // Create & send rules embed
@@ -91,7 +90,7 @@ export class GuildMemberAddEvent {
         "Finally, we are here to teach, not to copy and paste code for you to use. If we see you have a problem that isn't too difficult to need help with then we will expect you to figure it out on your own so you actually learn whilst possibly giving you some hints if needed"
       )
       .setThumbnail(client.user.displayAvatarURL)
-      .setColor("0xff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setFooter("If these rules are broken then don't be surprised by a ban");
     member.send(rules);
 

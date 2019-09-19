@@ -9,6 +9,8 @@ import {
   ApplicationDialogue
 } from "../dialogues/applicationDialogue";
 import { DialogueStep, DialogueHandler } from "../handlers/dialogueHandler";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class AcceptApplicationCommand extends BaseCommand {
   readonly commandWords = ["acceptapplication"];
@@ -86,7 +88,7 @@ export default class AcceptApplicationCommand extends BaseCommand {
             let acceptedApplication = new Discord.RichEmbed()
               .setTitle("You've been accepted.")
               .setThumbnail(commandData.message.author.avatarURL)
-              .setColor("#2dff2d")
+              .setColor(Constants.EmbedColors.GREEN)
               .setDescription(
                 `Your ${channelNameParts[0]} application has been accepted by ${commandData.message.author.tag}.
                 Reason: ${info.reason}`
@@ -101,7 +103,7 @@ export default class AcceptApplicationCommand extends BaseCommand {
             let dapperTeamEmbed = new Discord.RichEmbed()
               .setTitle("New Team Member.")
               .setThumbnail(applicant.displayAvatarURL)
-              .setColor("#2dff2d")
+              .setColor(Constants.EmbedColors.GREEN)
               .setDescription(
                 `Please welcome our new ${channelNameParts[0]}, ${data.discordUser.username}.`
               );
@@ -122,9 +124,7 @@ export default class AcceptApplicationCommand extends BaseCommand {
             sent++;
             if (sent == 1)
               // Something went wrong, log error
-              commandData.message.reply(
-                `Whoops, something went wrong. \n ${err}`
-              );
+              commandData.message.channel.send(ErrorEmbed.Build(err));
           });
       });
 

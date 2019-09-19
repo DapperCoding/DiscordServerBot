@@ -3,6 +3,7 @@ import { IBotCommandHelp } from "../api";
 import { XpHandler } from "../handlers/xpHandler";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class LevelCommand extends BaseCommand {
   readonly commandWords = ["level"];
@@ -50,7 +51,7 @@ export default class LevelCommand extends BaseCommand {
       XpHandler.instance.getLevelDataById(message.author.id).then(levelData => {
         let xpEmbed = new Discord.RichEmbed()
           .setTitle(message.author.username)
-          .setColor("#ff00ff")
+          .setColor(Constants.EmbedColors.YELLOW)
           .addField("Level", levelData.level, true)
           .addField("XP", levelData.xp, true);
         return resolve(xpEmbed);

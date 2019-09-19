@@ -1,6 +1,7 @@
 import { RichEmbed, TextChannel, Guild, GuildMember } from "discord.js";
 import { GuildHelper } from "../../helpers/guildHelper";
 import { HostingEnquiry } from "../../models/signalr/hostingEnquiry";
+import { Constants } from "../../constants";
 
 export class HostingEnquiryEvent {
   public static handle(server: Guild, enquiry: HostingEnquiry) {
@@ -16,11 +17,9 @@ export class HostingEnquiryEvent {
     ) as GuildMember[];
     let hostingEmbed = new RichEmbed()
       .setTitle(
-        `A user has requested contact regarding the hosting ${
-          enquiry.packageType
-        }`
+        `A user has requested contact regarding the hosting ${enquiry.packageType}`
       )
-      .setColor("0x00ff00")
+      .setColor(Constants.EmbedColors.GREEN)
       .setFooter("Please dm this user asap - or dm Mick");
 
     if (discordUser) {
@@ -46,14 +45,12 @@ export class HostingEnquiryEvent {
             "Thanks for taking interest in one of our hosting packages!"
           )
           .setDescription("We usually contact you within 24 hours!")
-          .setColor("0xff0000")
+          .setColor(Constants.EmbedColors.GREEN)
           .addField(
             "Information",
-            `You'll receive more information about hosting package: ${
-              enquiry.package
-            }, soon.`
+            `You'll receive more information about hosting package: ${enquiry.package}, soon.`
           )
-          .setFooter("With ❤ by the DapperCoding team");
+          .setFooter("With ❤ the DapperCoding team");
         discordUser.send(hostingEnquiryEmbed).catch(console.error);
       } catch (e) {}
     }

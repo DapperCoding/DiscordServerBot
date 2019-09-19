@@ -4,6 +4,7 @@ import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { TicketReceive } from "../models/ticket/ticketReceive";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class CloseTicketCommand extends BaseCommand {
   readonly commandWords = ["close", "stop"];
@@ -80,7 +81,7 @@ export default class CloseTicketCommand extends BaseCommand {
               `${commandData.message.author.username} thinks that this ticket can be closed now`
             )
             .setThumbnail(commandData.message.author.avatarURL)
-            .setColor("#2dff2d")
+            .setColor(Constants.EmbedColors.YELLOW)
             .setDescription(
               "If you agree that this ticket should be closed then please type the following command:\n__**?closeTicket**__"
             );

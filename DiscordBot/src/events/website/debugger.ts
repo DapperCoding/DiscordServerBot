@@ -1,6 +1,7 @@
 import { GuildHelper } from "../../helpers/guildHelper";
 import { TextChannel, Guild, RichEmbed } from "discord.js";
 import TicketEmbed from "../../models/ticket/ticketEmbed";
+import { Constants } from "../../constants";
 
 export class DebuggerEvent {
   public static handle(server: Guild, info: TicketEmbed) {
@@ -20,7 +21,7 @@ export class DebuggerEvent {
 
     // Create embed that tells the creator to close the proficiency
     let endTicketEmbed = new RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle(`Hey ${info.ticket.applicant.username} - just a tip`)
       .setDescription(
         "We think you should use a debugging tool, you can find a video about how to use them just below."

@@ -4,9 +4,9 @@ import { GenericRichEmbedPageHandler } from "../genericRichEmbedPageHandler";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { BotCommand } from "../models/botCommand";
+import { Constants } from "../constants";
 
 export default class CommandsCommand extends BaseCommand {
-
   readonly commandWords = ["commands"];
 
   public getHelp(): IBotCommandHelp {
@@ -43,8 +43,10 @@ export default class CommandsCommand extends BaseCommand {
     let embed = new Discord.RichEmbed()
       .setTitle("Here is a list of all our commands")
       .setDescription("Use the arrow buttons to page through the commands")
-      .setFooter("You'll have to manually remove the reaction to be able to click use the reaction again")
-      .setColor("#ff0000");
+      .setFooter(
+        "You'll have to manually remove the reaction to be able to click use the reaction again"
+      )
+      .setColor(Constants.EmbedColors.YELLOW);
 
     commandData.message.author.send(embed).then(async message => {
       // TypeScript hack for sending a single message
@@ -116,9 +118,9 @@ export default class CommandsCommand extends BaseCommand {
 
     let confirmationEmbed = new Discord.RichEmbed()
       .setTitle("Hello " + commandData.message.author.username)
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .addField(
-        "I've just sent you a pm with all the server's commands",
+        "I've just sent you a dm with all the server's commands",
         "I hope you enjoy your time here and make the most out of me, DapperBot",
         false
       );

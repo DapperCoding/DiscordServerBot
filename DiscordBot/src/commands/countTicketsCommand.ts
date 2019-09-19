@@ -3,6 +3,7 @@ import { IBotCommandHelp } from "../api";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class CountTicketsCommand extends BaseCommand {
   readonly commandWords = ["counttickets"];
@@ -50,7 +51,7 @@ export default class CountTicketsCommand extends BaseCommand {
       // When everything went right, we receive a ticket back, so we add the h2h-er to the ticket channel
       .then(tickets => {
         let embed = new Discord.RichEmbed()
-          .setColor("#ff0000")
+          .setColor(Constants.EmbedColors.YELLOW)
           .setTitle(`There's currently ${tickets.length} open tickets`);
 
         commandData.message.channel.send(embed);

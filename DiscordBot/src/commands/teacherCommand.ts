@@ -12,6 +12,7 @@ import {
 import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class TicketCommand extends BaseCommand {
   readonly commandWords = ["teacher"];
@@ -67,7 +68,7 @@ export default class TicketCommand extends BaseCommand {
       );
     } catch (e) {
       commandData.message.channel.send(
-        "Please use the web panel enable DMs to use this feature."
+        "Please use the web panel or enable DMs to use this feature."
       );
       return;
     }
@@ -77,57 +78,58 @@ export default class TicketCommand extends BaseCommand {
     // Add discordMessage object for later use in apiCall
     this.setMessage(commandData.message);
     let d = new TeacherDialogue();
-    // Create category step
-    let ageStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.ageStep,
-      "Please enter your age."
-    );
 
     // Create description step
     let motivationStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
       collectedInfo,
       d.motivationStep,
-      "Enter a short overview of what motivates you. (60 - 200 characters)"
+      "Why do you want to become a Teacher? (80 - 400 characters)"
     );
 
-    let developmentExperience: DialogueStep<
+    let developmentExperienceStep: DialogueStep<
       TeacherDialogueData
     > = new DialogueStep(
       collectedInfo,
       d.developmentExperience,
-      "Enter a short overview of your development experience. (60 - 200 characters)"
+      "What is your previous experience in software development (80 - 400 characters)"
     );
 
-    let githubLinks: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.githubLinks,
-      "Enter 1 or more GitHub profile links."
-    );
-
-    let projectLinks: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.projectLinks,
-      "Enter 1 or more previous project links."
-    );
-
-    let teachingExperience: DialogueStep<
+    let teachingExperienceStep: DialogueStep<
       TeacherDialogueData
     > = new DialogueStep(
       collectedInfo,
       d.teachingExperience,
-      "Enter your previous teaching experience. (60 - 200 characters)"
+      "What is your teaching experience? (60 - 200 characters)"
+    );
+
+    let githubLinksStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
+      collectedInfo,
+      d.githubLinks,
+      "What is the link to your github profile?"
+    );
+
+    let projectLinksStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
+      collectedInfo,
+      d.projectLinks,
+      "What are some links to interesting projects you worked on (you can also tell us a bit about them in here)?"
+    );
+
+    // Create category step
+    let ageStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
+      collectedInfo,
+      d.ageStep,
+      "How old are you?"
     );
 
     // Create new dialogueHandler with a titleStep and descriptionStep
     let handler = new DialogueHandler(
       [
-        ageStep,
         motivationStep,
-        developmentExperience,
-        githubLinks,
-        projectLinks,
-        teachingExperience
+        developmentExperienceStep,
+        teachingExperienceStep,
+        githubLinksStep,
+        projectLinksStep,
+        ageStep
       ],
       collectedInfo
     );
@@ -147,7 +149,7 @@ export default class TicketCommand extends BaseCommand {
           .then(x => {
             let applicationEmbed = new discord.RichEmbed()
               .setTitle("Application Created Successfully!")
-              .setColor("#ffdd05")
+              .setColor(Constants.EmbedColors.GREEN)
               .addField("Age:", data.age, false)
               .addField("Your Motivation:", data.motivation, false)
               .addField("Your Project Link(s):", data.projectLinks, false)

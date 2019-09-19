@@ -1,5 +1,6 @@
 import { GuildHelper } from "../../helpers/guildHelper";
 import { Guild, Client, RichEmbed, GuildMember } from "discord.js";
+import { Constants } from "../../constants";
 
 export class ProductEnquiryEvent {
   public static handle(server: Guild, serverBot: Client, productEnquiry: any) {
@@ -10,7 +11,7 @@ export class ProductEnquiryEvent {
       .setTitle(
         `A user has requested contact regarding the ${productEnquiry.product}`
       )
-      .setColor("0x00ff00")
+      .setColor(Constants.EmbedColors.GREEN)
       .addField("The user", productEnquiry.discordId)
       .setFooter("Please DM this user asap - or DM Mick");
 
@@ -29,12 +30,12 @@ export class ProductEnquiryEvent {
       try {
         let productEnquiryEmbed = new RichEmbed()
           .setTitle("Thanks for your requesting contact!")
-          .setColor("0xff0000")
+          .setColor(Constants.EmbedColors.GREEN)
           .addField(
             "Information",
             `You'll receive more information about ${productEnquiry.product}`
           )
-          .setFooter("With ❤ by the DapperCoding team");
+          .setFooter("With ❤ the DapperCoding team");
         testUser.send(productEnquiryEmbed).catch(console.error);
       } catch (e) {}
     }

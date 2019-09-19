@@ -12,6 +12,7 @@ import {
 import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class TicketCommand extends BaseCommand {
   readonly commandWords = ["architect"];
@@ -77,18 +78,12 @@ export default class TicketCommand extends BaseCommand {
     // Add discordMessage object for later use in apiCall
     this.setMessage(commandData.message);
     let d = new ArchitectDialogue();
-    // Create category step
-    let ageStep: DialogueStep<ArchitectDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.ageStep,
-      "Please enter your age."
-    );
 
     // Create description step
     let motivationStep: DialogueStep<ArchitectDialogueData> = new DialogueStep(
       collectedInfo,
       d.motivationStep,
-      "Enter a short overview of what motivates you. (60 - 200 characters)"
+      "Why do you want to become an Architect? (80 - 400 characters)"
     );
 
     let developmentExperience: DialogueStep<
@@ -96,18 +91,24 @@ export default class TicketCommand extends BaseCommand {
     > = new DialogueStep(
       collectedInfo,
       d.developmentExperience,
-      "Enter a short overview of your development experience. (60 - 200 characters)"
+      "What is your previous experience in software development? (80 - 400 characters)"
     );
 
     let previousIdeas: DialogueStep<ArchitectDialogueData> = new DialogueStep(
       collectedInfo,
       d.previousIdeas,
-      "Enter a short overview of your previous ideas. (60 - 200 characters)"
+      "What are some links to interesting software you have designed in the past? (max 400 characters)"
+    );
+    // Create category step
+    let ageStep: DialogueStep<ArchitectDialogueData> = new DialogueStep(
+      collectedInfo,
+      d.ageStep,
+      "How old are you?"
     );
 
     // Create new dialogueHandler with a titleStep and descriptionStep
     let handler = new DialogueHandler(
-      [ageStep, motivationStep, developmentExperience, previousIdeas],
+      [motivationStep, developmentExperience, previousIdeas, ageStep],
       collectedInfo
     );
 
@@ -126,7 +127,7 @@ export default class TicketCommand extends BaseCommand {
           .then(x => {
             let applicationEmbed = new discord.RichEmbed()
               .setTitle("Application Created Successfully!")
-              .setColor("#ffdd05")
+              .setColor(Constants.EmbedColors.GREEN)
               .addField("Age:", data.age, false)
               .addField("Your Motivation:", data.motivation, false)
               .addField("Your Previous Ideas:", data.previousIdeas, false)

@@ -15,6 +15,7 @@ import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
 import { FaqDialogue } from "../dialogues/faqDialogue";
 import { Faq } from "../models/faq/faq";
 import { FaqIdentifierDialogue } from "../dialogues/faqIdentifierDialogue";
+import { Constants } from "../constants";
 
 export default class EditTicketCommand extends BaseCommand {
   readonly commandWords = ["editfaq"];
@@ -32,7 +33,7 @@ export default class EditTicketCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     let startupEmbed = new Discord.RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle("All FAQs");
 
     new ApiRequestHandler()

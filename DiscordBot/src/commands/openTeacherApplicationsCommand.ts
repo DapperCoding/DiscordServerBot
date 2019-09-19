@@ -9,6 +9,8 @@ import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { DiscordUser } from "../models/discordUser";
 import { TeacherForm } from "../models/forms/forms";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class OpenApplicationsCommand extends BaseCommand {
   readonly commandWords = ["openteacherapplications", "ota"];
@@ -33,8 +35,8 @@ export default class OpenApplicationsCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     let startupEmbed = new Discord.RichEmbed()
-      .setColor("#ff0000")
-      .setTitle("All Open Applications")
+      .setColor(Constants.EmbedColors.YELLOW)
+      .setTitle("All Open Teacher Applications")
       .setFooter("Please respond to these ASAP");
 
     new ApiRequestHandler(commandData.client)
@@ -177,9 +179,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                     sent++;
                     if (sent == 1)
                       // Something went wrong, log error
-                      commandData.message.reply(
-                        `Whoops, something went wrong. \n ${err}`
-                      );
+                      commandData.message.channel.send(ErrorEmbed.Build(err));
                   });
 
                 return { category: "applications", embed };

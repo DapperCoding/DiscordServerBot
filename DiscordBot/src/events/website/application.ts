@@ -1,5 +1,6 @@
 import { GuildHelper } from "../../helpers/guildHelper";
 import { TextChannel, RichEmbed, GuildMember } from "discord.js";
+import { Constants } from "../../constants";
 
 export class ApplicationEvent {
   public static handle(server, application) {
@@ -16,7 +17,7 @@ export class ApplicationEvent {
       .addField("Last name", application.lastName)
       .addField("Explanation", application.explanation)
       .addField("Links", application.links)
-      .setColor("0x00ff00")
+      .setColor(Constants.EmbedColors.GREEN)
       .setFooter("Please dm this user asap - or dm Mick");
     if (discordUser) {
       applicationEmbed.addField("The user", discordUser.user.username);
@@ -40,12 +41,12 @@ export class ApplicationEvent {
       try {
         let appliedEmbed = new RichEmbed()
           .setTitle("Thanks for your application!")
-          .setColor("0xff0000")
+          .setColor(Constants.EmbedColors.GREEN)
           .addField(
             "Information",
             `You'll receive more information about the application soon.`
           )
-          .setFooter("With ❤ by the DapperCoding team");
+          .setFooter("With ❤ the DapperCoding team");
         discordUser.send(appliedEmbed).catch(console.error);
       } catch (e) {}
     }

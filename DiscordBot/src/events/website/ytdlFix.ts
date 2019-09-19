@@ -1,6 +1,7 @@
 import { RichEmbed, TextChannel, Guild } from "discord.js";
 import { GuildHelper } from "../../helpers/guildHelper";
 import TicketEmbed from "../../models/ticket/ticketEmbed";
+import { Constants } from "../../constants";
 
 export class YtdlFixEvent {
   public static handle(server: Guild, info: TicketEmbed) {
@@ -21,7 +22,7 @@ export class YtdlFixEvent {
 
     // Create embed that tells the creator to close the proficiency
     let ytdlfixEmbed = new RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle("The YTDL Fix")
       .setURL(url)
       .addField(

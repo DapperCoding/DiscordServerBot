@@ -13,6 +13,7 @@ import { TicketProficiencyDialogue } from "../dialogues/ticketProficiencyDialogu
 import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class TicketCommand extends BaseCommand {
   readonly commandWords = ["help"];
@@ -133,12 +134,10 @@ export default class TicketCommand extends BaseCommand {
         // Create proficiency embed
         let ticketEmbed = new discord.RichEmbed()
           .setTitle("Ticket Created Successfully!")
-          .setColor("#ffdd05")
-          .addField("Your Title:", data.title, false)
-          .addField("Your Description:", data.description, false)
-          .setFooter(
-            "Don't forget: We're closing down the server for a week starting on the 17th of September, all tickets that are still open will be force closed on this day."
-          );
+          .setColor(Constants.EmbedColors.GREEN)
+          .addField("Title:", data.title, false)
+          .addField("Description:", data.description, false)
+          .setFooter("With ❤ the DapperCoding team");
 
         // Send ticketEmbed
         commandData.message.author.send(ticketEmbed);

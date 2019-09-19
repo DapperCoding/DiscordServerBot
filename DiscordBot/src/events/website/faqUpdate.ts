@@ -1,4 +1,5 @@
 import { Client, RichEmbed, TextChannel } from "discord.js";
+import { Constants } from "../../constants";
 
 export class FaqUpdateEvent {
   public static async handle(serverBot: Client, faq: any) {
@@ -19,7 +20,7 @@ export class FaqUpdateEvent {
       let faqEmbed = new RichEmbed()
         .setTitle("-Q: " + faq.question)
         .setDescription("-A: " + faq.answer)
-        .setColor("#2dff2d");
+        .setColor(Constants.EmbedColors.GREEN);
 
       // Check if resource link is present
       if (faq.resourceLink != null) {

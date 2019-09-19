@@ -8,6 +8,8 @@ import { Bot } from "../bot";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { ArchitectForm } from "../models/forms/forms";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class OpenApplicationsCommand extends BaseCommand {
   readonly commandWords = ["openarchitectapplications", "oaa"];
@@ -32,7 +34,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     let startupEmbed = new Discord.RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle("All Open Applications")
       .setFooter("Please respond to these ASAP");
 
@@ -169,9 +171,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                     sent++;
                     if (sent == 1)
                       // Something went wrong, log error
-                      commandData.message.reply(
-                        `Whoops, something went wrong. \n ${err}`
-                      );
+                      commandData.message.channel.send(ErrorEmbed.Build(err));
                   });
 
                 return { category: "applications", embed };

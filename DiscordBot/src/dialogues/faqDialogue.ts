@@ -8,6 +8,7 @@ import { FaqHandler } from "../handlers/faqHandler";
 import { FaqMessage } from "../models/faq/faqMessage";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { ConfigManager } from "../configManager";
+import { Constants } from "../constants";
 
 export class FaqDialogue {
   private _config: API.IBotConfig;
@@ -122,7 +123,7 @@ export class FaqDialogue {
     let faqEmbed = new Discord.RichEmbed()
       .setTitle("-Q: " + data.question)
       .setDescription("-A: " + data.answer)
-      .setColor("#2dff2d");
+      .setColor(Constants.EmbedColors.GREEN);
 
     if (
       data.resourceLink != null &&

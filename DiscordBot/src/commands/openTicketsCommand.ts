@@ -8,6 +8,8 @@ import { Bot } from "../bot";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { DiscordUser } from "../models/discordUser";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class OpenTicketsCommand extends BaseCommand {
   readonly commandWords = ["opentickets"];
@@ -51,7 +53,7 @@ export default class OpenTicketsCommand extends BaseCommand {
 
   public async process(commandData: CommandData): Promise<void> {
     let startupEmbed = new Discord.RichEmbed()
-      .setColor("#ff0000")
+      .setColor(Constants.EmbedColors.YELLOW)
       .setTitle("All open tickets");
 
     new ApiRequestHandler(commandData.client)
@@ -171,12 +173,10 @@ export default class OpenTicketsCommand extends BaseCommand {
 
                     let acceptedTicketembed = new Discord.RichEmbed()
                       .setTitle(
-                        `${
-                          commandData.message.author.username
-                        } is here to help you!`
+                        `${commandData.message.author.username} is here to help you!`
                       )
                       .setThumbnail(commandData.message.author.avatarURL)
-                      .setColor("#2dff2d")
+                      .setColor(Constants.EmbedColors.GREEN)
                       .setDescription(
                         "Please treat them nicely and they will treat you nicely back :)"
                       );
@@ -199,18 +199,13 @@ export default class OpenTicketsCommand extends BaseCommand {
 
                       .catch(err => {
                         // Something went wrong, log error
-                        commandData.message.reply(
-                          `Whoops, something went wrong. \n ${err}`
-                        );
+                        commandData.message.channel.send(ErrorEmbed.Build(err));
                       });
                   })
                   .catch(err => {
                     sent++;
                     if (sent == 1)
-                      // Something went wrong, log error
-                      commandData.message.reply(
-                        `Whoops, something went wrong. \n ${err}`
-                      );
+                      commandData.message.channel.send(ErrorEmbed.Build(err));
                   });
 
                 return { category: "tickets", embed };
@@ -220,9 +215,7 @@ export default class OpenTicketsCommand extends BaseCommand {
 
             // Add to embed
             embed.addField(
-              `Ticket${currentTicket.id} (${
-                currentTicket.count
-              } team member(s) helping)`,
+              `Ticket${currentTicket.id} (${currentTicket.count} team member(s) helping)`,
               currentTicket.subject +
                 "\n https://dapperdino.co.uk/HappyToHelp/Ticket?id=" +
                 currentTicket.id

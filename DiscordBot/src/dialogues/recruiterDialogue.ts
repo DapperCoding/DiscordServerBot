@@ -13,10 +13,10 @@ export class RecruiterDialogue extends FormBaseDialogue<RecruiterDialogueData> {
   ) {
     return new Promise<RecruiterDialogueData>((resolve, reject) => {
       try {
-        if (response.content.length <= 60) {
+        if (response.content.length <= 80 || response.content.length > 400) {
           reject(
             new ValidationError(
-              "You must provide a 60-200 character message on what previous recruiting experience you have."
+              "You must provide a 80-400 character message on what previous recruiting experience you have."
             )
           );
         }
@@ -35,10 +35,10 @@ export class RecruiterDialogue extends FormBaseDialogue<RecruiterDialogueData> {
   ) {
     return new Promise<RecruiterDialogueData>((resolve, reject) => {
       try {
-        if (response.content.length <= 60) {
+        if (response.content.length <= 80 || response.content.length > 400) {
           reject(
             new ValidationError(
-              "You must provide a 60-200 character message on what previous development reviewing experience you have."
+              "You must provide a 80-400 character message on what previous development reviewing experience you have."
             )
           );
         }
@@ -52,7 +52,7 @@ export class RecruiterDialogue extends FormBaseDialogue<RecruiterDialogueData> {
   }
 
   public githubLinks(response: Discord.Message, data: RecruiterDialogueData) {
-    return new Promise<RecruiterDialogueData>((resolve, reject) => {
+    return new Promise<RecruiterDialogueData>((resolve, reject) => {0
       try {
         if (
           response.content.length <= 0 &&
@@ -80,6 +80,12 @@ export class RecruiterDialogue extends FormBaseDialogue<RecruiterDialogueData> {
           reject(
             new ValidationError(
               "You must provide 1 or more links to a previous projects."
+            )
+          );
+        } else if (response.content.length > 400) {
+          reject(
+            new ValidationError(
+              "There is a maximum of 400 characters for this field."
             )
           );
         }

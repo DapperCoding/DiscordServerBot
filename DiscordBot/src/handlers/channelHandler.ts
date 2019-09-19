@@ -1,4 +1,5 @@
 import * as Discord from "discord.js";
+import { Constants } from "../constants";
 
 export class ChannelHandler {
   private _guild: Discord.Guild;
@@ -53,7 +54,7 @@ export class ChannelHandler {
             .setDescription(
               "We have received your ticket and have notified all Happy-To-Help members."
             )
-            .setColor("#2dff2d")
+            .setColor(Constants.EmbedColors.GREEN)
             .addField(
               "Information",
               "Please provide us with as much information as possible. Send at least your code and the error or a screenshot of your entire vscode window."
@@ -167,7 +168,7 @@ export class ChannelHandler {
             .setDescription(
               `We have received your application and ${recruiter.user.username} will interview you!.`
             )
-            .setColor("#2dff2d")
+            .setColor(Constants.EmbedColors.GREEN)
             .addField(
               "Information",
               "Please wait for the recruiter to ask you some questions."

@@ -12,6 +12,7 @@ import {
 import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
+import { Constants } from "../constants";
 
 export default class TicketCommand extends BaseCommand {
   readonly commandWords = ["recruiter"];
@@ -88,7 +89,7 @@ export default class TicketCommand extends BaseCommand {
     let motivationStep: DialogueStep<RecruiterDialogueData> = new DialogueStep(
       collectedInfo,
       d.motivationStep,
-      "Enter a short overview of what motivates you. (60 - 200 characters)"
+      "Why do you want to become a Recruiter?. (80 - 400 characters)"
     );
 
     let developmentExperience: DialogueStep<
@@ -96,7 +97,7 @@ export default class TicketCommand extends BaseCommand {
     > = new DialogueStep(
       collectedInfo,
       d.developmentExperience,
-      "Enter a short overview of your development experience. (60 - 200 characters)"
+      "What is your previous experience in software development? (80 - 400 characters)"
     );
 
     let developmentReviewingExperience: DialogueStep<
@@ -104,7 +105,7 @@ export default class TicketCommand extends BaseCommand {
     > = new DialogueStep(
       collectedInfo,
       d.developmentReviewingExperience,
-      "Enter a short overview of your development reviewing experience. (60 - 200 characters)"
+      "What is your previous experience in reviewing software? (80 - 400 characters)"
     );
 
     let recruitingExperience: DialogueStep<
@@ -112,31 +113,31 @@ export default class TicketCommand extends BaseCommand {
     > = new DialogueStep(
       collectedInfo,
       d.recruitingExperience,
-      "Enter a short overview of your recruiting experience. (60 - 200 characters)"
+      "What is your previous experience in recruiting developers? (80 - 400 characters)"
     );
 
     let githubLinks: DialogueStep<RecruiterDialogueData> = new DialogueStep(
       collectedInfo,
       d.githubLinks,
-      "Enter 1 or more GitHub profile links."
+      "What is the link to your github profile?"
     );
 
     let projectLinks: DialogueStep<RecruiterDialogueData> = new DialogueStep(
       collectedInfo,
       d.projectLinks,
-      "Enter 1 or more previous project links."
+      "What are some links to interesting software you have developed in the past?"
     );
 
     // Create new dialogueHandler with a titleStep and descriptionStep
     let handler = new DialogueHandler(
       [
-        ageStep,
         motivationStep,
+        recruitingExperience,
         developmentExperience,
         developmentReviewingExperience,
-        recruitingExperience,
         githubLinks,
-        projectLinks
+        projectLinks,
+        ageStep
       ],
       collectedInfo
     );
@@ -156,7 +157,7 @@ export default class TicketCommand extends BaseCommand {
           .then(x => {
             let applicationEmbed = new discord.RichEmbed()
               .setTitle("Application Created Successfully!")
-              .setColor("#ffdd05")
+              .setColor(Constants.EmbedColors.GREEN)
               .addField("Age:", data.age, false)
               .addField("Your Motivation:", data.motivation, false)
               .addField("GitHub Link(s):", data.githubLink, false)

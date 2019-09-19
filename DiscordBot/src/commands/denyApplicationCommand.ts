@@ -13,6 +13,8 @@ import {
   ApplicationDialogueData
 } from "../dialogues/applicationDialogue";
 import { DialogueHandler, DialogueStep } from "../handlers/dialogueHandler";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class DenyApplicatioNCommand extends BaseCommand {
   readonly commandWords = [
@@ -89,7 +91,7 @@ export default class DenyApplicatioNCommand extends BaseCommand {
             let deniedApplication = new Discord.RichEmbed()
               .setTitle("You've been denied.")
               .setThumbnail(commandData.message.author.avatarURL)
-              .setColor("RED")
+              .setColor(Constants.EmbedColors.RED)
               .setDescription(
                 `Your ${channelNameParts[0]} application has been denied by ${commandData.message.author.tag}.
                 Reason: ${info.reason}`
@@ -103,9 +105,7 @@ export default class DenyApplicatioNCommand extends BaseCommand {
             sent++;
             if (sent == 1)
               // Something went wrong, log error
-              commandData.message.reply(
-                `Whoops, something went wrong. \n ${err}`
-              );
+              commandData.message.channel.send(ErrorEmbed.Build(err));
           });
       });
 

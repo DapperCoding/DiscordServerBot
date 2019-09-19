@@ -6,6 +6,8 @@ import { ChannelHandler } from "../handlers/channelHandler";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 import { DiscordUser } from "../models/discordUser";
+import { Constants } from "../constants";
+import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class AcceptTicketCommand extends BaseCommand {
   readonly commandWords = ["acceptticket"];
@@ -53,7 +55,7 @@ export default class AcceptTicketCommand extends BaseCommand {
             `${commandData.message.author.username} is here to help you!`
           )
           .setThumbnail(commandData.message.author.avatarURL)
-          .setColor("#2dff2d")
+          .setColor(Constants.EmbedColors.GREEN)
           .setDescription(
             "Please treat them nicely and they will treat you nicely back :)"
           );
@@ -76,16 +78,14 @@ export default class AcceptTicketCommand extends BaseCommand {
 
           .catch(err => {
             // Something went wrong, log error
-            commandData.message.reply(
-              `Whoops, something went wrong. \n ${err}`
-            );
+            commandData.message.channel.send(ErrorEmbed.Build(err));
           });
       })
       .catch(err => {
         sent++;
         if (sent == 1)
           // Something went wrong, log error
-          commandData.message.reply(`Whoops, something went wrong. \n ${err}`);
+          commandData.message.channel.send(ErrorEmbed.Build(err));
       });
   }
 }
