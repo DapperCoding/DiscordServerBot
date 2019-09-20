@@ -77,12 +77,12 @@ export class Bot implements IBot {
     };
 
     // Automatically reconnect if the bot disconnects due to inactivity
-    this._client.on("disconnect", function(erMsg, code) {
+    this._client.on("disconnect", function (erMsg, code) {
       DisconnectEvent.handle(getClient(), code, erMsg);
     });
 
     // Automatically reconnect if the bot errors
-    this._client.on("error", function(error) {
+    this._client.on("error", function (error) {
       BotErrorEvent.handle(getClient(), error);
     });
 
@@ -108,11 +108,13 @@ export class Bot implements IBot {
 
     // Fires every time a member says something in a channel
     this._client.on("messageUpdate", async (oldMessage, newMessage) => {
+      if (oldMessage == null || newMessage == null || oldMessage == newMessage) return;
+      if (oldMessage.content.length === 0) return;
       MessageUpdateEvent.handle(newMessage);
     });
 
     // Fires every time a member's role, name, icon, etc... updates
-    this._client.on("guildMemberUpdate", function(oldMember, newMember) {
+    this._client.on("guildMemberUpdate", function (oldMember, newMember) {
       GuildMemberUpdateEvent.handle(newMember, oldMember);
     });
 
