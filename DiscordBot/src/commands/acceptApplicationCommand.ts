@@ -13,7 +13,7 @@ import { Constants } from "../constants";
 import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class AcceptApplicationCommand extends BaseCommand {
-  readonly commandWords = ["acceptapplication"];
+  readonly commandWords = ["acceptapplication", "accept"];
 
   public getHelp(): IBotCommandHelp {
     return {
