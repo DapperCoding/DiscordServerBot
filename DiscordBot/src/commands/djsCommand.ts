@@ -51,7 +51,7 @@ export default class DjsCommand extends BaseCommand {
 
                         collector.on('end', r => {
                             if (r.size <= 0) {
-                                (m as Discord.Message).reactions.clear();
+                                (m as Discord.Message).reactions.deleteAll();
                             }
                         });
                     });
