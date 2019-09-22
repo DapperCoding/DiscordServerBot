@@ -30,6 +30,10 @@ export class MessageEvent {
       messageService.handleMessageInInterviewChannel(message);
     }
 
+    if (message.author.bot) {
+      return;
+    }
+
     // Message as clean text
     const text = message.cleanContent;
 
