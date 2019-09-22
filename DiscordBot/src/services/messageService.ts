@@ -140,10 +140,10 @@ export class MessageService {
         null,
         `discordMessage/${message.id}/${message.channel.id}/${message.guild.id}`
       )
-      .then(id => {
-        if (id < 0) {
+      .then(discordMessageId => {
+        if (discordMessageId < 0) {
           new ApiRequestHandler()
-            .requestAPI(
+            .requestAPIWithType<any>(
               "POST",
               reaction,
               `forms/${this.TransformNamePartToUrlPart(
@@ -178,8 +178,6 @@ export class MessageService {
 
   private TransformNamePartToUrlPart(namePart: string) {
     switch (namePart) {
-      case "architect":
-        return "ideas/architect";
       default:
         return namePart;
     }
