@@ -52,7 +52,8 @@ export default class LevelCommand extends BaseCommand {
     return new Promise<Discord.RichEmbed>(async (resolve, reject) => {
       let xpEmbed = new Discord.RichEmbed()
         .setTitle("The current top 100 based on xp")
-        .setColor(Constants.EmbedColors.YELLOW);
+        .setColor(Constants.EmbedColors.YELLOW)
+        .setURL("https://student.dapperdino.co.uk/leaderboards");
 
       let sentMessage = (await message.channel.send(
         xpEmbed

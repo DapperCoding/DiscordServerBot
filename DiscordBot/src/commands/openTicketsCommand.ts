@@ -217,7 +217,7 @@ export default class OpenTicketsCommand extends BaseCommand {
             embed.addField(
               `Ticket${currentTicket.id} (${currentTicket.count} team member(s) helping)`,
               currentTicket.subject +
-                "\n https://dapperdino.co.uk/HappyToHelp/Ticket?id=" +
+                "\n https://teacher.dapperdino.co.uk/Ticket/" +
                 currentTicket.id
             );
 

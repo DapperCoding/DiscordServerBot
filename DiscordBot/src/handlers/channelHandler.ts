@@ -43,7 +43,8 @@ export class ChannelHandler {
           // Add permissions for creator
           channel.overwritePermissions(member, {
             VIEW_CHANNEL: true,
-            READ_MESSAGES: true
+            READ_MESSAGES: true,
+            SEND_MESSAGES:true
           });
 
           let ticketChannelEmbed = new Discord.RichEmbed()
@@ -52,7 +53,7 @@ export class ChannelHandler {
             )
             .setThumbnail("https://dapperdino.co.uk/images/dapperbot.png")
             .setDescription(
-              "We have received your ticket and have notified all Happy-To-Help members."
+              "We have received your ticket and have notified all Teachers."
             )
             .setColor(Constants.EmbedColors.GREEN)
             .addField(
@@ -68,7 +69,7 @@ export class ChannelHandler {
               "Just remember to be patient and well mannered as these members are giving up their own time to help you"
             )
             .setFooter(
-              "In the meantime you can start explaining your problems here as the Happy-To-Help member will be able to read all messages in the channel when they join"
+              "In the meantime you can start explaining your problems here as the Teacher will be able to read all messages in the channel when they join"
             );
 
           (channel as Discord.TextChannel).send(ticketChannelEmbed);
@@ -99,7 +100,7 @@ export class ChannelHandler {
   ) {
     // Find channel based on ticketId
     var channel = this._guild.channels.find(
-      channel => channel.name === `ticket${ticketId}`
+      channel => channel.name.toLowerCase() === `ticket${ticketId}`
     );
 
     // If channel is found
@@ -107,7 +108,8 @@ export class ChannelHandler {
       // Add premissions to channel for h2h-er
       channel.overwritePermissions(message.author, {
         VIEW_CHANNEL: true,
-        READ_MESSAGES: true
+        READ_MESSAGES: true,
+        SEND_MESSAGES:true
       });
 
       (channel as Discord.TextChannel).send(embed);
