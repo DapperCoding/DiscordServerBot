@@ -15,11 +15,11 @@ export default class mdnCommand extends BaseCommand {
             caption: "?mdn",
             description: "Look up something on the MDN documentation",
         };
-    }
+    };
 
     public canUseInChannel(channel: Discord.TextChannel): boolean {
         return true;
-    }
+    };
 
     public async process(commandData: CommandData): Promise<void> {
 
@@ -35,7 +35,7 @@ export default class mdnCommand extends BaseCommand {
         if (!body.URL || !body.Title || !body.Summary) {
             commandData.message.channel.send(`Woops, there was a mistake whilst searching the docs!`);
             return;
-        }
+        };
 
         const turndown = new Turndown();
         turndown.addRule('hyperlink', {
@@ -53,5 +53,5 @@ export default class mdnCommand extends BaseCommand {
 
         commandData.message.channel!.send(embed);
         return;
-    }
-}
+    };
+};
