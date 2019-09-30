@@ -154,7 +154,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                     }
                     try {
                       applicant.send(
-                        `Congratulations! A member of the Dapper Admin team has requested an interview with you. Go to the channel: recruiter-${data.application.id} to start the interview.`
+                        `Congratulations! A member of the Dapper Coding team has requested an interview with you. Go to the channel: recruiter-${data.application.id} to start the interview.`
                       );
                     } catch (e) {}
 

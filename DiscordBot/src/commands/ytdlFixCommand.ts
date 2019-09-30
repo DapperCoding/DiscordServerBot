@@ -11,7 +11,7 @@ export default class YtdlFixCommand extends BaseCommand {
     return {
       caption: "?ytdlfix",
       description: "Send the automated ytdl-fix message",
-      roles: ["teacher", "admin"]
+      roles: ["teacher"]
     };
   }
 

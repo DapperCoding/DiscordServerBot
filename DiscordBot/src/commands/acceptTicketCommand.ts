@@ -10,14 +10,14 @@ import { Constants } from "../constants";
 import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class AcceptTicketCommand extends BaseCommand {
-  readonly commandWords = ["acceptticket"];
+  readonly commandWords = ["acceptticket", "at"];
 
   public getHelp(): IBotCommandHelp {
     return {
       caption: "?acceptTicket",
       description:
         "For teachers to get access to the ticket channel on discord",
-      roles: ["teacher", "admin"]
+      roles: ["teacher"]
     };
   }
 

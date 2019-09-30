@@ -39,7 +39,7 @@ export default class OpenTicketsCommand extends BaseCommand {
     return {
       caption: "?opentickets",
       description: "Sends a list of all joinable tickets to your dms",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

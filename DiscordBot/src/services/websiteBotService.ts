@@ -127,7 +127,7 @@ export class WebsiteBotService {
       ApplicationEvent.handle(this._server, application);
     });
 
-    // On 'AcceptedApplicant' -> when admin accepts a h2h member through the admin panel
+    // On 'AcceptedApplicant'
     connection.on("AcceptedApplicant", async accepted => {
       AcceptedApplicantEvent.handle(this._server, accepted);
     });

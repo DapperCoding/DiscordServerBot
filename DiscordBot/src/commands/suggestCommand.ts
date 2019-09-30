@@ -106,7 +106,7 @@ export default class SuggestCommand extends BaseCommand {
               console.error(err);
               const embed = new Discord.RichEmbed()
                 .setTitle("Something went wrong leaving your suggestion")
-                .setDescription("please contact an admin")
+                .setDescription("please contact a Dapper Coding member")
                 .setColor(Constants.EmbedColors.RED)
                 .setFooter("With ❤ the DapperCoding team");
               commandData.message.channel.send(embed);

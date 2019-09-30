@@ -14,7 +14,7 @@ export default class MirrorCommand extends BaseCommand {
     return {
       caption: "?syncTickets",
       description: "Sync the open & closed ticket channels",
-      roles: ["admin", "teacher", "dappercoding"]
+      roles: ["teacher", "dappercoding"]
     };
   }
 

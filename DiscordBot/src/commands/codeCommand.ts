@@ -11,7 +11,7 @@ export default class CodeCommand extends BaseCommand {
     return {
       caption: "?code",
       description: "Use in ticket channels, ask for their code",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

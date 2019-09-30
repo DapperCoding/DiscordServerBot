@@ -11,9 +11,7 @@ export default class AddIntent extends BaseIntent {
   public async process(intentData: IntentData): Promise<void> {
     if (
       intentData.message.member.roles.find(
-        role =>
-          role.name.toLowerCase() === "teacher" ||
-          role.name.toLowerCase() === "admin"
+        role => role.name.toLowerCase() === "teacher"
       )
     ) {
       let faqModel = new Faq();

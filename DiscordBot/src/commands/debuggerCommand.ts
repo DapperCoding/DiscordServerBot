@@ -11,7 +11,7 @@ export default class DebuggerCommand extends BaseCommand {
     return {
       caption: "?debugger @user",
       description: "Send information how to use a debugger in vscode",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 
