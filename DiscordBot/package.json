@@ -40,6 +40,7 @@
     "request": "^2.88.0",
     "signalr": "^2.4.1",
     "superagent": "^3.8.3",
+    "turndown": "^5.0.3",
     "uuid": "^3.3.2",
     "uws": "^100.0.1",
     "websocket": "^1.0.28",
