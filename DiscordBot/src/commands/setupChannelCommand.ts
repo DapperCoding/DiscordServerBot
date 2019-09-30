@@ -15,7 +15,7 @@ export default class MirrorCommand extends BaseCommand {
     return {
       caption: "?setupChannel",
       description: "Setup the current ticket channel.",
-      roles: ["teacher", "dappercoding"]
+      roles: ["teacher", "dapper coding"]
     };
   }
 

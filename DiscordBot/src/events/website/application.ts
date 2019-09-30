@@ -8,7 +8,7 @@ export class ApplicationEvent {
       channel => channel.name.toLowerCase() === "dapper-coding"
     ) as TextChannel;
     const dapperCodingTeam = GuildHelper.GetAllWithRole(
-      "dappercoding"
+      "dapper coding"
     ) as GuildMember[];
     const discordUser = server.members.get(application.discordId);
     const applicationEmbed = new RichEmbed()

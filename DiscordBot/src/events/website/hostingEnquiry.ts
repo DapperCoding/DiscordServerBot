@@ -13,7 +13,7 @@ export class HostingEnquiryEvent {
     if (channel == null) return true;
 
     let dapperCodingTeam = GuildHelper.GetAllWithRole(
-      "dappercoding"
+      "dapper coding"
     ) as GuildMember[];
     let hostingEmbed = new RichEmbed()
       .setTitle(
