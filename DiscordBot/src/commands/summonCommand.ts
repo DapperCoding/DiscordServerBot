@@ -10,8 +10,7 @@ export default class SummonCommand extends BaseCommand {
   public getHelp(): IBotCommandHelp {
     return {
       caption: "?summon",
-      description: "Summon a user (give user permissions to current channel)",
-      roles: ["admin"]
+      description: "Summon a user (give user permissions to current channel)"
     };
   }
 

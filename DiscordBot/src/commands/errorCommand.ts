@@ -11,7 +11,7 @@ export default class ErrorCommand extends BaseCommand {
     return {
       caption: "?error",
       description: "Use in ticket channels, ask for error information",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

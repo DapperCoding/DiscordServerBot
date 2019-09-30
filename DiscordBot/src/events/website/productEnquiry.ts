@@ -5,7 +5,7 @@ import { Constants } from "../../constants";
 export class ProductEnquiryEvent {
   public static handle(server: Guild, serverBot: Client, productEnquiry: any) {
     let dapperCodingTeam = GuildHelper.GetAllWithRole(
-      "dappercoding"
+      "dapper coding"
     ) as GuildMember[];
     let enquiryEmbed = new RichEmbed()
       .setTitle(

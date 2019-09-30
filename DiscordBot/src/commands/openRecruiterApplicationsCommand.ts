@@ -8,7 +8,7 @@ import { Bot } from "../bot";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { DiscordUser } from "../models/discordUser";
-import { ArchitectForm } from "../models/forms/forms";
+import { ArchitectForm, RecruiterForm } from "../models/forms/forms";
 import { Constants } from "../constants";
 import { ErrorEmbed } from "../embeds/errorEmbed";
 
@@ -20,8 +20,8 @@ export default class OpenApplicationsCommand extends BaseCommand {
   public getHelp(): IBotCommandHelp {
     return {
       caption: "?openRecruiterApplications or ?ora",
-      description: "Sends a list of all architect applications",
-      roles: ["recruiter"]
+      description: "Sends a list of all recruiter applications",
+      roles: ["dapper coding"]
     };
   }
 
@@ -40,7 +40,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
       .setFooter("Please respond to these ASAP");
 
     new ApiRequestHandler(commandData.client)
-      .requestAPIWithType<ArchitectForm[]>(
+      .requestAPIWithType<RecruiterForm[]>(
         "GET",
         null,
         `forms/recruiter/OpenInPerspective/${commandData.message.author.id}`
@@ -154,7 +154,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
                     }
                     try {
                       applicant.send(
-                        `Congratulations! A member of the Dapper Admin team has requested an interview with you. Go to the channel: recruiter-${data.application.id} to start the interview.`
+                        `Congratulations! A member of the Dapper Coding team has requested an interview with you. Go to the channel: recruiter-${data.application.id} to start the interview.`
                       );
                     } catch (e) {}
 
@@ -182,7 +182,7 @@ export default class OpenApplicationsCommand extends BaseCommand {
 
             // Add to embed
             embed.addField(
-              `Architect Application #${currentApplication.id}`,
+              `Recruiter Application #${currentApplication.id}`,
               `For: ${currentApplication.discordUser.username}`
             );
 
@@ -219,5 +219,5 @@ interface OpenApplication {
   clickHandler: (
     data: OpenApplication
   ) => Promise<{ embed: Discord.RichEmbed; category: string }>;
-  application: ArchitectForm;
+  application: RecruiterForm;
 }

@@ -13,7 +13,7 @@ export default class AddFaqCommand extends BaseCommand {
     return {
       caption: "?addfaq",
       description: "Creates a new entry to the FAQ channel, follow the prompts",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

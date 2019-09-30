@@ -32,7 +32,7 @@ export default class CountTicketsCommand extends BaseCommand {
       caption: "?countTickets",
       description:
         "Sends an embed in the current channel with the open ticket count",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

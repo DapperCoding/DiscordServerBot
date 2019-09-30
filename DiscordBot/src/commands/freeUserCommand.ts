@@ -11,7 +11,7 @@ export default class FreeUserCommand extends BaseCommand {
     return {
       caption: "?free",
       description: "Free a user (remove user permissions from current channel)",
-      roles: ["admin", "teacher"]
+      roles: ["teacher"]
     };
   }
 

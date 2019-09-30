@@ -13,7 +13,7 @@ export default class ForceCloseTicketCommand extends BaseCommand {
       caption: "?forceClose",
       description:
         "Use this command inside the ticket channel to force close a ticket",
-      roles: ["teacher", "admin"]
+      roles: ["teacher"]
     };
   }
 
