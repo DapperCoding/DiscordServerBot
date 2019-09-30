@@ -50,7 +50,7 @@ export default class DjsCommand extends BaseCommand {
                         });
 
                         collector.on('end', r => {
-                            if (r.size <= 0) {
+                            if (r.size <= 0 && r.first().message.channel.type !== 'dm') {
                                 (m as Discord.Message).reactions.clear();
                             }
                         });
