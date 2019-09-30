@@ -5,6 +5,8 @@ import { CommandData } from "../models/commandData";
 import { Constants } from "../constants";
 import * as qs from 'querystring';
 import * as Turndown from 'turndown';
+const fetch = require('node-fetch');
+
 
 export default class mdnCommand extends BaseCommand {
 
