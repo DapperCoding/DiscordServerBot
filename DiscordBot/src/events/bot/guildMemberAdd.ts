@@ -106,6 +106,6 @@ export class GuildMemberAddEvent {
     );
 
     // Add member to Member role
-    member.addRole(member.guild.roles.find(role => role.name === "Member"));
+    member.addRole(member.guild.roles.find(role => role.name === "Student"));
   }
 }

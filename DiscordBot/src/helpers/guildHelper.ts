@@ -24,7 +24,7 @@ export class GuildHelper {
     //Loop through all the members in the server
     for (let i = 0; i < allUsers.length; i++) {
       //Check if any of their roles has the same name as the requested role
-      if (allUsers[i].roles.find(role => role.name === requestedRole)) {
+      if (allUsers[i].roles.find(role => role.name.toLowerCase() === requestedRole.toLowerCase())) {
         //Add that member to the list
         usersWithRole.push(allUsers[i]);
       }
