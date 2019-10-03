@@ -1,15 +1,11 @@
 import * as discord from "discord.js";
 import { IBotCommandHelp, IBotConfig } from "../api";
-import { Ticket } from "../models/ticket/ticket";
-import { Applicant } from "../models/ticket/applicant";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
 import { DialogueHandler, DialogueStep } from "../handlers/dialogueHandler";
-import { TicketReceive } from "../models/ticket/ticketReceive";
 import {
   ArchitectDialogue,
   ArchitectDialogueData
 } from "../dialogues/architectDialogue";
-import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 import { Constants } from "../constants";

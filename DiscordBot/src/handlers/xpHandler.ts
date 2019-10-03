@@ -3,13 +3,12 @@ import { ApiRequestHandler } from "./apiRequestHandler";
 import { PostXp } from "../models/xp/postXp";
 import { ReceiveXp } from "../models/xp/receiveXp";
 import { CompactPostXp } from "../models/xp/compactPostXp";
-import { ConfigManager } from "../configManager";
 
 export class XpHandler {
   private baseUrl: string;
 
   constructor() {
-    this.baseUrl =  "xp/";
+    this.baseUrl = "xp/";
   }
 
   public static instance = new XpHandler();
@@ -24,9 +23,20 @@ export class XpHandler {
     xpObject.username = message.author.username;
 
     new ApiRequestHandler()
-      .requestAPI("POST", xpObject, userXpURL)
+      .requestAPIWithType<any>("POST", xpObject, userXpURL)
       .then(data => {
-        console.log(data);
+
+        if (data.levelledUp) {
+          const levelChannel = message.guild ? message.guild.channels.find(x => x.name.toLowerCase() == "level-ups") as Discord.TextChannel : null;
+          if (levelChannel) {
+            const embed = new Discord.RichEmbed()
+              .setTitle("Someone just levelled up!")
+              .setDescription(`User: ${message.author}`)
+              .addField("Level", data.level, true)
+              .addField("XP", data.xp, true)
+            levelChannel.send(embed);
+          }
+        }
       })
       .catch(err => {
         console.log(err);

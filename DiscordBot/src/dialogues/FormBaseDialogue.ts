@@ -1,7 +1,15 @@
 import * as Discord from "discord.js";
 import { ValidationError } from "../error";
+import { BaseDialogueData, BaseDialogue } from "./baseDialogue";
 
-export class FormBaseDialogue<T extends FormBaseDialogueData> {
+
+export class FormBaseDialogue<T extends FormBaseDialogueData> implements BaseDialogue<T> {
+  
+  createHandler(data: T, channel: Discord.TextChannel | Discord.DMChannel, user: Discord.User, callback: (data: T) => void): void {
+    throw new Error("Method not implemented.");
+  }
+
+  
   /**
    * ageStep
    */
@@ -68,7 +76,7 @@ export class FormBaseDialogue<T extends FormBaseDialogueData> {
   }
 }
 
-export interface FormBaseDialogueData {
+export interface FormBaseDialogueData extends BaseDialogueData {
   age: number;
   discordDiscordId: string;
   motivation: string;

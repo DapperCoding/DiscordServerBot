@@ -1,21 +1,16 @@
 import * as discord from "discord.js";
-import { IBotCommandHelp, IBotConfig } from "../api";
-import { Ticket } from "../models/ticket/ticket";
-import { Applicant } from "../models/ticket/applicant";
+import { IBotCommandHelp } from "../api";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { DialogueHandler, DialogueStep } from "../handlers/dialogueHandler";
-import { TicketReceive } from "../models/ticket/ticketReceive";
 import {
-  TeacherDialogueData,
-  TeacherDialogue
+  TeacherDialogue, TeacherDialogueData
 } from "../dialogues/teacherDialogue";
-import { Proficiency } from "../models/proficiency/proficiency";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
-import { Constants } from "../constants";
+import { Constants, ChannelNames } from "../constants";
+import { TeacherForm } from "../models/forms/forms";
 
 export default class TicketCommand extends BaseCommand {
-  readonly commandWords = ["teacher"];
+  readonly commandWords = ["teacher", "teacherapplication"];
 
   public getHelp(): IBotCommandHelp {
     return {
@@ -47,18 +42,9 @@ export default class TicketCommand extends BaseCommand {
     return canUseCommand;
   }
 
-  private dMessage: discord.Message | null = null;
-
-  private setMessage(msg: discord.Message) {
-    this.dMessage = msg;
-  }
-
-  private getMessage(): discord.Message | null {
-    return this.dMessage;
-  }
-
   public async process(commandData: CommandData): Promise<void> {
     let dm = {} as discord.Message;
+    
     try {
       dm = (await commandData.message.author.send(
         "Create your application"
@@ -72,81 +58,17 @@ export default class TicketCommand extends BaseCommand {
       );
       return;
     }
-    // Array of collected info
-    let collectedInfo = new TeacherDialogueData();
-
-    // Add discordMessage object for later use in apiCall
-    this.setMessage(commandData.message);
-    let d = new TeacherDialogue();
-
-    // Create description step
-    let motivationStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.motivationStep,
-      "Why do you want to become a Teacher? (80 - 400 characters)"
-    );
-
-    let developmentExperienceStep: DialogueStep<
-      TeacherDialogueData
-    > = new DialogueStep(
-      collectedInfo,
-      d.developmentExperience,
-      "What is your previous experience in software development (80 - 400 characters)"
-    );
-
-    let teachingExperienceStep: DialogueStep<
-      TeacherDialogueData
-    > = new DialogueStep(
-      collectedInfo,
-      d.teachingExperience,
-      "What is your teaching experience? (60 - 200 characters)"
-    );
-
-    let githubLinksStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.githubLinks,
-      "What is the link to your github profile?"
-    );
-
-    let projectLinksStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.projectLinks,
-      "What are some links to interesting projects you worked on (you can also tell us a bit about them in here)?"
-    );
-
-    // Create category step
-    let ageStep: DialogueStep<TeacherDialogueData> = new DialogueStep(
-      collectedInfo,
-      d.ageStep,
-      "How old are you?"
-    );
-
-    // Create new dialogueHandler with a titleStep and descriptionStep
-    let handler = new DialogueHandler(
-      [
-        motivationStep,
-        developmentExperienceStep,
-        teachingExperienceStep,
-        githubLinksStep,
-        projectLinksStep,
-        ageStep
-      ],
-      collectedInfo
-    );
-
-    // Collect info from steps
-    await handler
-      .getInput(
-        dm.channel as discord.DMChannel,
-        commandData.message.author,
-        false
-      )
-      .then(async data => {
+    const dialogue = new TeacherDialogue();
+    const collectedInfo = new TeacherDialogueData();
+    dialogue.createHandler(collectedInfo,
+      dm.channel as discord.TextChannel | discord.DMChannel,
+      commandData.message.author,
+      (data) => {
         data.discordDiscordId = commandData.message.author.id;
 
         new ApiRequestHandler(commandData.client)
-          .requestAPIWithType("POST", data, "forms/teacher/add")
-          .then(x => {
+          .requestAPIWithType<TeacherForm>("POST", data, "forms/teacher/add")
+          .then((form) => {
             let applicationEmbed = new discord.RichEmbed()
               .setTitle("Application Created Successfully!")
               .setColor(Constants.EmbedColors.GREEN)
@@ -170,6 +92,16 @@ export default class TicketCommand extends BaseCommand {
 
             // Send ticketEmbed
             commandData.message.author.send(applicationEmbed);
+            const recruiterChannel = commandData.guild.channels.find(x=>x.name.toLowerCase()==ChannelNames.Dapper.RECRUITER) as discord.TextChannel;
+
+            const recruiterEmbed = new discord.RichEmbed()
+            .setTitle("Someone just applied for the teacher role")
+            .setDescription(`Go to https://apply.dapperdino.co.uk/recruiter/teacher/${form.id} to interact with the applicant`);
+
+            if (recruiterChannel) {
+              recruiterChannel.send(recruiterEmbed);
+            }
+            
           });
       });
   }
