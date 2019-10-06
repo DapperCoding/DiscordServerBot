@@ -25,7 +25,7 @@ export default class DjsCommand extends BaseCommand {
 
         let v = 'stable';
 
-        if (['--stable', '--master', '--commando'].includes(flag)) {
+        if (['--stable', '--master', '--commando', 'master', 'stable', 'commando'].includes(flag)) {
             v = flag.substr(2);
         } else {
             args.push(flag);
