@@ -1,6 +1,6 @@
 import * as Discord from "discord.js";
 import { ValidationError } from "../error";
-import { FormBaseDialogue, FormBaseDialogueData } from "./FormBaseDialogue";
+import { FormBaseDialogue, FormBaseDialogueData } from "./formBaseDialogue";
 
 export class RecruiterDialogue extends FormBaseDialogue<RecruiterDialogueData> {
   /**

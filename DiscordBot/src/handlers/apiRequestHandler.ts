@@ -146,6 +146,7 @@ export class ApiRequestHandler {
     return new Promise<apiBody>(async (resolve, reject) => {
       const config = ConfigManager.GetConfig();
       const baseUrl = config.apiUrl;
+      this._headers.Authorization = ``;
       var options = {
         url: baseUrl + "account/login",
         method: "POST",
@@ -228,10 +229,6 @@ export class ApiRequestHandler {
     return new Promise<apiBody>(
       // With a parameter thats a function that has 2 params: resolve,reject => resolve = returns OK, reject = ERROR
       async (resolve, reject) => {
-        if (previousOptions.headers) {
-          const token = ConfigManager.GetMemoryConfig("bearer");
-          previousOptions.headers.Authorization = `Bearer ${token}`;
-        }
         // Return the request
         return await request(
           previousOptions,

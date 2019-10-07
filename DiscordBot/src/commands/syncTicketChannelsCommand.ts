@@ -3,9 +3,9 @@ import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
 import { ApiRequestHandler } from "../handlers/apiRequestHandler";
-import { Ticket } from "../models/ticket/ticket";
 import { TicketCreatedEvent } from "../events/shared/ticketCreated";
 import { TicketReceive } from "../models/ticket/ticketReceive";
+import { RoleNames } from "../constants";
 
 export default class MirrorCommand extends BaseCommand {
   readonly commandWords = ["syncTickets"];
@@ -14,7 +14,7 @@ export default class MirrorCommand extends BaseCommand {
     return {
       caption: "?syncTickets",
       description: "Sync the open & closed ticket channels",
-      roles: ["teacher", "dapper coding"]
+      roles: [RoleNames.DAPPER_CODING, RoleNames.MODERATOR, RoleNames.HEADMASTER]
     };
   }
 

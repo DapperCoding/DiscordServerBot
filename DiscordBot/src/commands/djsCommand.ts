@@ -25,8 +25,8 @@ export default class DjsCommand extends BaseCommand {
 
         let v = 'stable';
 
-        if (['--stable', '--master', '--commando'].includes(flag)) {
-            v = flag.substr(2);
+        if (['--stable', '--master', '--commando', 'master', 'stable', 'commando'].includes(flag)) {
+            v = flag.includes('--') ? flag.substr(2) : flag;
         } else {
             args.push(flag);
         }
@@ -50,7 +50,7 @@ export default class DjsCommand extends BaseCommand {
                         });
 
                         collector.on('end', r => {
-                            if (r.size <= 0 && r.first().message.channel.type !== 'dm') {
+                            if (r.size <= 0 && commandData.message.channel.type !== 'dm') {
                                 (m as Discord.Message).reactions.clear();
                             }
                         });

@@ -8,7 +8,7 @@ import { Bot } from "../bot";
 import { CommandData } from "../models/commandData";
 import BaseCommand from "../baseCommand";
 import { DiscordUser } from "../models/discordUser";
-import { Constants } from "../constants";
+import { Constants, ChannelNames } from "../constants";
 import { ErrorEmbed } from "../embeds/errorEmbed";
 
 export default class OpenTicketsCommand extends BaseCommand {
@@ -44,7 +44,7 @@ export default class OpenTicketsCommand extends BaseCommand {
   }
 
   public canUseInChannel(channel: Discord.TextChannel): boolean {
-    return !channel.name.toLowerCase().startsWith("ticket");
+    return channel.name.toLowerCase() === ChannelNames.Commands.TEAM;
   }
 
   public init(bot: IBot, dataPath: string): void {

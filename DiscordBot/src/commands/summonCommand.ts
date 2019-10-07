@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
-import { Constants } from "../constants";
+import { Constants, RoleNames } from "../constants";
 
 export default class SummonCommand extends BaseCommand {
   readonly commandWords = ["summon"];
@@ -10,7 +10,8 @@ export default class SummonCommand extends BaseCommand {
   public getHelp(): IBotCommandHelp {
     return {
       caption: "?summon",
-      description: "Summon a user (give user permissions to current channel)"
+      description: "Summon a user (give user permissions to current channel)",
+      roles:[RoleNames.MODERATOR, RoleNames.DAPPER_CODING]
     };
   }
 

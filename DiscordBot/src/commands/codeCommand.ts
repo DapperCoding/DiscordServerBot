@@ -2,7 +2,7 @@ import * as Discord from "discord.js";
 import { IBotCommandHelp } from "../api";
 import BaseCommand from "../baseCommand";
 import { CommandData } from "../models/commandData";
-import { Constants } from "../constants";
+import { Constants, RoleNames } from "../constants";
 
 export default class CodeCommand extends BaseCommand {
   readonly commandWords = ["code"];
@@ -11,12 +11,12 @@ export default class CodeCommand extends BaseCommand {
     return {
       caption: "?code",
       description: "Use in ticket channels, ask for their code",
-      roles: ["teacher"]
+      roles: [RoleNames.TEACHER, RoleNames.MODERATOR]
     };
   }
 
   public canUseInChannel(channel: Discord.TextChannel): boolean {
-    return channel.name.toLowerCase().startsWith("ticket");
+    return true;
   }
 
   public async process(commandData: CommandData): Promise<void> {
