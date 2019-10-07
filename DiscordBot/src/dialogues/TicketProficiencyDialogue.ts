@@ -3,6 +3,7 @@ import { Message, RichEmbed, Client, TextChannel, DMChannel } from "discord.js";
 import { RichEmbedReactionHandler } from "../genericRichEmbedReactionHandler";
 import { Proficiency } from "../models/proficiency/proficiency";
 import { IBotConfig } from "../api";
+import { setMaxListeners } from "cluster";
 
 export class TicketProficiencyDialogue {
   /**
@@ -72,6 +73,7 @@ export class TicketProficiencyDialogue {
             // Add emoji click for current proficiency
             handler.addEmoji("tickets", emoji, {
               clickHandler: async data => {
+                sentEmbed.delete();
                 // resolve with chosen language
                 resolve(data.proficiency);
 
@@ -168,6 +170,7 @@ export class TicketProficiencyDialogue {
             // Add emoji click for current proficiency
             handler.addEmoji("tickets", emoji, {
               clickHandler: async data => {
+                sentEmbed.delete();
                 // resolve with chosen language
                 resolve(data.proficiency);
 

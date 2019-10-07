@@ -16,6 +16,7 @@ import {
 } from "../dialogues/ticketDialogue";
 import { TicketHelper } from "../helpers/ticketHelper";
 import { ConfigManager } from "../configManager";
+import { Constants } from "../constants";
 
 export default class EditTicketCommand extends BaseCommand {
   readonly commandWords = [
@@ -72,6 +73,7 @@ export default class EditTicketCommand extends BaseCommand {
             commandData.message.author.id
           );
           if (language) ticket.languageId = language.id;
+          commandData.message.delete();
         } else if (identifier === "framework" || identifier === "library") {
           let framework = await reactionHandler.SelectFramework(
             commandData.client,
@@ -79,6 +81,7 @@ export default class EditTicketCommand extends BaseCommand {
             commandData.message.author.id
           );
           if (framework) ticket.frameworkId = framework.id;
+          commandData.message.delete();
         } else if (identifier === "title") {
           let d = new TicketDialogue();
 
@@ -99,6 +102,7 @@ export default class EditTicketCommand extends BaseCommand {
             )
             .then(data => {
               ticket.subject = data.title;
+              commandData.message.delete();
             });
         } else if (identifier === "description") {
           let d = new TicketDialogue();
@@ -122,8 +126,10 @@ export default class EditTicketCommand extends BaseCommand {
             )
             .then(data => {
               ticket.description = data.description;
+              commandData.message.delete();
             });
         } else {
+          commandData.message.delete();
           commandData.message.channel.send(
             "Invalid identifier, Please use Title, Description, Framework or Language."
           );
@@ -137,6 +143,11 @@ export default class EditTicketCommand extends BaseCommand {
               updatedTicket.applicant.discordId
             );
             if (member) TicketHelper.updateTopic(member, updatedTicket);
+            const embed = new Discord.RichEmbed()
+              .setTitle("Successfully updated!")
+              .setDescription("You have successfully edited this ticket")
+              .setColor(Constants.EmbedColors.GREEN);
+            commandData.message.channel.send(embed);
           })
           .catch(console.error);
       })
