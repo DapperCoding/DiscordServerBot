@@ -15,14 +15,21 @@ import {
   TicketDialogue
 } from "../dialogues/ticketDialogue";
 import { TicketHelper } from "../helpers/ticketHelper";
+import { ConfigManager } from "../configManager";
 
 export default class EditTicketCommand extends BaseCommand {
-  readonly commandWords = ["editticket"];
+  readonly commandWords = [
+    "title",
+    "description",
+    "language",
+    "framework",
+    "library"
+  ];
 
   public getHelp(): IBotCommandHelp {
     return {
-      caption: "?editTicket",
-      description: "Change the ticket."
+      caption: "?title | ?description | ?language | ?library",
+      description: "Change your previous filled in "
     };
   }
 
@@ -39,13 +46,15 @@ export default class EditTicketCommand extends BaseCommand {
     new ApiRequestHandler()
       .requestAPIWithType<Ticket>("GET", null, `ticket/${ticketId}`)
       .then(async ticket => {
-        let data = commandData.message.content
+        let action = commandData.message.content
+          .toLowerCase()
           .slice(1)
-          .split(" ")
-          .slice(1);
+          .split(" ");
 
         // get title, description, language or framework
-        let identifier = data[0];
+        let identifier = action[0].substring(
+          ConfigManager.GetConfig().prefix.length
+        );
         if (!identifier) {
           commandData.message.channel.send(
             `You must provide an identifier to change data for. (Title, Description, Language, Framework)`
@@ -56,21 +65,21 @@ export default class EditTicketCommand extends BaseCommand {
         const reactionHandler = new TicketProficiencyDialogue();
         const collectedInfo = new TicketDialogueData();
 
-        if (identifier.toLowerCase().includes("lang")) {
+        if (identifier === "language") {
           let language = await reactionHandler.SelectLanguage(
             commandData.client,
             commandData.message.channel as TextChannel,
             commandData.message.author.id
           );
           if (language) ticket.languageId = language.id;
-        } else if (identifier.toLowerCase().includes("frame")) {
+        } else if (identifier === "framework" || identifier === "library") {
           let framework = await reactionHandler.SelectFramework(
             commandData.client,
             commandData.message.channel as TextChannel,
             commandData.message.author.id
           );
           if (framework) ticket.frameworkId = framework.id;
-        } else if (identifier.toLowerCase().includes("title")) {
+        } else if (identifier === "title") {
           let d = new TicketDialogue();
 
           let titleStep: DialogueStep<TicketDialogueData> = new DialogueStep(
@@ -91,7 +100,7 @@ export default class EditTicketCommand extends BaseCommand {
             .then(data => {
               ticket.subject = data.title;
             });
-        } else if (identifier.toLowerCase().includes("desc")) {
+        } else if (identifier === "description") {
           let d = new TicketDialogue();
 
           let descriptionStep: DialogueStep<
@@ -130,7 +139,8 @@ export default class EditTicketCommand extends BaseCommand {
             if (member) TicketHelper.updateTopic(member, updatedTicket);
           })
           .catch(console.error);
-      }).catch(console.error);
+      })
+      .catch(console.error);
 
     /**
          * let language = await reactionHandler.SelectLanguage(
