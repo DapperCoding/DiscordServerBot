@@ -6,7 +6,6 @@ import {
   DiscordUserProficiency,
   ProficiencyLevel
 } from "../../models/proficiency/proficiency";
-import { ConfigManager } from "../../configManager";
 import { GuildHelper } from "../../helpers/guildHelper";
 import { TicketHelper } from "../../helpers/ticketHelper";
 import { Constants } from "../../constants";

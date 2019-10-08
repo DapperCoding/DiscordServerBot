@@ -5,11 +5,9 @@ import { Constants } from "../../constants";
 
 export class SuggestionEvent {
   public static handle(server: Guild, serverBot: Client, suggestion: Suggest) {
-    // Get user that suggested this suggestion
-    const suggestor = serverBot.users.get(suggestion.discordUser.discordId);
 
     // Create suggestion embed
-    const suggestionEmbed = new RichEmbed({})
+    let suggestionEmbed = new RichEmbed({})
       .setTitle("Your suggestion has been created!")
       .setColor(Constants.EmbedColors.GREEN)
       .addField(
@@ -30,20 +28,37 @@ export class SuggestionEvent {
         "It means a lot!"
       )
       .setFooter("With ❤ the DapperCoding team");
-    // Check if found
-    if (suggestor) {
-      // Send embed to suggestor
-      suggestor.send(suggestionEmbed).catch(console.error);
 
-      suggestionEmbed.setTitle(`${suggestor.username} suggested something.`);
-      suggestionEmbed.setDescription(
-        `teacher link: https://teacher.dapperdino.co.uk/Suggestion/${suggestion.id}`
-      );
-      const h2hChat = server.channels.find(
-        channel => channel.name.toLowerCase() === "dapper-team"
-      ) as TextChannel;
 
-      h2hChat.send(suggestionEmbed);
-    }
+    suggestionEmbed.setDescription(
+      `teacher link: https://teacher.dapperdino.co.uk/Suggestion/${suggestion.id}`
+    );
+
+    suggestionEmbed = SuggestionEvent.sendMessageToUser(suggestion, suggestionEmbed, serverBot);
+    SuggestionEvent.sendMessageToDapperTeam(server, suggestionEmbed);
+  }
+
+  private static sendMessageToUser(suggestion: Suggest, embed: RichEmbed, serverBot: Client):RichEmbed {
+    if (!suggestion.discordUser) return embed;
+    // Get user that suggested this suggestion
+    const suggestor = serverBot.users.get(suggestion.discordUser.discordId);
+
+    if (!suggestor) return embed;
+
+    // Send embed to suggestor
+    suggestor.send(embed).catch(console.error);
+
+    embed.setTitle(`${suggestor.username} suggested something.`);
+
+    return embed;
+  }
+
+  private static sendMessageToDapperTeam(server:Guild, embed:RichEmbed) {
+
+    const h2hChat = server.channels.find(
+      channel => channel.name.toLowerCase() === "dapper-team"
+    ) as TextChannel;
+
+    h2hChat.send(embed);
   }
 }

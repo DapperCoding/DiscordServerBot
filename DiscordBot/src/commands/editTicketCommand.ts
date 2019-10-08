@@ -44,24 +44,24 @@ export default class EditTicketCommand extends BaseCommand {
       ""
     );
 
+    let action = commandData.message.content
+      .toLowerCase()
+      .slice(1)
+      .split(" ");
+
+    // get title, description, language or framework
+    let identifier = action[0];
+    if (!identifier) {
+      commandData.message.channel.send(
+        `You must provide an identifier to change data for. (Title, Description, Language, Framework)`
+      );
+      return;
+    }
+
+
     new ApiRequestHandler()
       .requestAPIWithType<Ticket>("GET", null, `ticket/${ticketId}`)
       .then(async ticket => {
-        let action = commandData.message.content
-          .toLowerCase()
-          .slice(1)
-          .split(" ");
-
-        // get title, description, language or framework
-        let identifier = action[0].substring(
-          ConfigManager.GetConfig().prefix.length
-        );
-        if (!identifier) {
-          commandData.message.channel.send(
-            `You must provide an identifier to change data for. (Title, Description, Language, Framework)`
-          );
-          return;
-        }
 
         const reactionHandler = new TicketProficiencyDialogue();
         const collectedInfo = new TicketDialogueData();
