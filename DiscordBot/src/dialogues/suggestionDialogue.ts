@@ -16,34 +16,6 @@ export class SuggestionDialogue {
   }
 
   /**
-   * addCategory
-   */
-  public addCategory(response: discord.Message, data: SuggestionDialogueData) {
-    return new Promise<SuggestionDialogueData>((resolve, reject) => {
-      try {
-        const categories = ["bot", "website", "general", "youtube"];
-
-        let category = response.content.toLowerCase().trim();
-
-        if (!categories.includes(category))
-          return reject(
-            new ValidationError(
-              `Chosen category did not exist, please choose one out of these options: ${categories
-                .join(", ")
-                .trim()}`
-            )
-          );
-
-        data.category = response.content;
-
-        return resolve(data);
-      } catch (e) {
-        return reject(e);
-      }
-    });
-  }
-
-  /**
    * addDescription
    */
   public addDescription(
@@ -61,7 +33,7 @@ export class SuggestionDialogue {
   }
 
   public handleAPI = (data: SuggestionDialogueData) => {
-    return new Promise<Suggest>((resolve, reject) => {
+    return new Promise<Suggest>(async (resolve, reject) => {
       // Create new suggestion
       let suggestion: Suggest = new Suggest();
 
@@ -73,23 +45,30 @@ export class SuggestionDialogue {
       suggestion.discordUser.username = this._message.member.displayName;
       suggestion.discordUser.discordId = this._message.member.id;
 
-      // Select suggestion type
-      switch (data.category.toLowerCase()) {
-        case "bot":
-          suggestion.type = SuggestionTypes.Bot;
-          break;
-        case "website":
-          suggestion.type = SuggestionTypes.Website;
-          break;
-        case "general":
-          suggestion.type = SuggestionTypes.General;
-          break;
-        case "youtube":
-          suggestion.type = SuggestionTypes.Youtube;
-          break;
-        default:
-          suggestion.type = SuggestionTypes.Undecided;
-      }
+      const categories = ["Bot", "🕸", "🗨", "📹"];
+      const msg = await this._message.channel.send("Please select the suggestion type.");
+      await (msg as discord.Message).react(':Bot:485871485421092874');
+      await (msg as discord.Message).react('🕸');
+      await (msg as discord.Message).react('🗨');
+      await (msg as discord.Message).react('📹');
+
+      const collector = this._message.createReactionCollector(
+        (reaction: discord.MessageReaction, user: discord.User) => ["Bot", "🕸", "🗨", "📹"].includes(reaction.emoji.name) && user.id === this._message.author.id
+      );
+
+      suggestion.type = SuggestionTypes.Undecided;
+
+      collector.on('collect', r => {
+
+        // This should never happen because of the filter in the ReactionCollector, but just in case.
+        if (!categories.includes(r.emoji.name)) return;
+
+        if (r.emoji.name === 'Bot') suggestion.type = SuggestionTypes.Bot;
+        else if (r.emoji.name === '🕸') suggestion.type = SuggestionTypes.Website;
+        else if (r.emoji.name === '🗨') suggestion.type = SuggestionTypes.General;
+        else if (r.emoji.name === '📹') suggestion.type = SuggestionTypes.YouTube;
+
+      });
 
       return new ApiRequestHandler()
         .requestAPIWithType<Suggest>("POST", suggestion, "suggestion")
