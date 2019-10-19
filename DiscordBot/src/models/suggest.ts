@@ -12,7 +12,7 @@ export enum SuggestionTypes {
     Bot = 0,
     Website = 1,
     General = 2,
-    Youtube = 3,
+    YouTube = 3,
     Undecided = 4
 }
 
