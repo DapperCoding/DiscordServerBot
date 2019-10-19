@@ -48,16 +48,6 @@ export default class SuggestCommand extends BaseCommand {
       commandData.message
     );
 
-    let suggestionCategoryStep: DialogueStep<
-      SuggestionDialogueData
-    > = new DialogueStep(
-      collectedInfo,
-      dialogue.addCategory,
-      "Enter the category that best suits your suggestion. Choose from 'Bot', 'Website', 'General' or 'Youtube'.",
-      "Type Successful",
-      "Type Unsuccessful"
-    );
-
     let suggestionStep: DialogueStep<SuggestionDialogueData> = new DialogueStep(
       collectedInfo,
       dialogue.addDescription,
@@ -67,7 +57,7 @@ export default class SuggestCommand extends BaseCommand {
     );
 
     let handler = new DialogueHandler(
-      [suggestionCategoryStep, suggestionStep],
+      [suggestionStep],
       collectedInfo
     );
 
