@@ -70,9 +70,11 @@ export class DialogueHandler<T> {
         let message = new Discord.RichEmbed()
           .setTitle("Hi " + user.username)
           .setDescription(step.beforeMessage)
-          .addField("Notification for", user)
           .setColor(Constants.EmbedColors.YELLOW)
           .setFooter("You can cancel the process by responding with ?cancel");
+
+        if (this._channel.type !== 'dm') message.addField("Notification for", user);
+        
 
         // Send before discordMessage
         await channel.send(message).then(newMsg => {
