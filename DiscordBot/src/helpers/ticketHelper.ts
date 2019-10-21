@@ -2,7 +2,7 @@ import { GuildMember, TextChannel, Guild } from "discord.js";
 import { Ticket } from "../models/ticket/ticket";
 
 export class TicketHelper {
-  public static updateTopic(member: GuildMember, ticket: Ticket) {
+  public static async updateTopic(member: GuildMember, ticket: Ticket) {
     // Find channel
     let channel = member.guild.channels.find(
       c => c.name.toLowerCase() === `ticket${ticket.id}`
@@ -14,9 +14,13 @@ export class TicketHelper {
     }
 
     // Set topic
-    channel.setTopic(
+    await channel.setTopic(
       `This ticket is created by ${member.user.username} \n\n\n Subject:\n${ticket.subject} \n\n Description:\n${ticket.description} \n\n Framework:\n ${ticket.framework.name} \n\n Language: \n ${ticket.language.name}`
-    );
+    )
+    .then(x=>{})
+    .catch(ex=> {
+      console.error(ex);
+    });
   }
 
   public static async fixPermissions(guild: Guild, ticket: Ticket) {
@@ -36,9 +40,11 @@ export class TicketHelper {
     );
 
     // Add permissions for creator
-    channel.overwritePermissions(ticket.applicant.discordId, {
+    await channel.overwritePermissions(ticket.applicant.discordId, {
       VIEW_CHANNEL: true,
       READ_MESSAGES: true
-    });
+    })
+    //.then(x=>{})
+    .catch(console.error);
   }
 }

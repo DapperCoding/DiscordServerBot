@@ -138,11 +138,11 @@ export default class EditTicketCommand extends BaseCommand {
 
         new ApiRequestHandler()
           .requestAPIWithType<Ticket>("POST", ticket, "ticket/update")
-          .then(updatedTicket => {
+          .then(async updatedTicket => {
             let member = commandData.guild.members.get(
               updatedTicket.applicant.discordId
             );
-            if (member) TicketHelper.updateTopic(member, updatedTicket);
+            if (member) await TicketHelper.updateTopic(member, updatedTicket);
             const embed = new Discord.RichEmbed()
               .setTitle("Successfully updated!")
               .setDescription("You have successfully edited this ticket")

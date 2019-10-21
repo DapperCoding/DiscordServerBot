@@ -34,15 +34,15 @@ export default class MirrorCommand extends BaseCommand {
         null,
         `ticket/${channel.name.toLowerCase().replace("ticket", "")}`
       )
-      .then(ticket => {
+      .then(async ticket => {
         // Get member that created the ticket
         let member = commandData.guild.members.get(
           ticket.applicant.discordId
         ) as Discord.GuildMember;
 
         // Update topic
-        TicketHelper.updateTopic(member, ticket);
-        TicketHelper.fixPermissions(commandData.guild, ticket);
+        await TicketHelper.updateTopic(member, ticket);
+        await TicketHelper.fixPermissions(commandData.guild, ticket);
       });
   }
 }

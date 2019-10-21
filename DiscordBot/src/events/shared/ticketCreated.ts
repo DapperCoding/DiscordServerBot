@@ -20,7 +20,7 @@ export class TicketCreatedEvent {
       // Add author to ticket
       .createChannelTicketCommand(ticket.id, member)
       .then(async channel => {
-        TicketHelper.updateTopic(member as GuildMember, ticket);
+        await TicketHelper.updateTopic(member as GuildMember, ticket);
       });
 
     console.log("hi");
