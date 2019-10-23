@@ -39,9 +39,43 @@ export class TagDialogue extends TagBaseDialogue<TagDialogueData> implements Bas
         )
         .then(callback);
     }
+    public async createNameHandler(
+        data: TagDialogueData,
+        channel: Discord.TextChannel,
+        user: Discord.User,
+        callback: (data: TagDialogueData) => void
+    ) {
+        let nameStep: DialogueStep<
+            TagDialogueData
+        > = new DialogueStep<TagDialogueData>(
+            data,
+            this.nameStep,
+            "Which name do you wish to cast on this tag?"
+        );
+
+        let handler = new DialogueHandler(
+            [nameStep],
+            data
+        );
+
+        await handler
+            .getInput(
+                channel,
+                user
+            )
+            .then(callback);
+    }
 }
 
 export interface TagDialogueData extends BaseDialogueData {
     name: string;
     answer: string;
 }
+
+export class TagDialogueData implements TagDialogueData { }
+
+export interface TagReturnData extends TagDialogueData {
+    id:number
+}
+
+export class TagReturnData implements TagReturnData { }
